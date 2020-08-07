@@ -4,12 +4,10 @@ import java.util.HashMap;
 
 public class Graph {
 
-
     private String _name;
     private int _noOfVertices;
     private HashMap<String, Vertex> hashVertices;
-    private HashMap<String, Edge> hashEdges ;
-
+    private HashMap<String, Edge> hashEdges;
 
     public String get_name() {
         return _name;
@@ -33,8 +31,5 @@ public class Graph {
         hashVertices = new HashMap<String, Vertex>();
         hashEdges = new HashMap<String, Edge>();
     }
-
-
-
 
 }
