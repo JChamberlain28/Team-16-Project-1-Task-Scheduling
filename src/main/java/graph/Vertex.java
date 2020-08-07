@@ -44,7 +44,7 @@ public class Vertex {
 
     /* GETTERS & SETTERS */
 
-    public String get_id() {
+    public String getId() {
         return _id;
     }
 
