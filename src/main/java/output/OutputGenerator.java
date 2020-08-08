@@ -19,8 +19,8 @@ public class OutputGenerator {
         String path = System.getProperty("user.dir") + File.separator + fileName + ".dot";
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
-            // TODO: Determine proper digraph naming scheme (ask Oliver)
-            out.write("digraph \"output\" {");
+            // TODO: Determine proper digraph naming scheme. Assume same as file name for now
+            out.write("digraph \"" + fileName + "\" {");
             out.newLine();
 
             for (Vertex v : vertices) {
