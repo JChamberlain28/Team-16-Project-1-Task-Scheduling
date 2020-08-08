@@ -1,4 +1,4 @@
-package input
+package input;
 
 public class InputParser {
 
