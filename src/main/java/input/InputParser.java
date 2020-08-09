@@ -1,11 +1,18 @@
 package input;
 
+
 import graph.Edge;
+
+import graph.Graph;
+import graph.Vertex;
+
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+
 import graph.Vertex;
 import graph.Graph;
 
@@ -15,7 +22,11 @@ public class InputParser {
     Graph graph = new Graph("Falcon1");
 
 
-    public static void readInput() {
+    public static void  readInput() {
+
+
+        Graph algoGraph = new Graph("newGraph");
+
 
         int edgeCount = 0;
 
@@ -26,7 +37,8 @@ public class InputParser {
             File file = new File("C:\\Users\\a_sid\\IdeaProjects\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
             bufferReader = new BufferedReader(new FileReader(file));
 
-            String line = bufferReader.readLine();
+            String line = bufferReader.readLine(); //need to remove first line somehow.
+
 
 
             while ((line = bufferReader.readLine()) != null) {
@@ -37,6 +49,11 @@ public class InputParser {
         break;
         }
 
+                // end of file
+                if (line.substring(0, 1).equals("}")) {
+                    break;
+                }
+
 
         if (line.contains(">")) { // edges
 
@@ -46,18 +63,46 @@ public class InputParser {
             int weight = Integer.parseInt(Character.toString(line.charAt(15)));
             String edgeId = parentNode+"->"+childNode;
 
-            graph.getHashVertices().
-            Edge edge = new Edge();
-            graph.addEdge(edgeIdid, edge);
+
+            System.out.println("edgeId ="+edgeId);
+            System.out.println("edgeWeight ="+weight);
 
 
+            HashMap<String, Vertex> hashVertices = algoGraph.getHashVertices();
+            Vertex parent = hashVertices.get(parentNode);
+            Vertex child = hashVertices.get(childNode);
+            Edge edge = new Edge(parent, child, weight);
 
+            System.out.println(edge);
 
+            algoGraph.addEdge(edgeId, edge);
 
+            edgeCount++;
 
 
 
         } else if (!line.contains("->")) { // nodes
+
+
+            //may move these outside the if statements to use with vertex
+            line = line.trim();
+            line.replaceAll( "\\s+", "");
+
+
+
+            String vertexID = line.substring(0, 1);
+            String vertexWeight = line.split("\\[Weight=")[1];
+            vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
+            int vertexWeightInt = Integer.parseInt(vertexWeight);
+
+            System.out.println(vertexID);
+            System.out.println(vertexWeight);
+
+            Vertex graphVertex = new Vertex(vertexID, vertexWeightInt);
+
+            System.out.println(graphVertex);
+
+            algoGraph.addVertex(vertexID, graphVertex);
 
 
         } else { //end of file
@@ -68,6 +113,10 @@ public class InputParser {
 
         }
 
+            // checking algo
+//            System.out.println(algoGraph.getHashVertices());
+
+            System.out.println(algoGraph.getHashEdges());
 
         } catch (IOException e) {
         e.printStackTrace();
