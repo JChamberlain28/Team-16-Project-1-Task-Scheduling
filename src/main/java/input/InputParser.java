@@ -34,7 +34,7 @@ public class InputParser {
 
         BufferedReader bufferReader = null;
         try {
-            File file = new File("C:\\Users\\a_sid\\IdeaProjects\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+            File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine(); //need to remove first line somehow.
@@ -59,9 +59,13 @@ public class InputParser {
 
 
             //change this so that it is not hardcoded.
-        char parentNode =  line.charAt(0);
-        char childNode = line.charAt(5);
-//        System.out.println(parentNode+" "+ childNode);
+        char parentChar =  line.charAt(0);
+        char childChar = line.charAt(5);
+
+
+            String parentNode = Character.toString(parentChar);
+            String childNode = Character.toString(childChar);
+
             int weight = Integer.parseInt(Character.toString(line.charAt(15)));
             String edgeId = parentNode+"->"+childNode;
 
@@ -71,11 +75,14 @@ public class InputParser {
 
 
             HashMap<String, Vertex> hashVertices = algoGraph.getHashVertices();
+
             Vertex parent = hashVertices.get(parentNode);
+
             Vertex child = hashVertices.get(childNode);
             Edge edge = new Edge(parent, child, weight);
 
             System.out.println(edge);
+            System.out.println(parent);
 
             algoGraph.addEdge(edgeId, edge);
 
@@ -123,9 +130,11 @@ public class InputParser {
         }
 
             // checking algo
-//            System.out.println(algoGraph.getHashVertices());
-
+/*           System.out.println(algoGraph.getHashVertices());
             System.out.println(algoGraph.getHashEdges());
+            Vertex vertexB = algoGraph.getHashVertices().get("b");
+            System.out.println("incomming edges = " + vertexB.getIncomingEdges());
+            System.out.println("OutgoingVertices = " + vertexB.getOutgoingVertices());*/
 
         } catch (IOException e) {
         e.printStackTrace();
