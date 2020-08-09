@@ -25,6 +25,17 @@ public class Graph {
         return hashEdges;
     }
 
+
+    public void addVertex(String id, Vertex vertex) {
+        hashVertices.put(id, vertex);
+    }
+
+    public void addEdge(String id, Edge edge) {
+        hashEdges.put(id, edge);
+    }
+
+
+
     public Graph(String name){
         _name=name;
         _noOfVertices = 0;
