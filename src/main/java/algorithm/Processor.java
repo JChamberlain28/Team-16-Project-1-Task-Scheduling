@@ -6,16 +6,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Processor {
+public class Processor {  // shallow copy
 
     private ScheduledTask _lastScheduled;
-    private HashMap<String, ScheduledTask> _taskMap;
+    private HashMap<String, ScheduledTask> _taskMap;  // shallow copy
     private int _id;
 
     public Processor(int id) {
         _lastScheduled = null;
         _taskMap = new HashMap<String, ScheduledTask>();
         _id = id;
+    }
+
+    /**
+     * Copy constructor.
+     * @param other The Processor object we are cloning.
+     */
+    public Processor(Processor other) {
+        this(other._id);
+        _taskMap = new HashMap<String, ScheduledTask>(other._taskMap);
+        _lastScheduled = other._lastScheduled;
     }
 
     public ScheduledTask scheduleTask(Vertex task, int startTime) {
