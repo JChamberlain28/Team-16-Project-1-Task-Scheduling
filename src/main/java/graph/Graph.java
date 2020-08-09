@@ -32,4 +32,15 @@ public class Graph {
         hashEdges = new HashMap<String, Edge>();
     }
 
+    public void addVertex(String id, Vertex vertex) {
+        hashVertices.put(id, vertex);
+    }
+
+    public void addEdge(String id, Edge edge) {
+        hashEdges.put(id, edge);
+    }
+
+
+
+
 }
