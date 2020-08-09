@@ -57,6 +57,8 @@ public class InputParser {
 
         if (line.contains(">")) { // edges
 
+
+            //change this so that it is not hardcoded.
         char parentNode =  line.charAt(0);
         char childNode = line.charAt(5);
 //        System.out.println(parentNode+" "+ childNode);
@@ -78,6 +80,13 @@ public class InputParser {
             algoGraph.addEdge(edgeId, edge);
 
             edgeCount++;
+
+            parent.addOutgoingEdge(edge);
+            child.addIncomingEdge(edge);
+
+
+            parent.addOutgoingVertex(edge.getEndVertex());
+            child.addIncomingVertex(edge.getStartVertex());
 
 
 
