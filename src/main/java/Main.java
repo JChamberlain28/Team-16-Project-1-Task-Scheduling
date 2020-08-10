@@ -24,16 +24,12 @@ public class Main {
         }
         String jarDir = runnableJar.getParentFile().getPath();
 
-
-
-
         Graph graph = InputParser.readInput("digraph2.dot", jarDir);
 
         UnoptimalAlgo ua = new UnoptimalAlgo();
         ua.computeSchedule(graph);
 
-        List<Vertex> vList = new ArrayList<Vertex>(graph.getHashVertices().values()); //TODO: possibly inefficient
-        OutputGenerator.generate(vList, "sampleFile", jarDir);
+        OutputGenerator.generate(graph, "sampleFile", jarDir);
 
     }
 }
