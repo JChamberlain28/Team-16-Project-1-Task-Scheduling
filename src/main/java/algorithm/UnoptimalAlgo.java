@@ -24,7 +24,6 @@ public class UnoptimalAlgo {
         Set<String> visitedIds = new HashSet<>();
         List<Vertex> queue = new ArrayList<Vertex>();
 
-        visitedIds.add(root.getId());
         queue.add(root);
 
         while (queue.size() > 0){ // while there is a vertex in the queue
@@ -39,7 +38,6 @@ public class UnoptimalAlgo {
                     parentsScheduled = false;
                     break;
                 }
-
             }
 
             if (parentsScheduled && !visitedIds.contains(currentVertex.getId())) {
