@@ -6,8 +6,6 @@ import java.util.List;
 public class Vertex {
 
     private String _id;
-    private ArrayList<Edge> incomingEdges;
-    private ArrayList<Edge> outgoingEdges;
     private ArrayList<Vertex> incomingVertices;
     private ArrayList<Vertex> outgoingVertices;
 
@@ -17,8 +15,6 @@ public class Vertex {
 
     public Vertex(String id, int cost) {
 
-        incomingEdges = new ArrayList<Edge>();
-        outgoingEdges = new ArrayList<Edge>();
         incomingVertices = new ArrayList<Vertex>();
         outgoingVertices = new ArrayList<Vertex>();
         _id = id;
@@ -26,13 +22,6 @@ public class Vertex {
 
     }
 
-    public void addIncomingEdge(Edge incomingEdge){
-        incomingEdges.add(incomingEdge);
-    }
-
-    public void addOutgoingEdge(Edge outgoingEdge){
-        outgoingEdges.add(outgoingEdge);
-    }
     public void addIncomingVertex(Vertex incomingVertex){
         incomingVertices.add(incomingVertex);
     }
@@ -46,14 +35,6 @@ public class Vertex {
 
     public String getId() {
         return _id;
-    }
-
-    public ArrayList<Edge> getIncomingEdges() {
-        return incomingEdges;
-    }
-
-    public ArrayList<Edge> getOutgoingEdges() {
-        return outgoingEdges;
     }
 
     public ArrayList<Vertex> getIncomingVertices() {

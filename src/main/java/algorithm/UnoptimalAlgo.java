@@ -1,6 +1,5 @@
 package algorithm;
 
-import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
@@ -18,35 +17,31 @@ public class UnoptimalAlgo {
     public void computeSchedule(Graph graph){
 
         Set<String> visitedVertexLabels = new HashSet<String>();
-        HashMap<String, Vertex> vertices = graph.getHashVertices(); // change method when refactor graph
-        // assume root is a for now (add get root method to graph)
-        Vertex root = vertices.get("a");
+        Vertex root = graph.getRoot();
 
         int currentStartTime = 0;
 
         List<Vertex> queue = new ArrayList<Vertex>();
-
         queue.add(root);
 
         while (queue.size() > 0){ // while there is a vertex in the queue
             // pop first vertex
             Vertex currentVertex = queue.remove(0);
 
-            //check if all perant vertices are scheduled
-            boolean allScheduled = true;
-            for (Edge e : currentVertex.getIncomingEdges()) {
-                boolean contains = visitedVertexLabels.contains(e.getStartVertex().getId());
-                if (!contains){
-                    allScheduled = false;
+            // check if all parent vertices are scheduled
+            boolean parentsScheduled = true;
+            for (Vertex v : currentVertex.getIncomingVertices()) {
+                boolean parentVisited = visitedVertexLabels.contains(v.getId());
+                if (!parentVisited){
+                    parentsScheduled = false;
                     break;
                 }
 
             }
 
-            if (allScheduled){
+            if (parentsScheduled){
                 // sets start time for node in graph and updates current start time (directly updating graph)
                 currentVertex.setStartTime(currentStartTime);
-
                 currentStartTime += currentVertex.getCost();
 
                 // set processor directly in graph

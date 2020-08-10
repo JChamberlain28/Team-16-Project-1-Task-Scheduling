@@ -2,19 +2,17 @@ package output;
 
 import graph.Graph;
 import graph.Vertex;
-import graph.Edge;
 
 import java.io.*;
-import java.util.List;
 
 public class OutputGenerator {
 
     /**
      * Generates an output .dot file representing a graph with task scheduling information.
-     * @param vertices List of vertices in the order they were parsed from the .dot input file
+     * @param graph Graph object describing the task dependencies
      * @param fileName Name of file to write to ([fileName].dot)
      */
-    public static void generate(List<Vertex> vertices, String fileName) {
+    public static void generate(Graph graph, String fileName) {
 
         String path = System.getProperty("user.dir") + File.separator + fileName + ".dot";
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
@@ -23,7 +21,7 @@ public class OutputGenerator {
             out.write("digraph \"" + fileName + "\" {");
             out.newLine();
 
-            for (Vertex v : vertices) {
+            for (Vertex v : graph.getVertices()) {
 
                 // Vertex format: a [ Weight=2, Start=0, Processor=1];
                 String vString = v.getId() + " [ Weight=" + v.getCost() + ", " + "Start=" +
@@ -31,10 +29,11 @@ public class OutputGenerator {
                 out.write("\t" + vString);
                 out.newLine();
 
-                for (Edge e : v.getIncomingEdges()) {
+                for (Vertex other : v.getIncomingVertices()) {
 
                     // Edge format: a −> b [ Weight=1 ];
-                    String eString = e.getStartVertex().getId() + " -> " + v.getId() + " [ Weight=" + e.getWeight() + " ];";
+                    String eString = other.getId() + " -> " + v.getId() + " [ Weight=" +
+                            graph.getEdgeWeight(other.getId(), v.getId()) + " ];";
                     out.write("\t" + eString);
                     out.newLine();
 
