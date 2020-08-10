@@ -14,21 +14,19 @@ import graph.Graph;
 
 public class InputParser {
 
-    public static void  readInput() {
+    public static Graph readInput(String fileName, String dir) {
 
         Graph algoGraph = new Graph("newGraph");
         int edgeCount = 0;
 
         BufferedReader bufferReader = null;
         try {
-            File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+            File file = new File(dir + File.separator + fileName);
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine(); // need to remove first line somehow.
 
             while ((line = bufferReader.readLine()) != null) {
-
-                System.out.println(line);
 
                 // end of file
                 if (line.substring(0, 1).equals("}")) {
@@ -103,6 +101,7 @@ public class InputParser {
             }
         }
 
+        return algoGraph;
 
     }
 }
