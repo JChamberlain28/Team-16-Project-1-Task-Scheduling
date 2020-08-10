@@ -39,7 +39,6 @@ public class OutputGenerator {
                     out.newLine();
 
                 }
-
             }
 
             out.write("}");

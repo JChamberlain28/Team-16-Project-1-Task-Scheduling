@@ -19,7 +19,6 @@ import graph.Graph;
 public class InputParser {
 
     private int[][] listOfEdges;
-    Graph graph = new Graph("Falcon1");
 
 
     public static void  readInput() {
@@ -49,7 +48,6 @@ public class InputParser {
                 if (line.substring(0, 1).equals("}")) {
                     break;
                 }
-
 
 
                 line = line.trim();
