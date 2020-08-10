@@ -26,11 +26,14 @@ public class UnoptimalAlgo {
 
         List<Vertex> queue = new ArrayList<Vertex>();
 
+        Set<String> visitedLabels = new HashSet<>();
         queue.add(root);
 
         while (queue.size() > 0){ // while there is a vertex in the queue
             // pop first vertex
             Vertex currentVertex = queue.remove(0);
+
+
 
             //check if all perant vertices are scheduled
             boolean allScheduled = true;
@@ -43,7 +46,10 @@ public class UnoptimalAlgo {
 
             }
 
-            if (allScheduled){
+            if (allScheduled && !visitedLabels.contains(currentVertex.getId())){
+
+                visitedLabels.add(currentVertex.getId());
+
                 // sets start time for node in graph and updates current start time (directly updating graph)
                 currentVertex.setStartTime(currentStartTime);
 
@@ -58,7 +64,11 @@ public class UnoptimalAlgo {
 
                 // add current vertex's label to list of those who have been scheduled
                 visitedVertexLabels.add(currentVertex.getId());
+
+                System.out.println(currentVertex.getId());
+                System.out.println(currentStartTime);
             }
+
         }
 
 

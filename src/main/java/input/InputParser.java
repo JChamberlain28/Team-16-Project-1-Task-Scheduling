@@ -21,10 +21,10 @@ public class InputParser {
     private int[][] listOfEdges;
 
 
-    public static void  readInput() {
+    public static Graph  readInput(String fileName, String dir) {
 
 
-        Graph algoGraph = new Graph("newGraph");
+        Graph algoGraph = new Graph("test"); //TODO: consider using split at dot to get name without .dot
 
 
         int edgeCount = 0;
@@ -33,7 +33,7 @@ public class InputParser {
 
         BufferedReader bufferReader = null;
         try {
-            File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+            File file = new File(dir + File.separator + fileName);
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine(); //need to remove first line somehow.
@@ -153,6 +153,8 @@ public class InputParser {
                 e.printStackTrace();
             }
         }
+
+        return algoGraph;
 
 
     }

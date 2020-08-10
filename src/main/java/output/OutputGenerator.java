@@ -14,9 +14,9 @@ public class OutputGenerator {
      * @param vertices List of vertices in the order they were parsed from the .dot input file
      * @param fileName Name of file to write to ([fileName].dot)
      */
-    public static void generate(List<Vertex> vertices, String fileName) {
+    public static void generate(List<Vertex> vertices, String fileName, String dir) {
 
-        String path = System.getProperty("user.dir") + File.separator + fileName + ".dot";
+        String path = dir + File.separator + fileName; //TODO: we should put .dot if not there
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now
