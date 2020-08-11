@@ -41,6 +41,7 @@ public class OutputGenerator {
             }
 
             out.write("}");
+            out.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
