@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.legacy;
 
 import graph.Vertex;
 
