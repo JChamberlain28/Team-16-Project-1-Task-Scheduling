@@ -68,7 +68,7 @@ public class PartialSchedule {
         _toSchedule.addAll(task.getOutgoingVertices());
 
         _scheduleMap = new HashMap<String, PartialSchedule>(parent._scheduleMap);
-        _scheduleMap.put(task.getId(), parent);
+        _scheduleMap.put(task.getId(), this);
 
         _processorStrings = processorStrings;
 
