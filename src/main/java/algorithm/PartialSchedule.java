@@ -80,8 +80,6 @@ public class PartialSchedule {
 
     public List<PartialSchedule> extend(Graph dependencyGraph) {
 
-        //TODO: implement duplicate schedule pruning
-
         List<PartialSchedule> partialSchedules = new ArrayList<PartialSchedule>();
         for (Vertex task : _toSchedule) {
             if (allDependenciesScheduled(task)) {
@@ -109,7 +107,6 @@ public class PartialSchedule {
                     List<String> processorStrings = new ArrayList<String>(this._processorStrings);
                     processorStrings.set(i, processorStrings.get(i) + task.getId() + "?" + pEarliestStartTime);
 
-                    // TODO: check that hash sets can be used to query a hash set
                     HashSet<String> processorStringSet = new HashSet<String>(processorStrings);
 
                     if (!processorStringsSet.contains(processorStringSet)) {
