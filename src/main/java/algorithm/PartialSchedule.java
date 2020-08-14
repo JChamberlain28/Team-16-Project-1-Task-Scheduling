@@ -121,10 +121,6 @@ public class PartialSchedule {
         return Arrays.stream(_processorEndTimes).max().getAsInt();
     }
 
-    public int getProcessorEndTime(int processor) {
-        return _processorEndTimes[processor-1];
-    }
-
     /**
      * Extends this PartialSchedule by creating all of its possible children PartialSchedules. This is done by iterating
      * through the topological order of the dependency graph, where one 'layer' is processed per call of this method.
