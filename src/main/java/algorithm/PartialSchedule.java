@@ -7,6 +7,9 @@ import java.util.*;
 
 public class PartialSchedule {
 
+    // The dependency graph that this schedule adheres to
+    private final Graph _dependencyGraph;
+
     // The PartialSchedule which this PartialSchedule is extending
     private PartialSchedule _parent;
 
@@ -22,7 +25,17 @@ public class PartialSchedule {
     // in the same way at the same time but are simply scheduled on different processors.
     private List<String> _processorStrings;
 
-    private HashSet<Vertex> _toSchedule;  // Protects against duplicate task scheduling due to multiple dependencies
+    // TODO: storing an entire HashMap / HashSet seems inefficient - consider removing _parent field: see below
+
+    /*
+        Move processor, start time and task information to ScheduledTask object, and set the value of the
+        _scheduleMap to be this object instead of the entire PartialSchedule object, as this will let the JVM garbage
+        collect PartialSchedule instances which are no longer needed. For the output generation, then, the
+        _scheduleMap would be iterated through.
+     */
+
+    // Protects against duplicate task scheduling due to multiple dependencies
+    private HashSet<Vertex> _toSchedule;
 
     // Maps the label of a Vertex to the PartialSchedule object where it was initially scheduled. Used in extend() to
     // query the end times of the dependencies of a task being scheduled.
@@ -34,6 +47,8 @@ public class PartialSchedule {
      * @param numProcessors Number of processors that the tasks are being scheduled on.
      */
     public PartialSchedule(Graph dependencyGraph, int numProcessors) {
+
+        _dependencyGraph = dependencyGraph;
 
         _parent = null;
         _processorEndTimes = new int[numProcessors];
@@ -64,6 +79,7 @@ public class PartialSchedule {
     private PartialSchedule(PartialSchedule parent, int processor, int startTime, Vertex task,
                             List<String> processorStrings) {
 
+        _dependencyGraph = parent._dependencyGraph;
         _parent = parent;
 
         _processorEndTimes = parent._processorEndTimes.clone();
@@ -101,7 +117,7 @@ public class PartialSchedule {
         return _toSchedule.size() == 0;
     }
 
-    public int getCost() {
+    public int getFinishTime() {
         return Arrays.stream(_processorEndTimes).max().getAsInt();
     }
 
@@ -112,10 +128,9 @@ public class PartialSchedule {
     /**
      * Extends this PartialSchedule by creating all of its possible children PartialSchedules. This is done by iterating
      * through the topological order of the dependency graph, where one 'layer' is processed per call of this method.
-     * @param dependencyGraph The Graph object encoding the dependencies between the tasks
      * @return The list of newly created PartialSchedules.
      */
-    public List<PartialSchedule> extend(Graph dependencyGraph) {
+    public List<PartialSchedule> extend() {
 
         List<PartialSchedule> partialSchedules = new ArrayList<PartialSchedule>();
         for (Vertex task : _toSchedule) {
@@ -134,7 +149,7 @@ public class PartialSchedule {
                             // Do nothing as this start time would have to be <= processor end time
                         } else {
                             int tempStartTime = dSchedule._startTime + dependency.getCost() +
-                                    dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                                    _dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
                             pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
                         }
 
