@@ -66,6 +66,8 @@ public class PartialSchedule {
         _toSchedule = new HashSet<Vertex>();
         _toSchedule.add(dependencyGraph.getRoot());
 
+        _scheduleMap = new HashMap<String, PartialSchedule>();
+
     }
 
     /**
@@ -83,25 +85,29 @@ public class PartialSchedule {
         _parent = parent;
 
         _processorEndTimes = parent._processorEndTimes.clone();
-        _processorEndTimes[processor-1] = startTime + task.getCost();  // Update processor end time
+        _processorEndTimes[processor] = startTime + task.getCost();  // Update processor end time
 
         _processor = processor;
         _startTime = startTime;
         _task = task;
 
-        _toSchedule = new HashSet<Vertex>(parent._toSchedule);
-        _toSchedule.remove(task);
-        _toSchedule.addAll(task.getOutgoingVertices());
-
         _scheduleMap = new HashMap<String, PartialSchedule>(parent._scheduleMap);
         _scheduleMap.put(task.getId(), this);
+
+        _toSchedule = new HashSet<Vertex>(parent._toSchedule);
+        _toSchedule.remove(task);
+        for (Vertex child : task.getOutgoingVertices()) {
+            if (allDependenciesScheduled(child)) {  // only schedule task when all dependencies scheduled
+                _toSchedule.add(child);
+            }
+        }
 
         _processorStrings = processorStrings;
 
     }
 
     /**
-     * Returns the parent of this PartialScheule
+     * Returns the parent of this PartialSchedule
      * @return Parent PartialSchedule instance
      */
     public PartialSchedule getParent() {
@@ -130,46 +136,41 @@ public class PartialSchedule {
 
         List<PartialSchedule> partialSchedules = new ArrayList<PartialSchedule>();
         for (Vertex task : _toSchedule) {
-            if (allDependenciesScheduled(task)) {
 
-                // TODO: This is overall pretty inefficient (nested loops), and could do with some optimising in future.
+            // TODO: This is overall pretty inefficient (nested loops), and could do with some optimising in future.
 
-                HashSet<HashSet<String>> processorStringsSet = new HashSet<HashSet<String>>();
-                for (int i = 0; i < _processorEndTimes.length; i++) {  // Loop through each processor
+            HashSet<HashSet<String>> processorStringsSet = new HashSet<HashSet<String>>();
+            for (int i = 0; i < _processorEndTimes.length; i++) {  // Loop through each processor
 
-                    int pEarliestStartTime = _processorEndTimes[i];
-                    for (Vertex dependency : task.getIncomingVertices()) {
+                int pEarliestStartTime = _processorEndTimes[i];
+                for (Vertex dependency : task.getIncomingVertices()) {
 
-                        PartialSchedule dSchedule = _scheduleMap.get(dependency.getId());
-                        if (dSchedule._processor == i) {
-                            // Do nothing as this start time would have to be <= processor end time
-                        } else {
-                            int tempStartTime = dSchedule._startTime + dependency.getCost() +
-                                    _dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
-                            pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
-                        }
-
-                    }
-
-                    // TODO: come up with more unique separator character ('?' *may* be used as a label for a vertex)
-                    List<String> processorStrings = new ArrayList<String>(this._processorStrings);
-                    processorStrings.set(i, processorStrings.get(i) + task.getId() + "?" + pEarliestStartTime);
-
-                    HashSet<String> processorStringSet = new HashSet<String>(processorStrings);
-
-                    if (!processorStringsSet.contains(processorStringSet)) {
-                        // No duplicate of this PartialSchedule exists
-                        processorStringsSet.add(new HashSet<String>(processorStrings));
-                        partialSchedules.add(new PartialSchedule(this, i, pEarliestStartTime, task,
-                                processorStrings));
+                    PartialSchedule dSchedule = _scheduleMap.get(dependency.getId());
+                    if (dSchedule._processor == i) {
+                        // Do nothing as this start time would have to be <= processor end time
+                    } else {
+                        int tempStartTime = dSchedule._startTime + dependency.getCost() +
+                                _dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                        pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
                     }
 
                 }
 
-            } else {
-                // Task will get added again to _toSchedule once its dependency has been processed
-                _toSchedule.remove(task);
+                // TODO: come up with more unique separator character ('?' *may* be used as a label for a vertex)
+                List<String> processorStrings = new ArrayList<String>(this._processorStrings);
+                processorStrings.set(i, processorStrings.get(i) + task.getId() + "?" + pEarliestStartTime);
+
+                HashSet<String> processorStringSet = new HashSet<String>(processorStrings);
+
+                if (!processorStringsSet.contains(processorStringSet)) {
+                    // No duplicate of this PartialSchedule exists
+                    processorStringsSet.add(new HashSet<String>(processorStrings));
+                    partialSchedules.add(new PartialSchedule(this, i, pEarliestStartTime, task,
+                            processorStrings));
+                }
+
             }
+
         }
 
         return partialSchedules;
