@@ -31,7 +31,7 @@ public class DfsBranchAndBound {
         //while stack is not empty:
         while (!stack.isEmpty()){
             //    Pop partial schedule off of stack and name curr_schedule
-            PartialSchedule currentSchedule = stack.get(stack.size()-1);
+            PartialSchedule currentSchedule = stack.remove(stack.size()-1);
             //    Get cost of curr_schedule as curr_cost
             int currentFinishTime = currentSchedule.getFinishTime();
             //    if curr_cost < lowest_cost:
