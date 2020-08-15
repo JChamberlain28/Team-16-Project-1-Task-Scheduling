@@ -123,6 +123,26 @@ public class PartialSchedule {
         return _toSchedule.size() == 0;
     }
 
+    public int[] getProcessorEndTimes() {
+        return _processorEndTimes;
+    }
+
+    public int getProcessor() {
+        return _processor;
+    }
+
+    public int getStartTime() {
+        return _startTime;
+    }
+
+    public Vertex getTask() {
+        return _task;
+    }
+
+    public PartialSchedule getPartialSchedule(Vertex task) {
+        return _scheduleMap.get(task.getId());
+    }
+
     public int getFinishTime() {
         return Arrays.stream(_processorEndTimes).max().getAsInt();
     }
