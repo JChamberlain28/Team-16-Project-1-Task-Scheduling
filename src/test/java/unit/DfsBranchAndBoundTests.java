@@ -39,7 +39,22 @@ public class DfsBranchAndBoundTests {
     public void producesSchedule() {
 
         DfsBranchAndBound algo = new DfsBranchAndBound(dependencyGraph, 8);
-        Assert.assertNotNull(algo.findOptimalSchedule());
+        PartialSchedule schedule = algo.findOptimalSchedule();
+        Assert.assertNotNull(schedule);
+
+
+// for debug to show the schedule
+//        while (schedule.getTask() != null){
+//            System.out.println("ID: " + schedule.getTask().getId() + " Processor: " + (schedule.getProcessor() +1) + " Start Time: " + schedule.getStartTime()
+//            + " Cost: " + schedule.getTask().getCost());
+//
+//            schedule = schedule.getParent();
+//
+//
+//        }
+
+
+
 
     }
 
