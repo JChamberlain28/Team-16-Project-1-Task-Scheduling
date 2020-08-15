@@ -1,5 +1,6 @@
 package unit;
 
+import algorithm.BruteForceAlgorithm;
 import algorithm.DfsBranchAndBound;
 import algorithm.PartialSchedule;
 import graph.Graph;
@@ -53,8 +54,19 @@ public class DfsBranchAndBoundTests {
 //
 //        }
 
+    }
 
+    @Test
+    public void producesOptimalSchedule() {
 
+        // Assumes brute force algorithm is correct
+
+        int optimalEndTime = (new BruteForceAlgorithm(dependencyGraph, 8))
+                .findOptimalSchedule()
+                .getFinishTime();
+        Assert.assertEquals(optimalEndTime, (new DfsBranchAndBound(dependencyGraph, 8)
+                .findOptimalSchedule()
+                .getFinishTime()));
 
     }
 
