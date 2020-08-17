@@ -15,19 +15,10 @@ public class Main {
     public static void main(String[] args) {
 
         CliParser cliparser = CliParser.getCliParserInstance();
-
-        String[] argsInput = {"digraph2.dot", "t"};
-
-        cliparser.UI(argsInput);
-
-        System.out.println(cliparser.getCliParserInstance().getFilePathName());
-        System.out.println(cliparser.getCliParserInstance().getNumberOfCores());
-        System.out.println(cliparser.getCliParserInstance().getNumberOfProcessors());
-        System.out.println(cliparser.getCliParserInstance().getOutputFileName());
-        System.out.println(cliparser.getCliParserInstance().isVisualisationDisplay());
+        cliparser.UI(args);
 
 
-       /* // get directory of jar
+        // get directory of jar
         CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
         File runnableJar = null;
 
@@ -43,7 +34,7 @@ public class Main {
         UnoptimalAlgo ua = new UnoptimalAlgo();
         ua.computeSchedule(graph);
 
-        OutputGenerator.generate(graph, "sampleFile", jarDir);*/
+        OutputGenerator.generate(graph, "sampleFile", jarDir);
 
 
 

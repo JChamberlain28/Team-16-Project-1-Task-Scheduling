@@ -1,6 +1,4 @@
-package test;
-
-
+package unit;
 
 
 import static org.junit.Assert.assertEquals;
@@ -14,12 +12,12 @@ import org.junit.Test;
 
 
 
-public class cliparsingTest {
+public class CliParsingTesting {
 
 /*
 *
-*       only these two matter
-*     private String filePathName;
+*   only these two matter
+*   private String filePathName;
     private int numberOfProcessors;
     *
     *
