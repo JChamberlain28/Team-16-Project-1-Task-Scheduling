@@ -24,9 +24,15 @@ public class InputParser {
             File file = new File(dir + File.separator + fileName);
             bufferReader = new BufferedReader(new FileReader(file));
 
-            String line = bufferReader.readLine(); // need to remove first line somehow.
 
-            while ((line = bufferReader.readLine()) != null) {
+
+            String line = bufferReader.readLine();
+            //remove all lines until it finds the last line of the title
+            while (!line.contains("[Weight=")) {
+                line = bufferReader.readLine();
+            }
+
+            while (line!= null) {
 
                 // end of file
                 if (line.substring(0, 1).equals("}")) {
@@ -87,8 +93,7 @@ public class InputParser {
                 } else { // end of file
                     System.out.println("end of file or GG");
                 }
-
-
+                line = bufferReader.readLine();
             }
 
         } catch (IOException e) {
