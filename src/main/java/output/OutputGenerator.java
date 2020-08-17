@@ -14,11 +14,11 @@ public class OutputGenerator {
      */
     public static void generate(Graph graph, String fileName, String dir) {
 
-        String path = dir + File.separator + fileName; //TODO: we should put .dot if not there
+        String path = dir + File.separator + fileName;
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now
-            out.write("digraph \"" + fileName + "\" {");
+            out.write("digraph \"" + fileName.substring(0, fileName.length()-4) + "\" {");
             out.newLine();
 
             for (Vertex v : graph.getVertices()) {

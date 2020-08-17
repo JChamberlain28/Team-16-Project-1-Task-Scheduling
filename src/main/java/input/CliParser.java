@@ -8,9 +8,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
 
-
 import org.apache.commons.cli.*;
-
 
 public class CliParser {
 

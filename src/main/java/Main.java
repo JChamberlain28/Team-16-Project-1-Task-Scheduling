@@ -14,9 +14,10 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        CliParser cliparser = CliParser.getCliParserInstance();
-        cliparser.UI(args);
+        String[] argsInput = {"digraph2.dot", "2"};
 
+        CliParser cliparser = CliParser.getCliParserInstance();
+        cliparser.UI(argsInput);
 
         // get directory of jar
         CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
@@ -27,19 +28,15 @@ public class Main {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
         String jarDir = runnableJar.getParentFile().getPath();
 
-        Graph graph = InputParser.readInput("digraph2.dot", jarDir);
+        Graph graph = InputParser.readInput(cliparser.getFilePathName(), jarDir);
 
         UnoptimalAlgo ua = new UnoptimalAlgo();
         ua.computeSchedule(graph);
 
-        OutputGenerator.generate(graph, "sampleFile", jarDir);
-
-
-
-
-
+        OutputGenerator.generate(graph, cliparser.getOutputFileName(), jarDir);
 
     }
 }
