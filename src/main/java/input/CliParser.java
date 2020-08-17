@@ -16,6 +16,7 @@ public class CliParser {
 
 
     private static final CliParser CliParsedInputs = new CliParser();
+
     private String filePathName;
     private int numberOfProcessors;
     private int numberOfCores;
@@ -94,8 +95,6 @@ public class CliParser {
 
     private void parseCli(String[] args) {
 
-
-
         // method to make new output file name should be added
         CliParsedInputs.numberOfCores = 1;  //default number of cores
         CliParsedInputs.outputFileName = "output.dot"; //default output name
@@ -109,7 +108,7 @@ public class CliParser {
             } else {
                 //throw exception here?
                 System.err.println("Invalid file path name");
-                //throw new IllegalArgumentException("Invalid file path name");
+                throw new IllegalArgumentException("Invalid file path name");
             }
 
             // number of processors
@@ -117,16 +116,14 @@ public class CliParser {
                 CliParsedInputs.numberOfProcessors = Integer.parseInt(args[1]);
             } else {
                 System.err.println("Invalid number of processors");
-                //throw new IllegalArgumentException("Invalid number of processors");
+                throw new IllegalArgumentException("Invalid number of processors");
             }
-
-
 
 
         } else {
             // does not have minimum number of args.
             System.err.println("0 arguments");
-            //throw new IllegalArgumentException("0 arguments");
+            throw new IllegalArgumentException("0 arguments");
         }
 
 
@@ -230,7 +227,7 @@ public class CliParser {
 
     private Options createOptions(){
 
-        Options createdOptions = createOptions();
+        Options createdOptions = new Options();
 
         Option numberOfCoresOption =    OptionBuilder.hasArgs(1)
                 .withArgName("number of cores")

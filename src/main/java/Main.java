@@ -14,8 +14,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        CliParser cliparser = new CliParser();
-        cliparser.UI(args);
+        CliParser cliparser = CliParser.getCliParserInstance();
+
+        String[] argsInput = {"digraph2.dot", "t"};
+
+        cliparser.UI(argsInput);
 
         System.out.println(cliparser.getCliParserInstance().getFilePathName());
         System.out.println(cliparser.getCliParserInstance().getNumberOfCores());
