@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.apache.commons.cli-1.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/org.apache.commons.cli-1.2.0.jar/org.apache.commons.cli-1.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
