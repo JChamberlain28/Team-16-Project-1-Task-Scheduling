@@ -2,6 +2,22 @@ plugins {
     id 'java'
 }
 
+jar {
+
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                'Main-Class': 'Main'
+        )
+    }
+
+    classifier = 'all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 group 'org.example'
 version '1.0-SNAPSHOT'
 
