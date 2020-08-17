@@ -42,19 +42,15 @@ public class Graph {
      * incoming edges, and should only be called once the Graph has been fully constructed.
      * @return Root Vertex of the graph
      */
-    public Vertex getRoot() {
+    public List<Vertex> getRoots() {
         // TODO: May need optimising in future.
-        Vertex root = null;
+        List<Vertex> roots = new ArrayList<Vertex>();
         for (Vertex v : _vertexMap.values()) {
             if (v.getIncomingVertices().size() == 0) {
-                if (root != null) {
-                    throw new RuntimeException("More than one root candidate!");
-                } else {
-                    root = v;
-                }
+                roots.add(v);
             }
         }
-        return root;
+        return roots;
     }
 
     /**

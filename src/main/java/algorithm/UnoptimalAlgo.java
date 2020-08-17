@@ -17,14 +17,12 @@ public class UnoptimalAlgo {
     public void computeSchedule(Graph graph){
 
         Set<String> visitedVertexLabels = new HashSet<String>();
-        Vertex root = graph.getRoot();
 
         int currentStartTime = 0;
 
         Set<String> visitedIds = new HashSet<>();
         List<Vertex> queue = new ArrayList<Vertex>();
-
-        queue.add(root);
+        queue.addAll(graph.getRoots());
 
         while (queue.size() > 0){ // while there is a vertex in the queue
             // pop first vertex

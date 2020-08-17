@@ -53,13 +53,12 @@ public class InputParser {
 
                     //split the childAndParentVertexID into child and parent vertex id
                     // in form: child vertex id,  parent vertex id
-                    String[] childAndParentVertexIDSplit = childAndParentVertexID.split(">");
+                    String[] childAndParentVertexIDSplit = childAndParentVertexID.split("->");
 
                     // find vertex id of child and parent
                     String parentVertexID = childAndParentVertexIDSplit[0];
-                    parentVertexID = parentVertexID.replaceAll("[^A-Za-z0-9 -]", "");
+                    System.out.println(parentVertexID);
                     String childVertexID = childAndParentVertexIDSplit[1];
-                    childVertexID = childVertexID.replaceAll("[^A-Za-z0-9 -]", "");
 
                     // find edge weight
                     edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
@@ -77,7 +76,6 @@ public class InputParser {
 
                     // find vertex id
                     String vertexID = lineSplit[0];
-                    vertexID = vertexID.replaceAll("[^A-Za-z0-9 -]", "");
 
                     // find vertex weight
                     String vertexWeight = lineSplit[1];
@@ -88,7 +86,6 @@ public class InputParser {
                     // and then add to the graph.
                     Vertex graphVertex = new Vertex(vertexID, vertexWeightInt);
                     algoGraph.addVertex(vertexID, graphVertex);
-
 
                 } else { // end of file
                     System.out.println("end of file or GG");

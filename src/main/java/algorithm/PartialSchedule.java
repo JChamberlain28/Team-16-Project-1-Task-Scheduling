@@ -64,7 +64,7 @@ public class PartialSchedule {
         }
 
         _toSchedule = new HashSet<Vertex>();
-        _toSchedule.add(dependencyGraph.getRoot());
+        _toSchedule.addAll(dependencyGraph.getRoots());
 
         _scheduleMap = new HashMap<String, PartialSchedule>();
 
