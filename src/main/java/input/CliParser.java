@@ -142,7 +142,6 @@ public class CliParser {
                 if (checkValidStringInt(numberOfCoresInput)) {
                     CliParsedInputs.numberOfCores = Integer.parseInt(numberOfCoresInput);
                 }else{
-
                     //throw new IllegalArgumentException("invalid number of cores");
                 }
             }
