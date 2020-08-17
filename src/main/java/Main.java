@@ -1,6 +1,7 @@
 import algorithm.UnoptimalAlgo;
 import graph.Graph;
 import graph.Vertex;
+import input.CliParser;
 import input.InputParser;
 import output.OutputGenerator;
 
@@ -12,6 +13,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+
+        CliParser cliparser = CliParser.getCliParserInstance();
+        cliparser.UI(args);
+
 
         // get directory of jar
         CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
@@ -30,6 +35,11 @@ public class Main {
         ua.computeSchedule(graph);
 
         OutputGenerator.generate(graph, "sampleFile", jarDir);
+
+
+
+
+
 
     }
 }
