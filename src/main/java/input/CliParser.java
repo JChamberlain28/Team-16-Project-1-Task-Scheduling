@@ -95,10 +95,7 @@ public class CliParser {
 
     private void parseCli(String[] args) {
 
-        // method to make new output file name should be added
-        CliParsedInputs.numberOfCores = 1;  //default number of cores
-        CliParsedInputs.outputFileName = "output.dot"; //default output name
-        CliParsedInputs.visualisationDisplay = false;  // default visualisation boolean (true or false)
+
 
 
         // input format is such that first two args are given without options
@@ -126,6 +123,12 @@ public class CliParser {
             throw new IllegalArgumentException("0 arguments");
         }
 
+
+        // method to make new output file name should be added
+        CliParsedInputs.numberOfCores = 1;  //default number of cores
+        String defaultOutputFileName =  ( CliParsedInputs.filePathName +  "−output.dot" );
+        CliParsedInputs.outputFileName = defaultOutputFileName; //default output name
+        CliParsedInputs.visualisationDisplay = false;  // default visualisation boolean (true or false)
 
 
         try {

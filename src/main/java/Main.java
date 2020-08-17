@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-
+        String[] argsInput = {"digraph2.dot", "2"};
         CliParser cliparser = CliParser.getCliParserInstance();
         cliparser.UI(args);
 
