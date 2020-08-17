@@ -124,7 +124,8 @@ public class CliParser {
 
         // method to make new output file name should be added
         CliParsedInputs.numberOfCores = 1;  //default number of cores
-        String defaultOutputFileName =  ( CliParsedInputs.filePathName +  "-output.dot" );
+        String fileName = CliParsedInputs.filePathName;
+        String defaultOutputFileName =  ( fileName.replaceAll(".dot$", "") +  "-output.dot" );
         CliParsedInputs.outputFileName = defaultOutputFileName; //default output name
         CliParsedInputs.visualisationDisplay = false;  // default visualisation boolean (true or false)
 

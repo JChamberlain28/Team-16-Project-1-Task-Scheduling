@@ -18,7 +18,7 @@ public class OutputGenerator {
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now
-            out.write("digraph \"" + fileName.substring(0, fileName.length()-4) + "\" {");
+            out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");
             out.newLine();
 
             for (Vertex v : graph.getVertices()) {
