@@ -24,10 +24,9 @@ public class InputParser {
             File file = new File(dir + File.separator + fileName);
             bufferReader = new BufferedReader(new FileReader(file));
 
-
-
             String line = bufferReader.readLine();
-            //remove all lines until it finds the last line of the title
+            // Remove all lines until it finds the last line of the title,
+            // which is the first line with a vertex.
             while (!line.contains("[Weight=")) {
                 line = bufferReader.readLine();
             }
