@@ -40,7 +40,7 @@ public class CliParser {
     public void UI(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("Error: No arguments provided. " +
-                    "Please enter a valid filename and number of processors in the format: " +
+                    "Please enter a valid filename and number of processors in the format: \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
         else {
@@ -84,7 +84,7 @@ public class CliParser {
         } else {
             // does not have minimum number of args.
             throw new IllegalArgumentException("Error: Required arguments are missing." +
-                    " Please enter a valid filename and number of processors in the format: " +
+                    " Please enter a valid filename and number of processors in the format: \n" +
                      "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
@@ -169,13 +169,13 @@ public class CliParser {
             line = parser.parse(cliOptions, optionArguments);
         } catch(Exception e) {
             throw new IllegalArgumentException( "Error: " + e.getMessage() +
-                   ". Please enter valid options and valid arguments in the format " +
+                   ". Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
         // too many args have been provided
         if (line.getArgList().size() > 2){
-            throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format " +
+            throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
@@ -193,23 +193,9 @@ public class CliParser {
 
         Options createdOptions = new Options();
 
-        Option numberOfCoresOption =    OptionBuilder.hasArgs(1)
-                .withArgName("number of cores")
-                .withDescription("Number of cores for execution in parallel")
-                .create("p");
-
-        Option visualisationOption = OptionBuilder
-                .withDescription("Visualisation of the search")
-                .create("v");
-
-        Option outputOption = OptionBuilder.hasArgs(1)
-                .withArgName("output file name")
-                .withDescription("The output file name")
-                .create("o");
-
-        createdOptions.addOption(numberOfCoresOption);
-        createdOptions.addOption(visualisationOption);
-        createdOptions.addOption(outputOption);
+        createdOptions.addOption("p", true, "Number of cores for execution in parallel");
+        createdOptions.addOption("v", false, "Boolean for visualisation of the search");
+        createdOptions.addOption("o", true, "The output file name");
 
         return createdOptions;
     }
