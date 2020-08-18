@@ -49,3 +49,4 @@ Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.
 
 
 ## Helpful Links
+[Wiki](/wiki/Home.md)
