@@ -51,9 +51,6 @@ public class CliParser {
         }
     }
 
-
-
-
     // Method will parse and check the inputs are valid.
     // options are also  check for.
     private void parseCli(String[] args) {
@@ -102,7 +99,6 @@ public class CliParser {
         // default visualisation boolean (true or false)
         _CliParsedInputs._visualisationDisplay = false;
 
-
             // Detect and parse all command line arg options flags
             CommandLine commandLineParsed = parseOptionArguments(args);
 
@@ -135,9 +131,6 @@ public class CliParser {
                 }
             }
 
-
-
-
     }
 
     /* Method to check if input visualisation boolean is valid.
@@ -151,7 +144,6 @@ public class CliParser {
     public static boolean checkValidFileName(String fileName){
         return (fileName.endsWith(".dot"));
     }
-
 
     /* Method to check if input integer is valid.
      */
@@ -167,7 +159,6 @@ public class CliParser {
         }
 
     }
-
 
     private CommandLine parseOptionArguments(String[] optionArguments) {
         Options cliOptions = createOptions();
@@ -190,9 +181,6 @@ public class CliParser {
 
         return line;
     }
-
-
-
 
     /*
      * Method to create the additional options that may be supplied to the command line.
@@ -219,19 +207,12 @@ public class CliParser {
                 .withDescription("The output file name")
                 .create("o");
 
-
         createdOptions.addOption(numberOfCoresOption);
         createdOptions.addOption(visualisationOption);
         createdOptions.addOption(outputOption);
 
         return createdOptions;
     }
-
-
-
-
-
-
 
     // Getter to return the CliParser object that contains the parsed command line inputs
     public static CliParser getCliParserInstance(){
@@ -254,7 +235,5 @@ public class CliParser {
     public int getNumberOfCores(){
         return _numberOfCores;
     }
-
-
 
 }

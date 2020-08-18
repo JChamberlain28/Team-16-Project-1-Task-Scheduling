@@ -22,6 +22,7 @@ public class OutputGenerator {
             out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");
             out.newLine();
 
+            // Add all vertices to .dot file
             for (Vertex v : graph.getVertices()) {
 
                 // Vertex format: a [ Weight=2, Start=0, Processor=1];
@@ -30,6 +31,7 @@ public class OutputGenerator {
                 out.write("\t" + vString);
                 out.newLine();
 
+                // Add all incoming edges to .dot file
                 for (Vertex other : v.getIncomingVertices()) {
 
                     // Edge format: a −> b [ Weight=1 ];
