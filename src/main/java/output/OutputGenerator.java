@@ -2,6 +2,7 @@ package output;
 
 import graph.Graph;
 import graph.Vertex;
+import util.FilenameMethods;
 
 import java.io.*;
 
@@ -12,9 +13,9 @@ public class OutputGenerator {
      * @param graph Graph object describing the task dependencies
      * @param fileName Name of file to write to ([fileName].dot)
      */
-    public static void generate(Graph graph, String fileName, String dir) {
-
-        String path = dir + File.separator + fileName;
+    public static void generate(Graph graph, String fileName) {
+        String dir = FilenameMethods.getDirectoryOfJar();
+        String path = (dir + File.separator + fileName);
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now

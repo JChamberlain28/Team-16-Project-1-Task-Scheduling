@@ -2,6 +2,7 @@ package input;
 
 import graph.Graph;
 import graph.Vertex;
+import util.FilenameMethods;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,15 +16,17 @@ import java.io.IOException;
  * */
 public class InputParser {
 
-
-    public static Graph readInput(String fileName, String dir) {
+    public static Graph readInput(String fileName) {
 
         Graph algoGraph = new Graph("newGraph");
         int edgeCount = 0;
 
         BufferedReader bufferReader = null;
-        try {
-            File file = new File(dir + File.separator + fileName);
+
+        String dir = FilenameMethods.getDirectoryOfJar();
+        File file = new File(dir + File.separator + fileName);
+
+            try {
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine();
@@ -88,8 +91,9 @@ public class InputParser {
                     Vertex graphVertex = new Vertex(vertexID, vertexWeightInt);
                     algoGraph.addVertex(vertexID, graphVertex);
 
-                } else { // end of file
-                    System.out.println("end of file or GG");
+                } else {
+                    throw new IllegalArgumentException("Error: Input '.dot' file is not a valid graph. " +
+                            "The input dot file should be valid.");
                 }
                 line = bufferReader.readLine();
             }
@@ -100,7 +104,9 @@ public class InputParser {
         } finally {
 
             try {
-                bufferReader.close();
+
+                    bufferReader.close();
+
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 return null;

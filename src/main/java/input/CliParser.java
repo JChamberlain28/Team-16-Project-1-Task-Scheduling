@@ -1,6 +1,14 @@
 package input;
 
+import graph.Graph;
 import org.apache.commons.cli.*;
+import util.FilenameMethods;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+
 /*
  * The CliParser class will parse the command line arguments and store the
  * required values and options inside an object. This object is then used throughout
@@ -42,6 +50,9 @@ public class CliParser {
         }
     }
 
+
+
+
     // Method will parse and check the inputs are valid.
     // options are also  check for.
     private void parseCli(String[] args) {
@@ -52,6 +63,13 @@ public class CliParser {
             // Checking valid input file name.
             if (checkValidFileName(args[0])) {
                 _CliParsedInputs._filePathName = args[0]; // File path
+                String dir = FilenameMethods.getDirectoryOfJar();
+
+                File file = new File(dir + File.separator + _CliParsedInputs._filePathName);
+                if (!file.exists()) {
+                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name");
+                }
+
             } else {
                 throw new IllegalArgumentException("Error: Invalid file path name. Please provide a valid file " +
                         "name with the full '.dot' extension included.");
@@ -168,7 +186,7 @@ public class CliParser {
                 // do something else
             }
         } catch(Exception e) {
-            e.getMessage(); /////////////////%%%%%%%%%
+            e.getMessage();
         }
 
         // too many args
@@ -214,6 +232,10 @@ public class CliParser {
 
         return createdOptions;
     }
+
+
+
+
 
 
 
