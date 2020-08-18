@@ -10,7 +10,8 @@
 | Saad Siddiqui               | msid633       | [Saad-Siddiqui27](http://github.com/Saad-Siddiqui27) |
 
 ## Helpful Links
-* [Meeting Minutes](Meeting-Minutes.md)
 * [Software Architecture](Software-Architecture.md)
 * [Schedule Representation](Schedule-Representation.md)
 * [Project Plan](Project-Plan.md)
+* [How to use](How-to-use.md)
+* [Meeting Minutes](Meeting-Minutes.md)
