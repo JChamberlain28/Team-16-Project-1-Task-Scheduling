@@ -4,8 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+* Graph implementation to store the data in the ".dot" file.
+* This class is instantiated in the cli parser.
+* the and called with the algorithm.
+*
+* */
 public class Graph {
 
+    // fields of the graph object.
     private String _name;
     private HashMap<String, Vertex> _vertexMap;
     private HashMap<String, HashMap<String, Integer>> _edgeMap;
@@ -25,14 +32,17 @@ public class Graph {
         return _vertexMap.get(id);
     }
 
+    // check if there exists a specified vertex.
     public boolean hasVertex(String id) {
         return _vertexMap.containsKey(id);
     }
 
+    // get edge weight given vertex 1 to 2.
     public int getEdgeWeight(String from, String to) {
         return _edgeMap.get(from).get(to);
     }
 
+    // check if there exists a directed edge from vertex 1 to 2.
     public boolean hasEdge(String from, String to) {
         return _edgeMap.containsKey(from) && _edgeMap.get(from).containsKey(to);
     }
@@ -72,14 +82,13 @@ public class Graph {
     }
 
 
+    // Getters for graph object.
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(_vertexMap.values());
     }
-
     public String getName() {
         return _name;
     }
-
     public int getNoOfVertices() {
         return _vertexMap.size();
     }

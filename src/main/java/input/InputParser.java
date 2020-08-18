@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/*
+ * The CliParser class will parse the specified input ".dot" file and store the
+ * given data as a graph representation.
+ * The graph object is then use throughout the program in the execution of the algorithm.
+ * */
 public class InputParser {
 
 
