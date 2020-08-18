@@ -40,8 +40,8 @@ public class CliParser {
     public void UI(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("Error: No arguments provided. " +
-                    "Please enter a valid filename and number of processors in the format: \n" +
-                    "java -jar <jar name> INPUT.dot P [-p N | -v | -o <output file name>]");
+                    "Please enter a valid filename and number of processors in the format: " +
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
         else {
 
@@ -80,13 +80,15 @@ public class CliParser {
             if ( checkValidStringInt(args[1])) {
                 _CliParsedInputs._numberOfProcessors = Integer.parseInt(args[1]);
             } else {
-                throw new IllegalArgumentException("Error: Invalid number of processors");
+                throw new IllegalArgumentException("Error: Invalid number of processors. " +
+                        "Please provide a valid number of processors");
             }
 
         } else {
             // does not have minimum number of args.
             throw new IllegalArgumentException("Error: Required arguments are missing." +
-                    " Please enter a valid filename and number of processors");
+                    " Please enter a valid filename and number of processors in the format: " +
+                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
         // In the case that options are not included, default values are set.
@@ -176,12 +178,14 @@ public class CliParser {
             line = parser.parse(cliOptions, optionArguments);
         } catch(Exception e) {
             throw new IllegalArgumentException( "Error: " + e.getMessage() +
-                   ". Please enter valid options and valid arguments");
+                   ". Please enter valid options and valid arguments in the format " +
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
         // too many args have been provided
         if (line.getArgList().size() > 2){
-            throw new IllegalArgumentException("too many arguments");
+            throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format " +
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
         return line;
