@@ -1,7 +1,7 @@
 # Welcome to the wiki for SOFTENG 306 Project 1 - Saadboys 16
 
 
-## Team members
+## Team Members
 | Name                        | UPI           | GitHub Name                                   |
 | ----------------------------|--------------| ---------------------------------------------|
 | Jack Chamberlain            | jcha928       | [JChamberlain28](http://github.com/JChamberlain28)  |
