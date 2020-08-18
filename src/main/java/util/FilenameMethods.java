@@ -9,7 +9,12 @@ import java.security.CodeSource;
 public class FilenameMethods {
 
 
+    /**
+     * Gets the directory of the executable jar file
+     * @return Directory of the jar file as a string
+     */
     public static String getDirectoryOfJar(){
+
         // get directory of jar
         CodeSource codeSource = FilenameMethods.class.getProtectionDomain().getCodeSource();
         File runnableJar = null;
@@ -20,8 +25,7 @@ public class FilenameMethods {
             e.printStackTrace();
         }
 
-        String jarDir = runnableJar.getParentFile().getPath();
-        return jarDir;
+        return runnableJar.getParentFile().getPath();
 
     }
 

@@ -104,9 +104,7 @@ public class InputParser {
         } finally {
 
             try {
-
-                    bufferReader.close();
-
+                bufferReader.close();
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 return null;

@@ -81,13 +81,15 @@ public class Graph {
     }
 
 
-    // Getters for graph object.
+    /* GETTERS */
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(_vertexMap.values());
     }
+
     public String getName() {
         return _name;
     }
+
     public int getNoOfVertices() {
         return _vertexMap.size();
     }
