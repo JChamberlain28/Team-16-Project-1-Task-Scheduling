@@ -61,7 +61,6 @@ public class InputParser {
 
                     // find vertex id of child and parent
                     String parentVertexID = childAndParentVertexIDSplit[0];
-                    System.out.println(parentVertexID);
                     String childVertexID = childAndParentVertexIDSplit[1];
 
                     // find edge weight
