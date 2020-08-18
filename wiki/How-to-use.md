@@ -1,3 +1,7 @@
+#How to use
+
+A short guide on how to clone, build and run our application!
+ 
 ## Compilation Instructions
 Required system packages (Linux):
 * gradle

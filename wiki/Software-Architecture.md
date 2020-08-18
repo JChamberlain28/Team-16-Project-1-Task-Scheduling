@@ -1,3 +1,5 @@
+## Software Architecture
+
 The overall architecture of our software consists of a selection of distinct modules which do not directly interact but instead are used in tandem by the main application scope. An exception is made for certain smaller modules, which are more for the purpose of providing a common 'language' for modules to communicate to the main application in, such as the Graph module.
 
 ## Implemented Modules
