@@ -1,6 +1,8 @@
 # Team: Saadboys   
-# project-1: Task Scheduling
-description of project
+
+# SOFTENG 306 Project 1: Task Scheduling
+A Java application which facilitates the creation of optimal schedulings of tasks.
+
 ## Team members
 | Name                        | UPI           | GitHub Name                                   |
 | ----------------------------|--------------| ---------------------------------------------|
