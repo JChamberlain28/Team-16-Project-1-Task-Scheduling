@@ -8,7 +8,6 @@ import java.util.List;
 * Graph implementation to store the data in the ".dot" file.
 * This class is instantiated in the cli parser.
 * the and called with the algorithm.
-*
 * */
 public class Graph {
 
