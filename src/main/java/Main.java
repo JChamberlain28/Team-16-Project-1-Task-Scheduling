@@ -15,9 +15,14 @@ public class Main {
     public static void main(String[] args) {
 
         String[] argsInput = {"digraph2.dot", "2"};
-
         CliParser cliparser = CliParser.getCliParserInstance();
-        cliparser.UI(argsInput);
+        try {
+            cliparser.UI(argsInput);
+        } catch ( IllegalArgumentException e ) {
+            // in the case that the input cannot be parsed the program is terminated.
+            System.err.println(e.getMessage());
+            return;
+        }
 
         // get directory of jar
         CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();

@@ -1,13 +1,5 @@
 package input;
 
-import algorithm.UnoptimalAlgo;
-import graph.Graph;
-import output.OutputGenerator;
-
-import java.io.*;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-
 import org.apache.commons.cli.*;
 /*
  * The CliParser class will parse the command line arguments and store the
@@ -18,16 +10,16 @@ import org.apache.commons.cli.*;
 public class CliParser {
 
     // object that stored parsed command line inputs
-    private static final CliParser CliParsedInputs = new CliParser();
+    private static final CliParser _CliParsedInputs = new CliParser();
 
     // parsed inputs from the command line
     // The inputs filePathName and numberOfProcessors are required inputs.
     // The inputs numberOfCores, outputFileName and visualisationDisplay are optional inputs
-    private String filePathName;
-    private int numberOfProcessors;
-    private int numberOfCores;
-    private String outputFileName;
-    private boolean visualisationDisplay;
+    private String _filePathName;
+    private int _numberOfProcessors;
+    private int _numberOfCores;
+    private String _outputFileName;
+    private boolean _visualisationDisplay;
 
     /*
      * Private Constructor preventing any other class from instantiating.
@@ -43,8 +35,10 @@ public class CliParser {
                     "Please enter a valid filename and number of processors");
         }
         else {
+
             // Parse the command line inputs and store them for use in the program.
             parseCli(args);
+
         }
     }
 
@@ -57,7 +51,7 @@ public class CliParser {
         if (args.length > 1) {
             // Checking valid input file name.
             if (checkValidFileName(args[0])) {
-                CliParsedInputs.filePathName = args[0]; // File path
+                _CliParsedInputs._filePathName = args[0]; // File path
             } else {
                 throw new IllegalArgumentException("Error: Invalid file path name. Please provide a valid file " +
                         "name with the full '.dot' extension included.");
@@ -65,7 +59,7 @@ public class CliParser {
 
             // Checking valid number of processors.
             if ( checkValidStringInt(args[1])) {
-                CliParsedInputs.numberOfProcessors = Integer.parseInt(args[1]);
+                _CliParsedInputs._numberOfProcessors = Integer.parseInt(args[1]);
             } else {
                 throw new IllegalArgumentException("Invalid number of processors");
             }
@@ -79,15 +73,15 @@ public class CliParser {
         // In the case that options are not included, default values are set.
 
         //default number of cores
-        CliParsedInputs.numberOfCores = 1;
+        _CliParsedInputs._numberOfCores = 1;
         // default output file name
-        String fileName = CliParsedInputs.filePathName;
+        String fileName = _CliParsedInputs._filePathName;
         String defaultOutputFileName =  ( fileName.replaceAll(".dot$", "") +  "-output.dot" );
-        CliParsedInputs.outputFileName = defaultOutputFileName;
+        _CliParsedInputs._outputFileName = defaultOutputFileName;
         // default visualisation boolean (true or false)
-        CliParsedInputs.visualisationDisplay = false;
+        _CliParsedInputs._visualisationDisplay = false;
 
-        try {
+
             // Detect and parse all command line arg options flags
             CommandLine commandLineParsed = parseOptionArguments(args);
 
@@ -96,7 +90,7 @@ public class CliParser {
                 String numberOfCoresInput = commandLineParsed.getOptionValue("p");
                 // Checking valid number of cores.
                 if (checkValidStringInt(numberOfCoresInput)) {
-                    CliParsedInputs.numberOfCores = Integer.parseInt(numberOfCoresInput);
+                    _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
                 }else{
                     throw new IllegalArgumentException("Error: invalid number of cores." +
                             " Please enter a valid number of cores.");
@@ -108,7 +102,7 @@ public class CliParser {
                 String visualisationDisplayInput = commandLineParsed.getOptionValue("v");
                 // Checking valid visualisation boolean.
                 if (checkValidBoolean(visualisationDisplayInput )){
-                    CliParsedInputs.visualisationDisplay = Boolean.parseBoolean(visualisationDisplayInput);
+                    _CliParsedInputs._visualisationDisplay = Boolean.parseBoolean(visualisationDisplayInput);
                 } else{
                     throw new IllegalArgumentException("Error: invalid input for visualisation." +
                             " Please enter a valid visualisation boolean (true or false).");
@@ -120,16 +114,13 @@ public class CliParser {
                 String outputFileNameInput = commandLineParsed.getOptionValue("o");
                 // Checking valid output file name.
                 if (checkValidFileName(outputFileNameInput)) {
-                    CliParsedInputs.outputFileName = outputFileNameInput;
+                    _CliParsedInputs._outputFileName = outputFileNameInput;
                 } else{
                     throw new IllegalArgumentException("Error: invalid output file name. " +
                             "Please provide a valid file name with the full '.dot' extension included.");
                 }
             }
 
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
 
 
 
@@ -177,7 +168,7 @@ public class CliParser {
                 // do something else
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            e.getMessage(); /////////////////%%%%%%%%%
         }
 
         // too many args
@@ -228,24 +219,24 @@ public class CliParser {
 
     // Getter to return the CliParser object that contains the parsed command line inputs
     public static CliParser getCliParserInstance(){
-        return CliParsedInputs;
+        return _CliParsedInputs;
     }
 
     // Getters for the parsed command line inputs.
     public String getFilePathName() {
-        return filePathName;
+        return _filePathName;
     }
     public int getNumberOfProcessors() {
-        return numberOfProcessors;
+        return _numberOfProcessors;
     }
     public String getOutputFileName() {
-        return outputFileName;
+        return _outputFileName;
     }
     public boolean isVisualisationDisplay() {
-        return visualisationDisplay;
+        return _visualisationDisplay;
     }
     public int getNumberOfCores(){
-        return numberOfCores;
+        return _numberOfCores;
     }
 
 

@@ -7,12 +7,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-
-import graph.Vertex;
-import graph.Graph;
 
 public class InputParser {
+
 
     public static Graph readInput(String fileName, String dir) {
 
@@ -93,13 +90,15 @@ public class InputParser {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
+            return null;
         } finally {
 
             try {
                 bufferReader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
+                return null;
             }
         }
 
