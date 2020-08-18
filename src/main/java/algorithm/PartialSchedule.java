@@ -27,13 +27,6 @@ public class PartialSchedule {
 
     // TODO: storing an entire HashMap / HashSet seems inefficient - consider removing _parent field: see below
 
-    /*
-        Move processor, start time and task information to ScheduledTask object, and set the value of the
-        _scheduleMap to be this object instead of the entire PartialSchedule object, as this will let the JVM garbage
-        collect PartialSchedule instances which are no longer needed. For the output generation, then, the
-        _scheduleMap would be iterated through.
-     */
-
     // Protects against duplicate task scheduling due to multiple dependencies
     private HashSet<Vertex> _toSchedule;
 
