@@ -3,8 +3,13 @@ package graph;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Vertex objects to store inside graph object.
+ * These represent the vertex objects of the input file graph and are used in the algorithm.
+ * */
 public class Vertex {
 
+    // Fields of the vertex object
     private String _id;
     private ArrayList<Vertex> incomingVertices;
     private ArrayList<Vertex> outgoingVertices;
@@ -14,14 +19,13 @@ public class Vertex {
     private int _cost;
 
     public Vertex(String id, int cost) {
-
         incomingVertices = new ArrayList<Vertex>();
         outgoingVertices = new ArrayList<Vertex>();
         _id = id;
         _cost = cost;
-
     }
 
+    // Adding incoming and outgoing vertices, used for efficiency in the algorithm.
     public void addIncomingVertex(Vertex incomingVertex){
         incomingVertices.add(incomingVertex);
     }
@@ -31,8 +35,7 @@ public class Vertex {
     }
 
 
-    /* GETTERS & SETTERS */
-
+    //Getters and setters for vertex fields
     public String getId() {
         return _id;
     }

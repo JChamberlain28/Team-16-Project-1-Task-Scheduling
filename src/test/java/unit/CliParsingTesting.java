@@ -49,14 +49,15 @@ public class CliParsingTesting {
 
         assertEquals("digraph2.dot", cliParser.getFilePathName());
         assertEquals(2, cliParser.getNumberOfProcessors());
-        assertEquals("output.dot",cliParser.getOutputFileName());
+        assertEquals("digraph2-output.dot",cliParser.getOutputFileName());
+
     }
 
 
     @Test
     public void testInvalidFileName() {
         try {
-            String[] argsInput = {"digraph2.dot2", "2"};
+            String[] argsInput = {"digraph2.dot", "2"};
 
 
             CliParser cliParser = CliParser.getCliParserInstance();

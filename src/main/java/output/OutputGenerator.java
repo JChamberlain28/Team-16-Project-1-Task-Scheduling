@@ -2,6 +2,7 @@ package output;
 
 import graph.Graph;
 import graph.Vertex;
+import util.FilenameMethods;
 
 import java.io.*;
 
@@ -12,15 +13,16 @@ public class OutputGenerator {
      * @param graph Graph object describing the task dependencies
      * @param fileName Name of file to write to ([fileName].dot)
      */
-    public static void generate(Graph graph, String fileName, String dir) {
-
-        String path = dir + File.separator + fileName; //TODO: we should put .dot if not there
+    public static void generate(Graph graph, String fileName) {
+        String dir = FilenameMethods.getDirectoryOfJar();
+        String path = (dir + File.separator + fileName);
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now
-            out.write("digraph \"" + fileName + "\" {");
+            out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");
             out.newLine();
 
+            // Add all vertices to .dot file
             for (Vertex v : graph.getVertices()) {
 
                 // Vertex format: a [ Weight=2, Start=0, Processor=1];
@@ -29,6 +31,7 @@ public class OutputGenerator {
                 out.write("\t" + vString);
                 out.newLine();
 
+                // Add all incoming edges to .dot file
                 for (Vertex other : v.getIncomingVertices()) {
 
                     // Edge format: a −> b [ Weight=1 ];

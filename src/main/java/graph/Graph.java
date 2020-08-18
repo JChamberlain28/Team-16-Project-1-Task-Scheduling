@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+* Graph implementation to store the data in the ".dot" file.
+* This class is instantiated in the cli parser.
+* the and called with the algorithm.
+* */
 public class Graph {
 
+    // fields of the graph object.
     private String _name;
     private HashMap<String, Vertex> _vertexMap;
     private HashMap<String, HashMap<String, Integer>> _edgeMap;
@@ -25,14 +31,17 @@ public class Graph {
         return _vertexMap.get(id);
     }
 
+    // check if there exists a specified vertex.
     public boolean hasVertex(String id) {
         return _vertexMap.containsKey(id);
     }
 
+    // get edge weight given vertex 1 to 2.
     public int getEdgeWeight(String from, String to) {
         return _edgeMap.get(from).get(to);
     }
 
+    // check if there exists a directed edge from vertex 1 to 2.
     public boolean hasEdge(String from, String to) {
         return _edgeMap.containsKey(from) && _edgeMap.get(from).containsKey(to);
     }
@@ -42,19 +51,15 @@ public class Graph {
      * incoming edges, and should only be called once the Graph has been fully constructed.
      * @return Root Vertex of the graph
      */
-    public Vertex getRoot() {
+    public List<Vertex> getRoots() {
         // TODO: May need optimising in future.
-        Vertex root = null;
+        List<Vertex> roots = new ArrayList<Vertex>();
         for (Vertex v : _vertexMap.values()) {
             if (v.getIncomingVertices().size() == 0) {
-                if (root != null) {
-                    throw new RuntimeException("More than one root candidate!");
-                } else {
-                    root = v;
-                }
+                roots.add(v);
             }
         }
-        return root;
+        return roots;
     }
 
     /**
@@ -76,6 +81,7 @@ public class Graph {
     }
 
 
+    /* GETTERS */
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(_vertexMap.values());
     }
