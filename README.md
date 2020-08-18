@@ -3,7 +3,7 @@
 # SOFTENG 306 Project 1: Task Scheduling
 A Java application which facilitates the creation of optimal schedulings of tasks.
 
-## Team members
+## Team Members
 | Name                        | UPI           | GitHub Name                                   |
 | ----------------------------|--------------| ---------------------------------------------|
 | Jack Chamberlain            | jcha928       | [JChamberlain28](http://github.com/JChamberlain28)  |
