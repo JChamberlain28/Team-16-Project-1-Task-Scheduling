@@ -84,6 +84,9 @@ public class InputParser {
                     algoGraph.addVertex(vertexID, graphVertex);
 
 
+
+
+
                 } else { // end of file
                     System.out.println("end of file or GG");
                 }
