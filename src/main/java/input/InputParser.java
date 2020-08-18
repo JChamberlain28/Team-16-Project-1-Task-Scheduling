@@ -35,14 +35,14 @@ public class InputParser {
             while (line!= null) {
 
                 // end of file
-                if (line.substring(0, 1).equals("}")) {
+                if (line.length()==1 && line.contains("}")) {
                     break;
                 }
 
                 line = line.trim();
                 line = line.replaceAll("\\s+", "");
 
-                if (line.contains(">")) { // edges
+                if (line.contains(">") && line.contains("[Weight=")) { // edges
 
                     //split the line into child and parent vertex id and edge weight
                     // in form: child and parent vertex id , edge weight
@@ -68,7 +68,7 @@ public class InputParser {
                     algoGraph.addEdge(parentVertexID, childVertexID, edgeWeightInt);
                     edgeCount++;
 
-                } else if (!line.contains(">")) { // nodes
+                } else if (!line.contains(">") && line.contains("[Weight=")) { // nodes
 
                     //split the line into vertex id and vertex weight
                     // in form: id , weight

@@ -49,7 +49,7 @@ public class CliParsingTesting {
 
         assertEquals("digraph2.dot", cliParser.getFilePathName());
         assertEquals(2, cliParser.getNumberOfProcessors());
-        assertEquals("output.dot",cliParser.getOutputFileName());
+        assertEquals("digraph2-output.dot",cliParser.getOutputFileName());
 
     }
 

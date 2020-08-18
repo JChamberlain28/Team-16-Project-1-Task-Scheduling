@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="unit.CliParsingTesting" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-08-18T00:53:26" hostname="DESKTOP-252OEPJ" time="0.017">
+  <properties/>
+  <testcase name="testInvalidNumberOfInputs" classname="unit.CliParsingTesting" time="0.006"/>
+  <testcase name="testInvalidNumberOfProcessorsNotInt" classname="unit.CliParsingTesting" time="0.001"/>
+  <testcase name="testInvalidNumberOfProcessors" classname="unit.CliParsingTesting" time="0.0"/>
+  <testcase name="testStandardInputs" classname="unit.CliParsingTesting" time="0.01"/>
+  <testcase name="testInvalidFileName" classname="unit.CliParsingTesting" time="0.0"/>
+  <system-out><![CDATA[SOFTENG306 Project 1
+group16 - Saddboys
+SOFTENG306 Project 1
+group16 - Saddboys
+SOFTENG306 Project 1
+group16 - Saddboys
+SOFTENG306 Project 1
+group16 - Saddboys
+SOFTENG306 Project 1
+group16 - Saddboys
+]]></system-out>
+  <system-err><![CDATA[0 arguments
+Invalid number of processors
+Invalid number of processors
+]]></system-err>
+</testsuite>
