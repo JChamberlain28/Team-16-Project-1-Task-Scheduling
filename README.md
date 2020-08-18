@@ -3,7 +3,7 @@
 description of project
 ## Team members
 | Name                        | UPI           | GitHub Name                                   |
-| ----------------------------|:-------------:| ---------------------------------------------:|
+| ----------------------------|:-------------:| :--------------------------------------------:|
 | Jack Chamberlain            | jcha928       |  [JChamberlain28](github.com/JChamberlain28)                                      |
 | Jackson Ayling-Campbell     | jayl164       |  [loldabigboi](github.com/loldabigboi) |
 | Daniel Hor                  | dhor051       |     |
