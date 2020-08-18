@@ -12,6 +12,6 @@ description of project
 ## Usage Instructions
 Please compile with IntelliJ 2020. Compatibility issues arise with IntelliJ 2019 and lower due to changes in Gradle module names.
 
-**To compile in intelliJ, please**
+** To compile in intelliJ, please **
 
 ## Helpful Links
