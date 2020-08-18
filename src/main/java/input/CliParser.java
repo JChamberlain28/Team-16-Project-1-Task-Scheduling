@@ -40,7 +40,8 @@ public class CliParser {
     public void UI(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("Error: No arguments provided. " +
-                    "Please enter a valid filename and number of processors");
+                    "Please enter a valid filename and number of processors in the format: \n" +
+                    "java -jar <jar name> INPUT.dot P [-p N | -v | -o <output file name>]");
         }
         else {
 
@@ -67,7 +68,7 @@ public class CliParser {
 
                 File file = new File(dir + File.separator + _CliParsedInputs._filePathName);
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name");
+                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
                 }
 
             } else {
@@ -79,7 +80,7 @@ public class CliParser {
             if ( checkValidStringInt(args[1])) {
                 _CliParsedInputs._numberOfProcessors = Integer.parseInt(args[1]);
             } else {
-                throw new IllegalArgumentException("Invalid number of processors");
+                throw new IllegalArgumentException("Error: Invalid number of processors");
             }
 
         } else {
@@ -107,7 +108,7 @@ public class CliParser {
             if (commandLineParsed.hasOption("p")) {
                 String numberOfCoresInput = commandLineParsed.getOptionValue("p");
                 // Checking valid number of cores.
-                if (checkValidStringInt(numberOfCoresInput)) {
+                if (numberOfCoresInput!=null && checkValidStringInt(numberOfCoresInput)) {
                     _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
                 }else{
                     throw new IllegalArgumentException("Error: invalid number of cores." +
@@ -117,21 +118,14 @@ public class CliParser {
 
             // option flag provided for visualisation.
             if (commandLineParsed.hasOption("v")) {
-                String visualisationDisplayInput = commandLineParsed.getOptionValue("v");
-                // Checking valid visualisation boolean.
-                if (checkValidBoolean(visualisationDisplayInput )){
-                    _CliParsedInputs._visualisationDisplay = Boolean.parseBoolean(visualisationDisplayInput);
-                } else{
-                    throw new IllegalArgumentException("Error: invalid input for visualisation." +
-                            " Please enter a valid visualisation boolean (true or false).");
-                }
+                _CliParsedInputs._visualisationDisplay = true;
             }
 
             // option flag provided for choosing an output file name.
             if (commandLineParsed.hasOption("o")) {
                 String outputFileNameInput = commandLineParsed.getOptionValue("o");
                 // Checking valid output file name.
-                if (checkValidFileName(outputFileNameInput)) {
+                if (outputFileNameInput!=null && checkValidFileName(outputFileNameInput)) {
                     _CliParsedInputs._outputFileName = outputFileNameInput;
                 } else{
                     throw new IllegalArgumentException("Error: invalid output file name. " +
@@ -180,19 +174,16 @@ public class CliParser {
         try {
             // args are the arguments passed to the the application via the main method
             line = parser.parse(cliOptions, optionArguments);
-            if (line.hasOption("output")){
-                //do something
-            } else if(line.hasOption("name")){
-                // do something else
-            }
         } catch(Exception e) {
-            e.getMessage();
+            throw new IllegalArgumentException( "Error: " + e.getMessage() +
+                   ". Please enter valid options and valid arguments");
         }
 
-        // too many args
+        // too many args have been provided
         if (line.getArgList().size() > 2){
             throw new IllegalArgumentException("too many arguments");
         }
+
         return line;
     }
 
@@ -215,8 +206,7 @@ public class CliParser {
                 .withDescription("Number of cores for execution in parallel")
                 .create("p");
 
-        Option visualisationOption = OptionBuilder.hasArgs(1)
-                .withArgName("search visualisation")
+        Option visualisationOption = OptionBuilder
                 .withDescription("Visualisation of the search")
                 .create("v");
 
