@@ -24,12 +24,12 @@ Then navigate to the  repository
 `` cd project-1-saadboys-16 ``
 
 ### Compile/Build the Project   
-Type the following to build the project and package it into a jar
+Type the following to build the project and package it into a jar   
 `` gradle fatJar ``
 
 If the build fails, ensure java is in the classpath and the JAVA_HOME varialble is set to the home directory of your java installation.   
 
-Navigate to the produced jar
+Navigate to the produced jar   
 `` cd ./build/libs ``
 
 ## Usage Instructions
