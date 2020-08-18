@@ -1,4 +1,4 @@
-#How to use
+# How to use
 
 A short guide on how to clone, build and run our application!
  
