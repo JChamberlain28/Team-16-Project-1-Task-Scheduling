@@ -1,4 +1,5 @@
-## Welcome to the wiki for SOFTENG 306 Project 1 - Saadboys 16
+# Welcome to the wiki for SOFTENG 306 Project 1 - Saadboys 16
+
 
 ## Team members
 | Name                        | UPI           | GitHub Name                                   |
@@ -8,6 +9,7 @@
 | Daniel Hor                  | dhor051       | [Dhors](http://github.com/Dhors)   |
 | Daniel Adams                | dada290       | [dagea](http://github.com/dagea)   |
 | Saad Siddiqui               | msid633       | [Saad-Siddiqui27](http://github.com/Saad-Siddiqui27) |
+
 
 ## Helpful Links
 * [Software Architecture](Software-Architecture.md)
