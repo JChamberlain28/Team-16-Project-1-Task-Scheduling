@@ -6,16 +6,58 @@ import java.util.*;
 
 public class AStarAlgorithm implements Comparator {
 
-    private HashMap<PartialSchedule, Float> partialSchedules = new HashMap<PartialSchedule, Float>();
+    private HashMap<PartialSchedule, Float> _heuristicMap = new HashMap<PartialSchedule, Float>();
+
+    private Graph _dependencyGraph;
+    private int _numProcessors;
 
 
-//    private PriorityQueue<PartialSchedule> open = new PriorityQueue<>
+    public AStarAlgorithm(Graph dependencyGraph, int numProcessors){
+        _dependencyGraph = dependencyGraph;
+        _numProcessors = numProcessors;
+    }
+
+
+
 
     public PartialSchedule findOptimalSchedule() throws Exception {
 
+        PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>();
+
+        PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
+
+        calculateHeuristicCost(nullSchedule);
+
+        open.add(nullSchedule);
+
+
+
+        while(!open.isEmpty()) {
+            PartialSchedule p = open.poll();
+
+            if(p.isComplete()) {
+                return p.makeComplete();
+            }
+
+
+            List<PartialSchedule> children = p.extend();
+            for (PartialSchedule pChild: children ) {
+
+                calculateHeuristicCost(pChild);
+                open.add(pChild);
+
+            }
+
+
+
+        }
+
+
+
+
     }
 
-    public void calculateHeuristicCost(PartialSchedule p){
+    public void setHeuristicCost(PartialSchedule p){
         partialSchedules.put(p , 0.0f);
     }
 
@@ -23,10 +65,10 @@ public class AStarAlgorithm implements Comparator {
     Comparator<PartialSchedule> com = new Comparator<PartialSchedule>(){
         @Override
         int compareTo(Partial Schedule a, Partial Scedule b) {
-                if (hashmap.get(a) > hasmap.get(b){
+                if (_heuristicMap.get(a) > _heuristicMap.get(b){
                     return 1;
                 }
-                if (hashmap.get(b) > hasmap.get(a){
+                if (_heuristicMap.get(b) > _heuristicMap.get(a){
                     return -1;
                 } else {
                     return 0;
