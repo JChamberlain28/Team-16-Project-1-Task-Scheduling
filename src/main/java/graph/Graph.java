@@ -11,15 +11,18 @@ import java.util.List;
 * */
 public class Graph {
 
-    // fields of the graph object.
     private String _name;
     private HashMap<String, Vertex> _vertexMap;
     private HashMap<String, HashMap<String, Integer>> _edgeMap;
+
+    // Stores the bottom level for each vertex
+    private HashMap<Vertex, Integer> _bottomLevelMap;
 
     public Graph(String name) {
         _name = name;
         _vertexMap = new HashMap<String, Vertex>();
         _edgeMap = new HashMap<String, HashMap<String, Integer>>();
+        _bottomLevelMap = new HashMap<Vertex, Integer>();
     }
 
     public void addVertex(String id, Vertex vertex) {
@@ -79,6 +82,11 @@ public class Graph {
         _vertexMap.get(fromId).addOutgoingVertex(_vertexMap.get(toId));
         _vertexMap.get(toId).addIncomingVertex(_vertexMap.get(fromId));
     }
+
+    /**
+     *
+     * @return
+     */
 
 
     /* GETTERS */

@@ -193,7 +193,7 @@ public class PartialSchedule {
     /**
      * Checks whether all of the dependencies of the passed Vertex (task) have already been scheduled.
      * @param task Task for which we are checking whether the dependencies have been scheduled.
-     * @return Whether or not all dependencies have been scheduled
+     * @return Whether or not all dependencies have been scheduled.
      */
     private boolean allDependenciesScheduled(Vertex task) {
 
@@ -204,6 +204,18 @@ public class PartialSchedule {
         }
         return true;
 
+    }
+
+    /**
+     * Returns whether or not two PartialSchedule objects are equivalent. Equivalent in this context means that each
+     * PartialSchedule has the same task schedulings irrespective of the processor numbers.
+     * @param other The PartialSchedule to compare against.
+     * @return Whether or not the passed PartialSchedule is equivalent.
+     */
+    public boolean isEquivalent(PartialSchedule other) {
+        HashSet<String> pStringSet = new HashSet<String>(this._processorStrings);
+        pStringSet.removeAll(new HashSet<String>(other._processorStrings));
+        return pStringSet.isEmpty();
     }
 
 }
