@@ -243,4 +243,13 @@ public class PartialSchedule {
         return new HashSet<String>(_processorStrings);
     }
 
+
+    /**
+     * it return a set of vertices that are eligible to be scheduled next.
+     * @return
+     */
+    public Set<Vertex> getToSchedule(){
+        return _toSchedule;
+    }
+
 }

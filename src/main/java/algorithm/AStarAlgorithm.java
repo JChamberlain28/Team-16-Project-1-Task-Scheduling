@@ -4,6 +4,7 @@ package algorithm;
 
 
 import graph.Graph;
+import graph.Vertex;
 
 import java.awt.*;
 import java.util.List;
@@ -83,9 +84,13 @@ public class AStarAlgorithm {
     }
 
     public void setHeuristicCost(PartialSchedule p){
-        _heuristicMap.put(p , 0.0f);
-    }
 
+        int maxBottomLevel = 0;
+        for (Vertex v : p.getToSchedule() ){
+           maxBottomLevel = Math.max(maxBottomLevel, v.getCost()+_dependencyGraph.getBottomLevel(v));
+        }
+        _heuristicMap.put(p , (float) maxBottomLevel);
+    }
 
 }
 
