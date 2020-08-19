@@ -1,40 +1,81 @@
 package algorithm;
 
 
+
+
+import graph.Graph;
+
 import java.util.PriorityQueue;
 import java.util.*;
 
-public class AStarAlgorithm implements Comparator {
 
-    private HashMap<PartialSchedule, Float> partialSchedules = new HashMap<PartialSchedule, Float>();
+public class AStarAlgorithm {
+
+    private HashMap<PartialSchedule, Float> _heuristicMap = new HashMap<PartialSchedule, Float>();
+
+    private Graph _dependencyGraph;
+    private int _numProcessors;
 
 
-//    private PriorityQueue<PartialSchedule> open = new PriorityQueue<>
+    public AStarAlgorithm(Graph dependencyGraph, int numProcessors){
+        _dependencyGraph = dependencyGraph;
+        _numProcessors = numProcessors;
+    }
+
+
+
 
     public PartialSchedule findOptimalSchedule() throws Exception {
 
-    }
-
-    public void calculateHeuristicCost(PartialSchedule p){
-        partialSchedules.put(p , 0.0f);
-    }
-
-
-    Comparator<PartialSchedule> com = new Comparator<PartialSchedule>(){
-        @Override
-        int compareTo(Partial Schedule a, Partial Scedule b) {
-                if (hashmap.get(a) > hasmap.get(b){
-                    return 1;
+        PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
+             new Comparator<PartialSchedule>() {
+                @Override
+                public int compare(PartialSchedule a, PartialSchedule b) {
+                    if (_heuristicMap.get(a) > _heuristicMap.get(b)) {
+                        return 1;
+                    }
+                    if (_heuristicMap.get(b) > _heuristicMap.get(a)) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
                 }
-                if (hashmap.get(b) > hasmap.get(a){
-                    return -1;
-                } else {
-                    return 0;
-                }
+            }
+        );
+
+        PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
+
+        setHeuristicCost(nullSchedule);
+
+        open.add(nullSchedule);
+
+
+
+        while(!open.isEmpty()) {
+            PartialSchedule p = open.poll();
+
+            if(p.isComplete()) {
+                return p;
+            }
+
+
+            List<PartialSchedule> children = p.extend();
+            for (PartialSchedule pChild: children ) {
+
+                setHeuristicCost(pChild);
+                open.add(pChild);
+
             }
 
         }
+        return null;
+
     }
+
+    public void setHeuristicCost(PartialSchedule p){
+        _heuristicMap.put(p , 0.0f);
+    }
+
 
 }
 
