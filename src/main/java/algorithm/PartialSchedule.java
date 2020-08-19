@@ -16,6 +16,9 @@ public class PartialSchedule {
     // Stores the current end times for each processor
     private int[] _processorEndTimes;
 
+    // Stores the idle time for each processor
+    private int[] _processorIdleTimes;
+
     // Stores information regarding what task has been scheduled on top of the parent and how.
     private int _processor;
     private int _startTime;
@@ -44,10 +47,14 @@ public class PartialSchedule {
         _dependencyGraph = dependencyGraph;
 
         _parent = null;
+
         _processorEndTimes = new int[numProcessors];
+        _processorIdleTimes = new int[numProcessors];
         for (int i = 0; i < numProcessors; i++) {
             _processorEndTimes[i] = 0;
+            _processorIdleTimes[i] = 0;
         }
+
         _processor = 0;
         _startTime = 0;
         _task = null;
@@ -79,6 +86,7 @@ public class PartialSchedule {
 
         _processorEndTimes = parent._processorEndTimes.clone();
         _processorEndTimes[processor] = startTime + task.getCost();  // Update processor end time
+        _processorIdleTimes[processor] = parent._processorIdleTimes.clone();
 
         _processor = processor;
         _startTime = startTime;
@@ -216,6 +224,13 @@ public class PartialSchedule {
         HashSet<String> pStringSet = new HashSet<String>(this._processorStrings);
         pStringSet.removeAll(new HashSet<String>(other._processorStrings));
         return pStringSet.isEmpty();
+    }
+
+    /**
+     * Returns a set of String objects to represent the task schedulings irrespective of processor.
+     */
+    public Set<String> getProcessorStringSet() {
+        return new HashSet<String>(_processorStrings);
     }
 
 }
