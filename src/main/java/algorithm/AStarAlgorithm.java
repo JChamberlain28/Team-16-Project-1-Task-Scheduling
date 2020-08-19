@@ -1,0 +1,72 @@
+package algorithm;
+
+
+import java.util.PriorityQueue;
+import java.util.*;
+
+public class AStarAlgorithm implements Comparator {
+
+    private HashMap<PartialSchedule, Float> partialSchedules = new HashMap<PartialSchedule, Float>();
+
+
+//    private PriorityQueue<PartialSchedule> open = new PriorityQueue<>
+
+    public PartialSchedule findOptimalSchedule() throws Exception {
+
+    }
+
+    public void calculateHeuristicCost(PartialSchedule p){
+        partialSchedules.put(p , 0.0f);
+    }
+
+
+    Comparator<PartialSchedule> com = new Comparator<PartialSchedule>(){
+        @Override
+        int compareTo(Partial Schedule a, Partial Scedule b) {
+                if (hashmap.get(a) > hasmap.get(b){
+                    return 1;
+                }
+                if (hashmap.get(b) > hasmap.get(a){
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+
+        }
+    }
+
+}
+
+//    We maintain two lists: OPEN and CLOSE:
+//
+//        OPEN consists on nodes that have been visited but not expanded (meaning that sucessors have not been
+//        explored yet). This is the list of pending tasks.
+//
+//        CLOSE consists on nodes that have been visited and expanded (sucessors have been explored already and
+//        included in the open list, if this was the case).
+//
+//        1 Put node_start in the OPEN list with f(node_start) = h(node_start) (initialization)
+//        2 while the OPEN list is not empty {
+//        3 Take from the open list the node node_current with the lowest
+//        4 f(node_current) = g(node_current) + h(node_current)
+//        5 if node_current is node_goal we have found the solution; break
+//        6 Generate each state node_successor that come after node_current
+//        7 for each node_successor of node_current {
+//        8 Set successor_current_cost = g(node_current) + w(node_current, node_successor)
+//        9 if node_successor is in the OPEN list {
+//        10 if g(node_successor) ≤ successor_current_cost continue (to line 20)
+//        11 } else if node_successor is in the CLOSED list {
+//        12 if g(node_successor) ≤ successor_current_cost continue (to line 20)
+//        13 Move node_successor from the CLOSED list to the OPEN list
+//        14 } else {
+//        15 Add node_successor to the OPEN list
+//        16 Set h(node_successor) to be the heuristic distance to node_goal
+//        17 }
+//        18 Set g(node_successor) = successor_current_cost
+//        19 Set the parent of node_successor to node_current
+//        20 }
+//        21 Add node_current to the CLOSED list
+//        22 }
+//        23 if(node_current != node_goal) exit with error (the OPEN list is empty)
+//        its a generic A* algorithm but we have to maybe change it slightly and implement it according to our graph structure.
