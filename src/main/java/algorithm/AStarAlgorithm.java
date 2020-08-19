@@ -5,6 +5,8 @@ package algorithm;
 
 import graph.Graph;
 
+import java.awt.*;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.*;
 
@@ -26,6 +28,8 @@ public class AStarAlgorithm {
 
 
     public PartialSchedule findOptimalSchedule() throws Exception {
+
+        HashSet<HashSet<String>> closedSet = new HashSet<HashSet<String>>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
              new Comparator<PartialSchedule>() {
@@ -53,6 +57,11 @@ public class AStarAlgorithm {
 
         while(!open.isEmpty()) {
             PartialSchedule p = open.poll();
+            Set<String> s = p.getProcessorStringSet();
+
+            if(!closedSet.add((HashSet<String>)s)){
+                continue;
+            }
 
             if(p.isComplete()) {
                 return p;
@@ -68,6 +77,7 @@ public class AStarAlgorithm {
             }
 
         }
+
         return null;
 
     }
