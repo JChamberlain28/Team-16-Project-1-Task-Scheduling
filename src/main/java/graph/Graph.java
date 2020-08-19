@@ -16,13 +16,13 @@ public class Graph {
     private HashMap<String, HashMap<String, Integer>> _edgeMap;
 
     // Stores the bottom level for each vertex
-    private HashMap<Vertex, Integer> _bottomLevelMap;
+    private HashMap<String, Integer> _bottomLevelMap;
 
     public Graph(String name) {
         _name = name;
         _vertexMap = new HashMap<String, Vertex>();
         _edgeMap = new HashMap<String, HashMap<String, Integer>>();
-        _bottomLevelMap = new HashMap<Vertex, Integer>();
+        _bottomLevelMap = new HashMap<String, Integer>();
     }
 
     public void addVertex(String id, Vertex vertex) {
@@ -84,9 +84,34 @@ public class Graph {
     }
 
     /**
-     *
-     * @return
+     * Method which calls getBottomLevel(String) with the id of the passed Vertex.
+     * @param v The Vertex to get the bottom level for.
+     * @return The bottom level of the passed vertex.
      */
+    public int getBottomLevel(Vertex v) {
+        return getBottomLevel(v.getId());
+    }
+
+    /**
+     * Returns the bottom level for the vertex with the given id. Only calculates the value if required (could already
+     * be stored in _bottomLevelMap), and if so it stores it in _bottomLevelMap.
+     * @param vertexId ID of the vertex.
+     * @return The bottom level of the vertex with ID vertexId.
+     */
+    public int getBottomLevel(String vertexId) {
+
+        Vertex v = _vertexMap.get(vertexId);
+        if (_bottomLevelMap.containsKey(vertexId)) {
+            return _bottomLevelMap.get(vertexId);
+        } else {
+            int maxBottomLevel = 0;
+            for (Vertex vChild : v.getOutgoingVertices()) {
+                maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
+            }
+            return v.getCost() + maxBottomLevel;
+        }
+
+    }
 
 
     /* GETTERS */
