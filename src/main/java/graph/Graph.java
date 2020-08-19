@@ -108,7 +108,10 @@ public class Graph {
             for (Vertex vChild : v.getOutgoingVertices()) {
                 maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
             }
-            return v.getCost() + maxBottomLevel;
+
+            int botLevel = v.getCost() + maxBottomLevel;
+            _bottomLevelMap.put(vertexId, botLevel);
+            return botLevel;
         }
 
     }
