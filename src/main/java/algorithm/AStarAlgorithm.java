@@ -1,10 +1,15 @@
 package algorithm;
 
 
+
+
+import graph.Graph;
+
 import java.util.PriorityQueue;
 import java.util.*;
 
-public class AStarAlgorithm implements Comparator {
+
+public class AStarAlgorithm {
 
     private HashMap<PartialSchedule, Float> _heuristicMap = new HashMap<PartialSchedule, Float>();
 
@@ -22,11 +27,25 @@ public class AStarAlgorithm implements Comparator {
 
     public PartialSchedule findOptimalSchedule() throws Exception {
 
-        PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>();
+        PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
+             new Comparator<PartialSchedule>() {
+                @Override
+                public int compare(PartialSchedule a, PartialSchedule b) {
+                    if (_heuristicMap.get(a) > _heuristicMap.get(b)) {
+                        return 1;
+                    }
+                    if (_heuristicMap.get(b) > _heuristicMap.get(a)) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
 
-        calculateHeuristicCost(nullSchedule);
+        setHeuristicCost(nullSchedule);
 
         open.add(nullSchedule);
 
@@ -36,47 +55,27 @@ public class AStarAlgorithm implements Comparator {
             PartialSchedule p = open.poll();
 
             if(p.isComplete()) {
-                return p.makeComplete();
+                return p;
             }
 
 
             List<PartialSchedule> children = p.extend();
             for (PartialSchedule pChild: children ) {
 
-                calculateHeuristicCost(pChild);
+                setHeuristicCost(pChild);
                 open.add(pChild);
 
             }
 
-
-
         }
-
-
-
+        return null;
 
     }
 
     public void setHeuristicCost(PartialSchedule p){
-        partialSchedules.put(p , 0.0f);
+        _heuristicMap.put(p , 0.0f);
     }
 
-
-    Comparator<PartialSchedule> com = new Comparator<PartialSchedule>(){
-        @Override
-        int compareTo(Partial Schedule a, Partial Scedule b) {
-                if (_heuristicMap.get(a) > _heuristicMap.get(b){
-                    return 1;
-                }
-                if (_heuristicMap.get(b) > _heuristicMap.get(a){
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
-
-        }
-    }
 
 }
 
