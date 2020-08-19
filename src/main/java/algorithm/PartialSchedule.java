@@ -84,9 +84,10 @@ public class PartialSchedule {
         _dependencyGraph = parent._dependencyGraph;
         _parent = parent;
 
+        _processorIdleTimes = parent._processorIdleTimes.clone();
         _processorEndTimes = parent._processorEndTimes.clone();
+        _processorIdleTimes[processor] += startTime - _processorEndTimes[processor];
         _processorEndTimes[processor] = startTime + task.getCost();  // Update processor end time
-        _processorIdleTimes[processor] = parent._processorIdleTimes.clone();
 
         _processor = processor;
         _startTime = startTime;
@@ -146,6 +147,15 @@ public class PartialSchedule {
 
     public int getFinishTime() {
         return Arrays.stream(_processorEndTimes).max().getAsInt();
+    }
+
+    /**
+     * Returns the idle time for a given processor, i.e. the amount of time it is not executing a task.
+     * @param processor
+     * @return
+     */
+    public int getIdleTime(int processor) {
+        return _processorIdleTimes[processor];
     }
 
     /**
