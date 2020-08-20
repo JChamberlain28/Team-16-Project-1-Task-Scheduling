@@ -32,7 +32,7 @@ public class Main {
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){
-            st.applyScheduleVals();
+            st.updateVertex();
         }
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());

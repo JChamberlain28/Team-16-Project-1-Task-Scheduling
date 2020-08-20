@@ -26,8 +26,8 @@ public class ScheduledTask {
         return _task;
     }
 
-    public void applyScheduleVals(){
-        _task.setProcessorNumber(_processor);
+    public void updateVertex(){
+        _task.setProcessorNumber(_processor + 1);
         _task.setStartTime(_startTime);
     }
 

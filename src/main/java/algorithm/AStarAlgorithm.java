@@ -89,7 +89,7 @@ public class AStarAlgorithm {
         // Calculate bottom level heuristic
         float bottomLevelHeuristic = 0;
         for (ScheduledTask st : p.getScheduledTasks()){
-            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, p.getStartTime() +
+            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, st.getStartTime() +
                     _dependencyGraph.getBottomLevel(st.getTask()));
         }
 
