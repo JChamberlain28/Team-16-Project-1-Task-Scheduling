@@ -72,40 +72,35 @@ public class AStarAlgorithm {
 
     public void setHeuristicCost(PartialSchedule p) {
 
-
-
         if (_heuristicMap.containsKey(p)) {
             System.err.println("Warning: Heuristic cost already calculated for this partial schedule -> " +
                     "duplicate calculation call");
             return;
         }
 
-
         if (p.getScheduledTask() == null){
             _heuristicMap.put(p, 0.0f); // the null schedule is removed immediately from heap so heuristic is irrelevant
             return;
         }
 
-        // Calculate bottom level heuristic
-        float bottomLevelHeuristic = 0;
-        for (Vertex v : p.getToSchedule()){
-            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, p.getStartTime() +
-                    _dependencyGraph.getBottomLevel(v));
-        }
-
         // Calculate idle time heuristic
         float idleTimeHeuristic = (float) p.getIdleTime();
-        List<ScheduledTask> scheduledTasks = p.getScheduledTasks();
-        for (ScheduledTask st : scheduledTasks) {
-            idleTimeHeuristic += st.getTask().getCost();
+        for (Vertex v : _dependencyGraph.getVertices()) {
+            idleTimeHeuristic += v.getCost();
         }
         idleTimeHeuristic /= p.getProcessorEndTimes().length;
+
+        // Calculate bottom level heuristic
+        float bottomLevelHeuristic = 0;
+        for (ScheduledTask st : p.getScheduledTasks()){
+            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, p.getStartTime() +
+                    _dependencyGraph.getBottomLevel(st.getTask()));
+        }
 
         // Calculate Data Ready Time heuristic
         float drtHeuristic = 0;
         for (Vertex child : p.getToSchedule()) {
 
-            ScheduledTask childScheduledTask = p.getScheduledTask(child.getId());
             for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
 
                 int minDataReadyTime = Integer.MAX_VALUE;
