@@ -72,9 +72,18 @@ public class AStarAlgorithm {
 
     public void setHeuristicCost(PartialSchedule p) {
 
+
+
         if (_heuristicMap.containsKey(p)) {
-            System.err.println("Warning: Heuristic cost already calculated for this partial schedule -> duplicate " +
-                    "schedule must have been processed by A* algorithm.");
+            System.err.println("Warning: Heuristic cost already calculated for this partial schedule -> " +
+                    "duplicate calculation call");
+            return;
+        }
+
+
+        if (p.getScheduledTask() == null){
+            _heuristicMap.put(p, 0.0f); // the null schedule is removed immediately from heap so heuristic is irrelevant
+            return;
         }
 
         // Calculate bottom level heuristic
