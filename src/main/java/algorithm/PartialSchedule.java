@@ -10,19 +10,14 @@ public class PartialSchedule {
     // The dependency graph that this schedule adheres to
     private final Graph _dependencyGraph;
 
-    // The PartialSchedule which this PartialSchedule is extending
-    private PartialSchedule _parent;
-
     // Stores the current end times for each processor
     private int[] _processorEndTimes;
 
-    // Stores the idle time for each processor
-    private int[] _processorIdleTimes;
+    // Stores cumulative idle time across all processors
+    private int _idleTime;
 
     // Stores information regarding what task has been scheduled on top of the parent and how.
-    private int _processor;
-    private int _startTime;
-    private Vertex _task;
+    private ScheduledTask _scheduledTask;
 
     // Used to prevent the creation of duplicate PartialSchedule objects, i.e. schedules where the tasks are ordered
     // in the same way at the same time but are simply scheduled on different processors.
@@ -33,9 +28,12 @@ public class PartialSchedule {
     // Protects against duplicate task scheduling due to multiple dependencies
     private HashSet<Vertex> _toSchedule;
 
-    // Maps the label of a Vertex to the PartialSchedule object where it was initially scheduled. Used in extend() to
-    // query the end times of the dependencies of a task being scheduled.
-    private Map<String, PartialSchedule> _scheduleMap;
+//    // Maps the label of a Vertex to the PartialSchedule object where it was initially scheduled. Used in extend() to
+//    // query the end times of the dependencies of a task being scheduled.
+//    private Map<String, PartialSchedule> _scheduleMap;
+
+    // Maps the label of a Vertex to its corresponding ScheduledTask object
+    private Map<String, ScheduledTask> _scheduledTaskMap;
 
     /**
      * Creates an empty PartialSchedule that is, effectively, the root of the solution-space tree.
@@ -46,18 +44,13 @@ public class PartialSchedule {
 
         _dependencyGraph = dependencyGraph;
 
-        _parent = null;
-
         _processorEndTimes = new int[numProcessors];
-        _processorIdleTimes = new int[numProcessors];
         for (int i = 0; i < numProcessors; i++) {
             _processorEndTimes[i] = 0;
-            _processorIdleTimes[i] = 0;
         }
+        _idleTime = 0;
 
-        _processor = 0;
-        _startTime = 0;
-        _task = null;
+        _scheduledTask = null;
         _processorStrings = new ArrayList<String>(numProcessors);
         for (int i = 0; i < numProcessors; i++) {
             _processorStrings.add("");  // Initialise empty processor strings
@@ -66,7 +59,7 @@ public class PartialSchedule {
         _toSchedule = new HashSet<Vertex>();
         _toSchedule.addAll(dependencyGraph.getRoots());
 
-        _scheduleMap = new HashMap<String, PartialSchedule>();
+        _scheduledTaskMap = new HashMap<String, ScheduledTask>();
 
     }
 
@@ -82,19 +75,17 @@ public class PartialSchedule {
                             List<String> processorStrings) {
 
         _dependencyGraph = parent._dependencyGraph;
-        _parent = parent;
 
-        _processorIdleTimes = parent._processorIdleTimes.clone();
         _processorEndTimes = parent._processorEndTimes.clone();
-        _processorIdleTimes[processor] += startTime - _processorEndTimes[processor];
         _processorEndTimes[processor] = startTime + task.getCost();  // Update processor end time
 
-        _processor = processor;
-        _startTime = startTime;
-        _task = task;
+        // Update cumulative idle time
+        _idleTime = parent._idleTime + startTime - parent._processorEndTimes[processor];
 
-        _scheduleMap = new HashMap<String, PartialSchedule>(parent._scheduleMap);
-        _scheduleMap.put(task.getId(), this);
+        _scheduledTask = new ScheduledTask(processor, startTime, task);
+
+        _scheduledTaskMap = new HashMap<String, ScheduledTask>(parent._scheduledTaskMap);
+        _scheduledTaskMap.put(task.getId(), _scheduledTask);
 
         _toSchedule = new HashSet<Vertex>(parent._toSchedule);
         _toSchedule.remove(task);
@@ -106,14 +97,6 @@ public class PartialSchedule {
 
         _processorStrings = processorStrings;
 
-    }
-
-    /**
-     * Returns the parent of this PartialSchedule
-     * @return Parent PartialSchedule instance
-     */
-    public PartialSchedule getParent() {
-        return _parent;
     }
 
     /**
@@ -130,32 +113,39 @@ public class PartialSchedule {
     }
 
     public int getProcessor() {
-        return _processor;
+        return _scheduledTask.getProcessor();
     }
 
     public int getStartTime() {
-        return _startTime;
+        return _scheduledTask.getStartTime();
     }
 
     public Vertex getTask() {
-        return _task;
+        return _scheduledTask.getTask();
     }
 
-    public PartialSchedule getPartialSchedule(Vertex task) {
-        return _scheduleMap.get(task.getId());
+    public ScheduledTask getScheduledTask() {
+        return _scheduledTask;
+    }
+
+    public ScheduledTask getScheduledTask(String id) {
+        return _scheduledTaskMap.get(id);
     }
 
     public int getFinishTime() {
         return Arrays.stream(_processorEndTimes).max().getAsInt();
     }
 
+    public List<ScheduledTask> getScheduledTasks() {
+        return new ArrayList<ScheduledTask>(_scheduledTaskMap.values());
+    }
+
     /**
-     * Returns the idle time for a given processor, i.e. the amount of time it is not executing a task.
-     * @param processor
+     * Returns the cumulative idle time overall all processors, i.e. the amount of time where a given processor is idle.
      * @return
      */
-    public int getIdleTime(int processor) {
-        return _processorIdleTimes[processor];
+    public int getIdleTime() {
+        return _idleTime;
     }
 
     /**
@@ -176,11 +166,11 @@ public class PartialSchedule {
                 int pEarliestStartTime = _processorEndTimes[i];
                 for (Vertex dependency : task.getIncomingVertices()) {
 
-                    PartialSchedule dSchedule = _scheduleMap.get(dependency.getId());
-                    if (dSchedule._processor == i) {
+                    ScheduledTask scheduledTask = _scheduledTaskMap.get(dependency.getId());
+                    if (scheduledTask.getProcessor() == i) {
                         // Do nothing as this start time would have to be <= processor end time
                     } else {
-                        int tempStartTime = dSchedule._startTime + dependency.getCost() +
+                        int tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
                                 _dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
                         pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
                     }
@@ -216,7 +206,7 @@ public class PartialSchedule {
     private boolean allDependenciesScheduled(Vertex task) {
 
         for (Vertex dependency : task.getIncomingVertices()) {
-            if (!_scheduleMap.containsKey(dependency.getId())) {
+            if (!_scheduledTaskMap.containsKey(dependency.getId())) {
                 return false;
             }
         }

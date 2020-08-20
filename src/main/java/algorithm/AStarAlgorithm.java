@@ -19,23 +19,17 @@ public class AStarAlgorithm {
     private Graph _dependencyGraph;
     private int _numProcessors;
 
-
     public AStarAlgorithm(Graph dependencyGraph, int numProcessors){
         _dependencyGraph = dependencyGraph;
         _numProcessors = numProcessors;
     }
 
-
-
-
-    public PartialSchedule findOptimalSchedule() throws Exception {
+    public PartialSchedule findOptimalSchedule() {
 
         HashSet<HashSet<String>> closedSet = new HashSet<HashSet<String>>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
-             new Comparator<PartialSchedule>() {
-                @Override
-                public int compare(PartialSchedule a, PartialSchedule b) {
+                (a, b) -> {
                     if (_heuristicMap.get(a) > _heuristicMap.get(b)) {
                         return 1;
                     }
@@ -45,29 +39,22 @@ public class AStarAlgorithm {
                         return 0;
                     }
                 }
-            }
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
-
         setHeuristicCost(nullSchedule);
-
         open.add(nullSchedule);
-
-
 
         while(!open.isEmpty()) {
             PartialSchedule p = open.poll();
             Set<String> s = p.getProcessorStringSet();
 
-            if(!closedSet.add((HashSet<String>)s)){
+            // Maybe apply this dupe check to DFS Branch and Bound
+            if (!closedSet.add((HashSet<String>)s)) {
                 continue;
-            }
-
-            if(p.isComplete()) {
+            }else if (p.isComplete()) {
                 return p;
             }
-
 
             List<PartialSchedule> children = p.extend();
             for (PartialSchedule pChild: children ) {
@@ -83,13 +70,54 @@ public class AStarAlgorithm {
 
     }
 
-    public void setHeuristicCost(PartialSchedule p){
+    public void setHeuristicCost(PartialSchedule p) {
 
-        int maxBottomLevel = 0;
-        for (Vertex v : p.getToSchedule() ){
-           maxBottomLevel = Math.max(maxBottomLevel, v.getCost()+_dependencyGraph.getBottomLevel(v));
+        if (_heuristicMap.containsKey(p)) {
+            System.err.println("Warning: Heuristic cost already calculated for this partial schedule -> duplicate " +
+                    "schedule must have been processed by A* algorithm.");
         }
-        _heuristicMap.put(p , (float) maxBottomLevel);
+
+        // Calculate bottom level heuristic
+        float bottomLevelHeuristic = 0;
+        for (Vertex v : p.getToSchedule()){
+            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, p.getStartTime() +
+                    _dependencyGraph.getBottomLevel(v));
+        }
+
+        // Calculate idle time heuristic
+        float idleTimeHeuristic = (float) p.getIdleTime();
+        List<ScheduledTask> scheduledTasks = p.getScheduledTasks();
+        for (ScheduledTask st : scheduledTasks) {
+            idleTimeHeuristic += st.getTask().getCost();
+        }
+        idleTimeHeuristic /= p.getProcessorEndTimes().length;
+
+        // Calculate Data Ready Time heuristic
+        float drtHeuristic = 0;
+        for (Vertex child : p.getToSchedule()) {
+
+            ScheduledTask childScheduledTask = p.getScheduledTask(child.getId());
+            int minDataReadyTime = Integer.MAX_VALUE;
+            for (Vertex dep : child.getIncomingVertices()) {
+
+                ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
+                int dataReadyTime = depScheduledTask.getStartTime() + dep.getCost();
+                if (depScheduledTask.getProcessor() == childScheduledTask.getProcessor()) {
+                    // Do nothing, as there is no cross-processor communication delay
+                } else {
+                    dataReadyTime += _dependencyGraph.getEdgeWeight(dep.getId(), child.getId());
+                }
+                minDataReadyTime = Math.min(minDataReadyTime, dataReadyTime);
+
+            }
+
+            int bottomLevel = _dependencyGraph.getBottomLevel(child);
+            drtHeuristic = Math.max(minDataReadyTime + bottomLevel, drtHeuristic);
+
+        }
+
+        _heuristicMap.put(p, Math.max(Math.max(idleTimeHeuristic, bottomLevelHeuristic), drtHeuristic));
+
     }
 
 }

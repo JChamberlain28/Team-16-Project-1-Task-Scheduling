@@ -1,6 +1,7 @@
 package unit;
 
 import algorithm.PartialSchedule;
+import algorithm.ScheduledTask;
 import graph.Graph;
 import graph.Vertex;
 import org.junit.Assert;
@@ -8,9 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PartialScheduleTests {
 
@@ -55,10 +54,10 @@ public class PartialScheduleTests {
     }
 
     @Test
-    public void nullScheduleHasNullParent() {
+    public void nullScheduleHasNoScheduledTask() {
 
         PartialSchedule nullSchedule = new PartialSchedule(dependencyGraph, 8);
-        Assert.assertNull(nullSchedule.getParent());
+        Assert.assertNull(nullSchedule.getScheduledTask());
 
     }
 
@@ -121,12 +120,12 @@ public class PartialScheduleTests {
         int minStartTime = parent.getProcessorEndTimes()[schedule.getProcessor()];
 
         for (Vertex dependency : schedule.getTask().getIncomingVertices()) {
-            PartialSchedule dependencySchedule = schedule.getPartialSchedule(dependency);
+            ScheduledTask scheduledTask = schedule.getScheduledTask(dependency.getId());
             // If this is null then dependency has not been scheduled, which is not valid as a task can only be
             // scheduled after all of its parents (chronologically)
-            Assert.assertNotNull(dependencySchedule);
-            if (dependencySchedule.getProcessor() != schedule.getProcessor()) {
-                minStartTime = Math.max(minStartTime, dependencySchedule.getStartTime() +
+            Assert.assertNotNull(scheduledTask);
+            if (scheduledTask.getProcessor() != schedule.getProcessor()) {
+                minStartTime = Math.max(minStartTime, scheduledTask.getStartTime() +
                         dependency.getCost() + dependencyGraph.getEdgeWeight(dependency.getId(), cV.getId()));
             }
         }

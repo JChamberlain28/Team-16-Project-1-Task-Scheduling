@@ -1,3 +1,5 @@
+import algorithm.AStarAlgorithm;
+import algorithm.PartialSchedule;
 import algorithm.UnoptimalAlgo;
 import graph.Graph;
 
@@ -24,9 +26,8 @@ public class Main {
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
 
-        // Run algorithm to find valid schedule.
-        UnoptimalAlgo ua = new UnoptimalAlgo();
-        ua.computeSchedule(graph);
+        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
+        PartialSchedule schedule = aStar.findOptimalSchedule();
 
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
