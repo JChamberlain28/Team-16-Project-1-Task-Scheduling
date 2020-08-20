@@ -106,22 +106,26 @@ public class AStarAlgorithm {
         for (Vertex child : p.getToSchedule()) {
 
             ScheduledTask childScheduledTask = p.getScheduledTask(child.getId());
-            int minDataReadyTime = Integer.MAX_VALUE;
-            for (Vertex dep : child.getIncomingVertices()) {
+            for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
 
-                ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
-                int dataReadyTime = depScheduledTask.getStartTime() + dep.getCost();
-                if (depScheduledTask.getProcessor() == childScheduledTask.getProcessor()) {
-                    // Do nothing, as there is no cross-processor communication delay
-                } else {
-                    dataReadyTime += _dependencyGraph.getEdgeWeight(dep.getId(), child.getId());
+                int minDataReadyTime = Integer.MAX_VALUE;
+                for (Vertex dep : child.getIncomingVertices()) {
+
+                    ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
+                    int dataReadyTime = depScheduledTask.getStartTime() + dep.getCost();
+                    if (depScheduledTask.getProcessor() == i) {
+                        // Do nothing, as there is no cross-processor communication delay
+                    } else {
+                        dataReadyTime += _dependencyGraph.getEdgeWeight(dep.getId(), child.getId());
+                    }
+                    minDataReadyTime = Math.min(minDataReadyTime, dataReadyTime);
+
                 }
-                minDataReadyTime = Math.min(minDataReadyTime, dataReadyTime);
+
+                int bottomLevel = _dependencyGraph.getBottomLevel(child);
+                drtHeuristic = Math.max(minDataReadyTime + bottomLevel, drtHeuristic);
 
             }
-
-            int bottomLevel = _dependencyGraph.getBottomLevel(child);
-            drtHeuristic = Math.max(minDataReadyTime + bottomLevel, drtHeuristic);
 
         }
 
