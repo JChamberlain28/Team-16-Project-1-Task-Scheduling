@@ -101,9 +101,10 @@ public class AStarAlgorithm {
         float drtHeuristic = 0;
         for (Vertex child : p.getToSchedule()) {
 
+            int minDataReadyTime = Integer.MAX_VALUE;
             for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
 
-                int minDataReadyTime = Integer.MAX_VALUE;
+
                 for (Vertex dep : child.getIncomingVertices()) {
 
                     ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
@@ -118,13 +119,21 @@ public class AStarAlgorithm {
                 }
 
                 int bottomLevel = _dependencyGraph.getBottomLevel(child);
+                if (minDataReadyTime == Integer.MAX_VALUE){
+                    minDataReadyTime = 0;
+                }
+
                 drtHeuristic = Math.max(minDataReadyTime + bottomLevel, drtHeuristic);
+
+
 
             }
 
         }
 
         _heuristicMap.put(p, Math.max(Math.max(idleTimeHeuristic, bottomLevelHeuristic), drtHeuristic));
+
+
 
     }
 
