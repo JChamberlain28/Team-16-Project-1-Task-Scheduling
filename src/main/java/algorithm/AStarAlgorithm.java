@@ -29,16 +29,7 @@ public class AStarAlgorithm {
         HashSet<HashSet<String>> closedSet = new HashSet<HashSet<String>>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
-                (a, b) -> {
-                    if (_heuristicMap.get(a) > _heuristicMap.get(b)) {
-                        return 1;
-                    }
-                    if (_heuristicMap.get(b) > _heuristicMap.get(a)) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                }
+                (a, b) -> Float.compare(getHeuristicCost(a), getHeuristicCost(b))
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
@@ -47,6 +38,7 @@ public class AStarAlgorithm {
 
         while(!open.isEmpty()) {
             PartialSchedule p = open.poll();
+            _heuristicMap.remove(p);
             Set<String> s = p.getProcessorStringSet();
 
             // Maybe apply this dupe check to DFS Branch and Bound
@@ -59,7 +51,7 @@ public class AStarAlgorithm {
             List<PartialSchedule> children = p.extend();
             for (PartialSchedule pChild: children ) {
 
-                setHeuristicCost(pChild);
+                //setHeuristicCost(pChild);
                 open.add(pChild);
 
             }
@@ -77,10 +69,14 @@ public class AStarAlgorithm {
                     "duplicate calculation call");
             return;
         }
+        _heuristicMap.put(p, getHeuristicCost(p));
+
+    }
+
+    private float getHeuristicCost(PartialSchedule p) {
 
         if (p.getScheduledTask() == null){
-            _heuristicMap.put(p, 0.0f); // the null schedule is removed immediately from heap so heuristic is irrelevant
-            return;
+            return 0.0f;
         }
 
         // Calculate idle time heuristic
@@ -101,10 +97,11 @@ public class AStarAlgorithm {
         float drtHeuristic = 0;
         for (Vertex child : p.getToSchedule()) {
 
-            int minDataReadyTime = Integer.MAX_VALUE;
+            float minDataReadyTime = Integer.MAX_VALUE;
+
             for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
 
-
+                int maxDataReadyTime = 0;
                 for (Vertex dep : child.getIncomingVertices()) {
 
                     ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
@@ -114,26 +111,17 @@ public class AStarAlgorithm {
                     } else {
                         dataReadyTime += _dependencyGraph.getEdgeWeight(dep.getId(), child.getId());
                     }
-                    minDataReadyTime = Math.min(minDataReadyTime, dataReadyTime);
+                    maxDataReadyTime = Math.max(maxDataReadyTime, dataReadyTime);
 
                 }
-
-                int bottomLevel = _dependencyGraph.getBottomLevel(child);
-                if (minDataReadyTime == Integer.MAX_VALUE){
-                    minDataReadyTime = 0;
-                }
-
-                drtHeuristic = Math.max(minDataReadyTime + bottomLevel, drtHeuristic);
-
-
+                minDataReadyTime = Math.min(maxDataReadyTime, minDataReadyTime);
 
             }
+            drtHeuristic = Math.max(minDataReadyTime + _dependencyGraph.getBottomLevel(child), drtHeuristic);
 
         }
 
-        _heuristicMap.put(p, Math.max(Math.max(idleTimeHeuristic, bottomLevelHeuristic), drtHeuristic));
-
-
+        return Math.max(idleTimeHeuristic, Math.max(bottomLevelHeuristic, drtHeuristic));
 
     }
 
