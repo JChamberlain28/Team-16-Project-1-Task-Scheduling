@@ -1,5 +1,6 @@
 import algorithm.AStarAlgorithm;
 import algorithm.PartialSchedule;
+import algorithm.ScheduledTask;
 import algorithm.UnoptimalAlgo;
 import graph.Graph;
 
@@ -29,6 +30,10 @@ public class Main {
         AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
         PartialSchedule schedule = aStar.findOptimalSchedule();
 
+        // persist start times and processor numbers in the graph for use in output
+        for (ScheduledTask st : schedule.getScheduledTasks()){
+            st.applyScheduleVals();
+        }
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
 

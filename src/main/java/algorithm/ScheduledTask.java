@@ -26,4 +26,9 @@ public class ScheduledTask {
         return _task;
     }
 
+    public void applyScheduleVals(){
+        _task.setProcessorNumber(_processor);
+        _task.setStartTime(_startTime);
+    }
+
 }
