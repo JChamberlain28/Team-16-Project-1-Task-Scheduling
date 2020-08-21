@@ -36,8 +36,8 @@ public class Visualise extends Application {
             Parent root=loader.load();
             Scene scene = new Scene(root);
 
-            stage.setWidth(1000);
-            stage.setHeight(700);
+            stage.setWidth(900);
+            stage.setHeight(600);
 
 
             stage.setTitle(visualiserTitle);
