@@ -63,7 +63,9 @@ public class CliParser {
                 _CliParsedInputs._filePathName = args[0]; // File path
                 String dir = FilenameMethods.getDirectoryOfJar();
 
-                File file = new File(dir + File.separator + _CliParsedInputs._filePathName);
+                //File file = new File(dir + File.separator + _CliParsedInputs._filePathName);
+                File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
                 }

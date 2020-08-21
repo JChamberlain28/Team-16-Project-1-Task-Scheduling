@@ -24,9 +24,11 @@ public class InputParser {
         BufferedReader bufferReader = null;
 
         String dir = FilenameMethods.getDirectoryOfJar();
-        File file = new File(dir + File.separator + fileName);
+        //File file = new File(dir + File.separator + fileName);
+        File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
 
-            try {
+
+        try {
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine();

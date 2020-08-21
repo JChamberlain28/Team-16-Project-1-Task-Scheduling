@@ -6,15 +6,17 @@ import input.CliParser;
 import input.InputParser;
 import output.OutputGenerator;
 
+import visualisation.Visualise;
 
 public class Main {
     public static void main(String[] args) {
 
+        String[] inputArgs = { "digraph2.dot", "3" ,"-v"};
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            cliparser.UI(args);
+            cliparser.UI(inputArgs);
         } catch ( IllegalArgumentException e ) {
             // in the case that the input cannot be parsed the program is terminated.
             System.err.println(e.getMessage());
@@ -27,6 +29,10 @@ public class Main {
         // Run algorithm to find valid schedule.
         UnoptimalAlgo ua = new UnoptimalAlgo();
         ua.computeSchedule(graph);
+
+        if (cliparser.isVisualisationDisplay()) {
+            Visualise.startVisual(args);
+        }
 
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
