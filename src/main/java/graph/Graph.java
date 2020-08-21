@@ -12,40 +12,41 @@ import java.util.List;
 public class Graph {
 
     private String _name;
-    private HashMap<String, Vertex> _vertexMap;
-    private HashMap<String, HashMap<String, Integer>> _edgeMap;
+    private HashMap<Integer, Vertex> _idVertexMap;
+    private HashMap<String, Vertex> _labelVertexMap;
+    private HashMap<Integer, HashMap<Integer, Integer>> _edgeMap;
 
     // Stores the bottom level for each vertex
-    private HashMap<String, Integer> _bottomLevelMap;
+    private HashMap<Integer, Integer> _bottomLevelMap;
 
     public Graph(String name) {
         _name = name;
-        _vertexMap = new HashMap<String, Vertex>();
-        _edgeMap = new HashMap<String, HashMap<String, Integer>>();
-        _bottomLevelMap = new HashMap<String, Integer>();
+        _idVertexMap = new HashMap<Integer, Vertex>();
+        _labelVertexMap = new HashMap<String, Vertex>();
+        _edgeMap = new HashMap<Integer, HashMap<Integer, Integer>>();
+        _bottomLevelMap = new HashMap<Integer, Integer>();
     }
 
-    public void addVertex(String id, Vertex vertex) {
-        _vertexMap.put(id, vertex);
-        _edgeMap.put(id, new HashMap<String, Integer>());
+    public void addVertex(Vertex vertex) {
+        _idVertexMap.put(vertex.getId(), vertex);
+        _labelVertexMap.put(vertex.getLabel(), vertex);
+        _edgeMap.put(vertex.getId(), new HashMap<Integer, Integer>());
     }
 
-    public Vertex getVertex(String id) {
-        return _vertexMap.get(id);
+    public Vertex getVertex(int id) {
+        return _idVertexMap.get(id);
     }
 
-    // check if there exists a specified vertex.
-    public boolean hasVertex(String id) {
-        return _vertexMap.containsKey(id);
+    public Vertex getVertex(String label) {
+        return _labelVertexMap.get(label);
     }
 
-    // get edge weight given vertex 1 to 2.
-    public int getEdgeWeight(String from, String to) {
+    public int getEdgeWeight(int from, int to) {
         return _edgeMap.get(from).get(to);
     }
 
     // check if there exists a directed edge from vertex 1 to 2.
-    public boolean hasEdge(String from, String to) {
+    public boolean hasEdge(int from, int to) {
         return _edgeMap.containsKey(from) && _edgeMap.get(from).containsKey(to);
     }
 
@@ -54,12 +55,12 @@ public class Graph {
      * incoming edges, and should only be called once the Graph has been fully constructed.
      * @return Root Vertex of the graph
      */
-    public List<Vertex> getRoots() {
+    public List<Integer> getRoots() {
         // TODO: May need optimising in future.
-        List<Vertex> roots = new ArrayList<Vertex>();
-        for (Vertex v : _vertexMap.values()) {
+        List<Integer> roots = new ArrayList<Integer>();
+        for (Vertex v : _idVertexMap.values()) {
             if (v.getIncomingVertices().size() == 0) {
-                roots.add(v);
+                roots.add(v.getId());
             }
         }
         return roots;
@@ -72,15 +73,25 @@ public class Graph {
      * @param toId ID of the Vertex at the head
      * @param weight Weighting of the edge.
      */
-    public void addEdge(String fromId, String toId, int weight) {
+    public void addEdge(int fromId, int toId, int weight) {
         if (!_edgeMap.containsKey(fromId)) {
             throw new RuntimeException("No vertex with id '" + fromId + "' exists in this graph.");
         } else if (!_edgeMap.containsKey(toId)) {
             throw new RuntimeException("No vertex with id '" + toId + "' exists in this graph.");
         }
         _edgeMap.get(fromId).put(toId, weight);
-        _vertexMap.get(fromId).addOutgoingVertex(_vertexMap.get(toId));
-        _vertexMap.get(toId).addIncomingVertex(_vertexMap.get(fromId));
+        _idVertexMap.get(fromId).addOutgoingVertex(_idVertexMap.get(toId));
+        _idVertexMap.get(toId).addIncomingVertex(_idVertexMap.get(fromId));
+    }
+
+    /**
+     * Alias for Graph#addEdge(int fromId, int toId, int weight)
+     * @param fromLabel Label of vertex at tail of edge
+     * @param toLabel Label of vertex at head of edge
+     * @param weight Weight of the edge
+     */
+    public void addEdge(String fromLabel, String toLabel, int weight) {
+        addEdge(_labelVertexMap.get(fromLabel).getId(), _labelVertexMap.get(toLabel).getId(), weight);
     }
 
     /**
@@ -98,9 +109,9 @@ public class Graph {
      * @param vertexId ID of the vertex.
      * @return The bottom level of the vertex with ID vertexId.
      */
-    public int getBottomLevel(String vertexId) {
+    public int getBottomLevel(int vertexId) {
 
-        Vertex v = _vertexMap.get(vertexId);
+        Vertex v = _idVertexMap.get(vertexId);
         if (_bottomLevelMap.containsKey(vertexId)) {
             return _bottomLevelMap.get(vertexId);
         } else {
@@ -119,15 +130,11 @@ public class Graph {
 
     /* GETTERS */
     public List<Vertex> getVertices() {
-        return new ArrayList<Vertex>(_vertexMap.values());
+        return new ArrayList<Vertex>(_idVertexMap.values());
     }
 
     public String getName() {
         return _name;
-    }
-
-    public int getNoOfVertices() {
-        return _vertexMap.size();
     }
 
 }

@@ -1,17 +1,18 @@
 package algorithm;
 
+import graph.Graph;
 import graph.Vertex;
 
 public class ScheduledTask {
 
     private int _processor;
     private int _startTime;
-    private Vertex _task;
+    private int _taskId;
 
-    public ScheduledTask(int processor, int startTime, Vertex task) {
+    public ScheduledTask(int processor, int startTime, int taskId) {
         _processor = processor;
         _startTime = startTime;
-        _task = task;
+        _taskId = taskId;
     }
 
     public int getProcessor() {
@@ -22,13 +23,14 @@ public class ScheduledTask {
         return _startTime;
     }
 
-    public Vertex getTask() {
-        return _task;
+    public int getTask() {
+        return _taskId;
     }
 
-    public void updateVertex(){
-        _task.setProcessorNumber(_processor + 1);
-        _task.setStartTime(_startTime);
+    public void updateVertex(Graph dependencyGraph){
+        Vertex task = dependencyGraph.getVertex(_taskId);
+        task.setProcessorNumber(_processor + 1);
+        task.setStartTime(_startTime);
     }
 
 }

@@ -63,12 +63,15 @@ public class InputParser {
                     String parentVertexID = childAndParentVertexIDSplit[0];
                     String childVertexID = childAndParentVertexIDSplit[1];
 
+                    Vertex parentVertex = algoGraph.getVertex(parentVertexID);
+                    Vertex childVertex = algoGraph.getVertex(childVertexID);
+
                     // find edge weight
                     edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
                     int edgeWeightInt = Integer.parseInt(edgeWeight);
 
                     // add edge to graph data.
-                    algoGraph.addEdge(parentVertexID, childVertexID, edgeWeightInt);
+                    algoGraph.addEdge(parentVertex.getId(), childVertex.getId(), edgeWeightInt);
                     edgeCount++;
 
                 } else if (!line.contains(">") && line.contains("[Weight=")) { // nodes
@@ -88,7 +91,7 @@ public class InputParser {
                     // Instantiate vertex using ID and weight
                     // and then add to the graph.
                     Vertex graphVertex = new Vertex(vertexID, vertexWeightInt);
-                    algoGraph.addVertex(vertexID, graphVertex);
+                    algoGraph.addVertex(graphVertex);
 
                 } else {
                     throw new IllegalArgumentException("Error: Input '.dot' file is not a valid graph. " +

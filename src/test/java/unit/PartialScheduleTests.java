@@ -25,10 +25,10 @@ public class PartialScheduleTests {
         Vertex c = new Vertex("c", 3);
         Vertex d = new Vertex("d", 2);
 
-        dependencyGraph.addVertex(a.getId(), a);
-        dependencyGraph.addVertex(b.getId(), b);
-        dependencyGraph.addVertex(c.getId(), c);
-        dependencyGraph.addVertex(d.getId(), d);
+        dependencyGraph.addVertex(a);
+        dependencyGraph.addVertex(b);
+        dependencyGraph.addVertex(c);
+        dependencyGraph.addVertex(d);
 
         dependencyGraph.addEdge(a.getId(), b.getId(), 1);
         dependencyGraph.addEdge(a.getId(), c.getId(), 2);
@@ -65,7 +65,7 @@ public class PartialScheduleTests {
     public void extendProducesNewPartialSchedules() {
 
         PartialSchedule nullSchedule = new PartialSchedule(dependencyGraph, 8);
-        Assert.assertNotEquals(nullSchedule.extend().size(),0);
+        Assert.assertNotEquals(nullSchedule.extend(dependencyGraph).size(),0);
 
     }
 
@@ -83,10 +83,10 @@ public class PartialScheduleTests {
             if (step++ > maxSteps) {
                 Assert.fail("Modelled solution space is far too large!");
             }
-            schedules.addAll(schedules.remove(0).extend());
+            schedules.addAll(schedules.remove(0).extend(dependencyGraph));
         }
 
-        Assert.assertNotEquals(nullSchedule.extend().size(), 0);
+        Assert.assertNotEquals(nullSchedule.extend(dependencyGraph).size(), 0);
 
     }
 
@@ -94,32 +94,32 @@ public class PartialScheduleTests {
     public void extendBenchmark() {
         PartialSchedule nullSchedule = new PartialSchedule(dependencyGraph, 8);
         int step = 0;
-        while (step++ < 10000) { nullSchedule.extend(); }
+        while (step++ < 10000) { nullSchedule.extend(dependencyGraph); }
     }
 
     @Test
     public void extendPrunesDuplicatesForOneTask() {
         PartialSchedule nullSchedule = new PartialSchedule(dependencyGraph, 8);
         // Duplicate pruning should mean only one child schedule is produced
-        Assert.assertEquals(1, nullSchedule.extend().size());
+        Assert.assertEquals(1, nullSchedule.extend(dependencyGraph).size());
     }
 
     @Test
     public void extendPrunesDuplicatesForMultipleTasks() {
         PartialSchedule schedule = new PartialSchedule(dependencyGraph, 8);
-        schedule = schedule.extend().get(0);  // get only child schedule
+        schedule = schedule.extend(dependencyGraph).get(0);  // get only child schedule
         // Duplicate pruning should mean only four child schedules are produced
-        Assert.assertEquals(4, schedule.extend().size());
+        Assert.assertEquals(4, schedule.extend(dependencyGraph).size());
     }
 
     // Assumes parent schedule is valid
     private void assertValidSchedule(PartialSchedule parent, PartialSchedule schedule) {
 
-        Vertex cV = schedule.getTask();  // Child vertex (task scheduled in 'schedule')
+        Vertex cV = dependencyGraph.getVertex(schedule.getTaskId());  // Child vertex (task scheduled in 'schedule')
 
         int minStartTime = parent.getProcessorEndTimes()[schedule.getProcessor()];
 
-        for (Vertex dependency : schedule.getTask().getIncomingVertices()) {
+        for (Vertex dependency : cV.getIncomingVertices()) {
             ScheduledTask scheduledTask = schedule.getScheduledTask(dependency.getId());
             // If this is null then dependency has not been scheduled, which is not valid as a task can only be
             // scheduled after all of its parents (chronologically)
@@ -142,7 +142,7 @@ public class PartialScheduleTests {
 
         while (!schedules.isEmpty()) {
             PartialSchedule parent = schedules.remove(0);
-            List<PartialSchedule> children = parent.extend();
+            List<PartialSchedule> children = parent.extend(dependencyGraph);
             children.forEach(child -> assertValidSchedule(parent, child));
             schedules.addAll(children);
         }
