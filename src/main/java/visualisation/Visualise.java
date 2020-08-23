@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
+import visualisation.controllers.GUIController;
 
 public class Visualise extends Application {
 
@@ -33,9 +34,9 @@ public class Visualise extends Application {
             FXMLLoader loader=new FXMLLoader();
             loader.setLocation(Visualise.class.getResource(SCENE_PATH));
             //System.out.println("loader =" + loader);
+
             Parent root=loader.load();
             Scene scene = new Scene(root);
-
             stage.setWidth(900);
             stage.setHeight(600);
 
@@ -46,7 +47,7 @@ public class Visualise extends Application {
             stage.setScene(scene);
 
             stage.show();
-
+            stage.setOnCloseRequest(event -> System.exit(0));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,10 +60,6 @@ public class Visualise extends Application {
     public void stop() {
         System.exit(1);
     }
-
-
-
-
 
 
 }
