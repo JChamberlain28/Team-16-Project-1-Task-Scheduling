@@ -74,4 +74,9 @@ public class Vertex {
         return _cost;
     }
 
+    public static void resetIdCount() {
+        // only required for testing purposes
+        currId = 0;
+    }
+
 }

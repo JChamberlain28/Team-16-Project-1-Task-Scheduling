@@ -1,7 +1,7 @@
 import algorithm.AStarAlgorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
-import algorithm.UnoptimalAlgo;
+import algorithm.SequentialAlgorithm;
 import graph.Graph;
 
 
@@ -32,7 +32,7 @@ public class Main {
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){
-            st.updateVertex();
+            st.updateVertex(graph);
         }
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());

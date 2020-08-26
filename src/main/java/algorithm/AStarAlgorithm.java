@@ -1,20 +1,14 @@
 package algorithm;
 
-
-
-
 import graph.Graph;
 import graph.Vertex;
 
-import java.awt.*;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.*;
 
 
 public class AStarAlgorithm {
-
-    private final HashMap<PartialSchedule, Float> _heuristicMap = new HashMap<PartialSchedule, Float>();
 
     private final Graph _dependencyGraph;
     private final int _numProcessors;
@@ -26,43 +20,33 @@ public class AStarAlgorithm {
 
     public PartialSchedule findOptimalSchedule() {
 
-        HashSet<HashSet<String>> closedSet = new HashSet<HashSet<String>>();
+        HashSet<Integer> scheduleSet = new HashSet<Integer>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
                 (a, b) -> Float.compare(getHeuristicCost(a), getHeuristicCost(b))
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
-        setHeuristicCost(nullSchedule);
         open.add(nullSchedule);
 
         while(!open.isEmpty()) {
             PartialSchedule p = open.poll();
-            _heuristicMap.remove(p);
-            Set<String> s = p.getProcessorStringSet();
 
-            // Maybe apply this dupe check to DFS Branch and Bound
-            if (!closedSet.add((HashSet<String>)s)) {
-                continue;
-            }else if (p.isComplete()) {
+            if (p.isComplete()) {
                 return p;
             }
 
-            open.addAll(p.extend(_dependencyGraph));
+            List<PartialSchedule> children = p.extend(_dependencyGraph);
+            for (PartialSchedule child : children) {
+                // PartialSchedule#hashCode handles duplicate detection for us
+                if (scheduleSet.add(child.hashCode())) {
+                    open.add(child);
+                }
+            }
+
         }
 
         return null;
-
-    }
-
-    public void setHeuristicCost(PartialSchedule p) {
-
-        if (_heuristicMap.containsKey(p)) {
-            System.err.println("Warning: Heuristic cost already calculated for this partial schedule -> " +
-                    "duplicate calculation call");
-            return;
-        }
-        _heuristicMap.put(p, getHeuristicCost(p));
 
     }
 
