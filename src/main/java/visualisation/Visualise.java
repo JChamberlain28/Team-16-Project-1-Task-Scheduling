@@ -35,7 +35,14 @@ public class Visualise extends Application {
             loader.setLocation(Visualise.class.getResource(SCENE_PATH));
             //System.out.println("loader =" + loader);
 
+            //GUIController _GUIController = new GUIController();
+
             Parent root=loader.load();
+
+
+
+
+
             Scene scene = new Scene(root);
             stage.setWidth(900);
             stage.setHeight(600);

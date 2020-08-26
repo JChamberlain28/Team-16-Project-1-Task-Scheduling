@@ -63,8 +63,8 @@ public class CliParser {
                 _CliParsedInputs._filePathName = args[0]; // File path
                 String dir = FilenameMethods.getDirectoryOfJar();
 
-                //File file = new File(dir + File.separator + _CliParsedInputs._filePathName);
-                File file = new File("C:\\Users\\OEM\\IdeaProjects\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+                //File file = new File(dir + File.separator + fileName);
+                File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
 
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
@@ -87,7 +87,7 @@ public class CliParser {
             // does not have minimum number of args.
             throw new IllegalArgumentException("Error: Required arguments are missing." +
                     " Please enter a valid filename and number of processors in the format: \n" +
-                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
         // In the case that options are not included, default values are set.
@@ -101,37 +101,37 @@ public class CliParser {
         // default visualisation boolean (true or false)
         _CliParsedInputs._visualisationDisplay = false;
 
-            // Detect and parse all command line arg options flags
-            CommandLine commandLineParsed = parseOptionArguments(args);
+        // Detect and parse all command line arg options flags
+        CommandLine commandLineParsed = parseOptionArguments(args);
 
-            // option flag provided for parallisation with n number of cores.
-            if (commandLineParsed.hasOption("p")) {
-                String numberOfCoresInput = commandLineParsed.getOptionValue("p");
-                // Checking valid number of cores.
-                if (numberOfCoresInput!=null && checkValidStringInt(numberOfCoresInput)) {
-                    _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
-                }else{
-                    throw new IllegalArgumentException("Error: invalid number of cores." +
-                            " Please enter a valid number of cores.");
-                }
+        // option flag provided for parallisation with n number of cores.
+        if (commandLineParsed.hasOption("p")) {
+            String numberOfCoresInput = commandLineParsed.getOptionValue("p");
+            // Checking valid number of cores.
+            if (numberOfCoresInput!=null && checkValidStringInt(numberOfCoresInput)) {
+                _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
+            }else{
+                throw new IllegalArgumentException("Error: invalid number of cores." +
+                        " Please enter a valid number of cores.");
             }
+        }
 
-            // option flag provided for visualisation.
-            if (commandLineParsed.hasOption("v")) {
-                _CliParsedInputs._visualisationDisplay = true;
-            }
+        // option flag provided for visualisation.
+        if (commandLineParsed.hasOption("v")) {
+            _CliParsedInputs._visualisationDisplay = true;
+        }
 
-            // option flag provided for choosing an output file name.
-            if (commandLineParsed.hasOption("o")) {
-                String outputFileNameInput = commandLineParsed.getOptionValue("o");
-                // Checking valid output file name.
-                if (outputFileNameInput!=null && checkValidFileName(outputFileNameInput)) {
-                    _CliParsedInputs._outputFileName = outputFileNameInput;
-                } else{
-                    throw new IllegalArgumentException("Error: invalid output file name. " +
-                            "Please provide a valid file name with the full '.dot' extension included.");
-                }
+        // option flag provided for choosing an output file name.
+        if (commandLineParsed.hasOption("o")) {
+            String outputFileNameInput = commandLineParsed.getOptionValue("o");
+            // Checking valid output file name.
+            if (outputFileNameInput!=null && checkValidFileName(outputFileNameInput)) {
+                _CliParsedInputs._outputFileName = outputFileNameInput;
+            } else{
+                throw new IllegalArgumentException("Error: invalid output file name. " +
+                        "Please provide a valid file name with the full '.dot' extension included.");
             }
+        }
 
     }
 
@@ -171,7 +171,7 @@ public class CliParser {
             line = parser.parse(cliOptions, optionArguments);
         } catch(Exception e) {
             throw new IllegalArgumentException( "Error: " + e.getMessage() +
-                   ". Please enter valid options and valid arguments in the format \n" +
+                    ". Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
         }
 
