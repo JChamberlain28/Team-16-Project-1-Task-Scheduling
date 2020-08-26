@@ -40,9 +40,6 @@ public class Visualise extends Application {
             Parent root=loader.load();
 
 
-
-
-
             Scene scene = new Scene(root);
             stage.setWidth(900);
             stage.setHeight(600);

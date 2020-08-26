@@ -6,6 +6,8 @@ import java.util.List;
 
 import algorithm.ScheduledTask;
 
+import graph.Graph;
+import graph.Vertex;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,8 +40,8 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
 
         public ExtraData(ScheduledTask scheduledTask, String styleClass) {
             super();
-
-            this.taskTimeLength = 2;  //                FUCK
+            Vertex taskVertex = Graph.graphInstance.getVertex(scheduledTask.getTask()); //lol
+            this.taskTimeLength = taskVertex.getCost();
             this.scheduledTask = scheduledTask;
             this.styleClass = styleClass;
 

@@ -202,16 +202,16 @@ public class GUIController {
         //PartialSchedule pSchedule = new PartialSchedule();
         // loop for all processors
 
-        //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
+        ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
-        PartialSchedule bestSchedule = null;  //??!!!!!!!!!!!!!!!!!!!!!! SOMEHOW GET SCHEULE HERE
+        //PartialSchedule bestSchedule = null;  //??!!!!!!!!!!!!!!!!!!!!!! SOMEHOW GET SCHEULE HERE
 
-        for ( ScheduledTask scheduledTask:  bestSchedule.getScheduledTasks()) {
+        //for ( ScheduledTask scheduledTask:  bestSchedule.getScheduledTasks()) {
             int taskProcessor = scheduledTask.getProcessor();
             XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
                     new GanttChart.ExtraData(scheduledTask, "status-red"));
             seriesProcessors[taskProcessor].getData().add(newData);
-        }
+        //}
 
 
         // clear current gantt and repopulate chart with new series

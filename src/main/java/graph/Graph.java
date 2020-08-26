@@ -19,7 +19,10 @@ public class Graph {
     // Stores the bottom level for each vertex
     private HashMap<Integer, Integer> _bottomLevelMap;
 
+    public static Graph graphInstance;
+
     public Graph(String name) {
+        Graph.graphInstance = this;
         _name = name;
         _idVertexMap = new HashMap<Integer, Vertex>();
         _labelVertexMap = new HashMap<String, Vertex>();
