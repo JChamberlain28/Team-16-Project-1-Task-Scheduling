@@ -9,8 +9,10 @@ import java.util.List;
  * */
 public class Vertex {
 
-    // Fields of the vertex object
-    private String _id;
+    private static int currId = 0;
+
+    private int _id;  // uniquely identifies every vertex
+    private String _label;  // human readable label for every vertex (parsed from .dot input)
     private ArrayList<Vertex> incomingVertices;
     private ArrayList<Vertex> outgoingVertices;
 
@@ -18,10 +20,11 @@ public class Vertex {
     private int _processorNumber;
     private int _cost;
 
-    public Vertex(String id, int cost) {
+    public Vertex(String label, int cost) {
         incomingVertices = new ArrayList<Vertex>();
         outgoingVertices = new ArrayList<Vertex>();
-        _id = id;
+        _label = label;
+        _id = currId++;
         _cost = cost;
     }
 
@@ -34,10 +37,17 @@ public class Vertex {
         outgoingVertices.add(outgoingVertex);
     }
 
+    public void clearIncomingVertices() { incomingVertices.clear(); }
 
-    //Getters and setters for vertex fields
-    public String getId() {
+    public void clearOutgoingVertices() { outgoingVertices.clear(); }
+
+
+    public int getId() {
         return _id;
+    }
+
+    public String getLabel() {
+        return _label;
     }
 
     public ArrayList<Vertex> getIncomingVertices() {
@@ -66,6 +76,11 @@ public class Vertex {
 
     public int getCost() {
         return _cost;
+    }
+
+    public static void resetIdCount() {
+        // only required for testing purposes
+        currId = 0;
     }
 
 }
