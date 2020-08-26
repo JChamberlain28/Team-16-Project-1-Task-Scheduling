@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PartialScheduleTests {
 
@@ -20,6 +21,7 @@ public class PartialScheduleTests {
     public void initGraph() {
 
         dependencyGraph = new Graph("test");
+        Vertex.resetIdCount();
 
         Vertex a = new Vertex("a", 2);
         Vertex b = new Vertex("b", 3);
@@ -151,6 +153,19 @@ public class PartialScheduleTests {
             children.forEach(child -> assertValidSchedule(parent, child));
             schedules.addAll(children);
         }
+
+    }
+
+    @Test
+    public void equivalentSchedulesHaveSameHashCode() {
+
+        Set<Integer> schedules = new HashSet<Integer>();
+        (new PartialSchedule(dependencyGraph, 4)).extend(dependencyGraph)
+            .get(0).extend(dependencyGraph).stream().forEach(ps -> {
+                schedules.add(ps.hashCode());
+            });
+
+        Assert.assertEquals(4, schedules.size());
 
     }
 

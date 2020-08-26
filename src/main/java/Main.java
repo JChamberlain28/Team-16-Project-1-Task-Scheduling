@@ -1,6 +1,7 @@
 import algorithm.AStarAlgorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
+import algorithm.UnoptimalAlgo;
 import graph.Graph;
 
 
