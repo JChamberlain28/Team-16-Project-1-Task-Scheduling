@@ -72,7 +72,7 @@ public class GraphTests {
         identicalListControl.add(h1);
         identicalListControl.add(h2);
 
-        List<HashSet<Integer>> actual = graph.identicalTaskVirtualEdgeBuild();
+        List<HashSet<Integer>> actual = graph.buildVirtualEdges();
 
         Assert.assertEquals(identicalListControl.size(), actual.size());
 
@@ -133,7 +133,7 @@ public class GraphTests {
         identicalListControl.add(h1);
 
 
-        List<HashSet<Integer>> actual = graph.identicalTaskVirtualEdgeBuild();
+        List<HashSet<Integer>> actual = graph.buildVirtualEdges();
 
 
 
@@ -191,7 +191,7 @@ public class GraphTests {
         identicalListControl.add(h1);
 
 
-        List<HashSet<Integer>> actual = graph.identicalTaskVirtualEdgeBuild();
+        List<HashSet<Integer>> actual = graph.buildVirtualEdges();
 
 
 

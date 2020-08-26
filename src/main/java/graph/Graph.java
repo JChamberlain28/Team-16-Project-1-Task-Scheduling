@@ -117,7 +117,7 @@ public class Graph {
      * @param vertexId ID of the vertex.
      * @return The bottom level of the vertex with ID vertexId.
      */
-    public int getBottomLevel(int vertexId) {
+    public int getBottomLevel(int vertexId) { //TODO: Consider accounting for virtual edges (not incl in bottom lvl calc
 
         Vertex v = _idVertexMap.get(vertexId);
         if (_bottomLevelMap.containsKey(vertexId)) {
@@ -136,7 +136,7 @@ public class Graph {
     }
 
 
-    public List<HashSet<Integer>> identicalTaskVirtualEdgeBuild(){ // returns a list of hashsets for unit test purposes
+    public List<HashSet<Integer>> buildVirtualEdges(){ // returns a list of hashsets for unit test purposes
         List<HashSet<Integer>> identicalList = new ArrayList<HashSet<Integer>>();
 
         for (int vId: _idVertexMap.keySet()){
@@ -222,7 +222,11 @@ public class Graph {
                 List<Integer> list = new ArrayList(identSubList);
                 _idVertexMap.get(list.get(i)).clearOutgoingVertices();
                 _idVertexMap.get(list.get(i+1)).clearIncomingVertices();
+                _idVertexMap.get(list.get(i)).addOutgoingVertex(_idVertexMap.get(list.get(i+1)));
+                _idVertexMap.get(list.get(i+1)).addIncomingVertex(_idVertexMap.get(list.get(i)));
+
                 addEdge(list.get(i), list.get(i+1), -1); // -1 weight is virtual edge
+
             }
 
         }

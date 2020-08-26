@@ -87,7 +87,8 @@ public class AStarAlgorithm {
                     if (depScheduledTask.getProcessor() == i) {
                         // Do nothing, as there is no cross-processor communication delay
                     } else {
-                        dataReadyTime += _dependencyGraph.getEdgeWeight(dep.getId(), child.getId());
+                        // doing Math.abs to negate virtual edges
+                        dataReadyTime += Math.abs(_dependencyGraph.getEdgeWeight(dep.getId(), child.getId()));
                     }
                     maxDataReadyTime = Math.max(maxDataReadyTime, dataReadyTime);
 

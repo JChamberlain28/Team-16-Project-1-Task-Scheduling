@@ -1,7 +1,6 @@
 import algorithm.AStarAlgorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
-import algorithm.UnoptimalAlgo;
 import graph.Graph;
 
 
@@ -26,7 +25,7 @@ public class Main {
 
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
-        graph.identicalTaskVirtualEdgeBuild();
+        graph.buildVirtualEdges();
         AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
         PartialSchedule schedule = aStar.findOptimalSchedule();
 
@@ -36,6 +35,8 @@ public class Main {
         }
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
+
+
 
     }
 

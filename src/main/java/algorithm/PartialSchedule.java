@@ -146,12 +146,21 @@ public class PartialSchedule {
                 int pEarliestStartTime = _processorEndTimes[i];
                 for (Vertex dependency : task.getIncomingVertices()) {
 
+
+
                     ScheduledTask scheduledTask = _scheduledTasks[dependency.getId()];
                     if (scheduledTask.getProcessor() == i) {
                         // Do nothing as this start time would have to be <= processor end time
                     } else {
-                        int tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
-                                dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                        int tempStartTime;
+                        if ((dependencyGraph.getEdgeWeight(dependency.getId(), taskId)) == -1){
+                            // this is a virtual edge
+                            // It does not include the dependency cost in start time
+                            tempStartTime = scheduledTask.getStartTime();
+                        } else {
+                            tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
+                                    dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                        }
                         pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
                     }
 
