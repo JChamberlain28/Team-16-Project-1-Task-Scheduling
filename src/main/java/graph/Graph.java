@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /*
@@ -19,18 +20,89 @@ public class Graph {
     // Stores the bottom level for each vertex
     private HashMap<Integer, Integer> _bottomLevelMap;
 
+    private HashMap<Integer, HashSet<Integer>> _identicalList;
+
     public Graph(String name) {
         _name = name;
         _idVertexMap = new HashMap<Integer, Vertex>();
         _labelVertexMap = new HashMap<String, Vertex>();
         _edgeMap = new HashMap<Integer, HashMap<Integer, Integer>>();
         _bottomLevelMap = new HashMap<Integer, Integer>();
+        _identicalList = new HashMap<>();
     }
 
     public void addVertex(Vertex vertex) {
+
+
         _idVertexMap.put(vertex.getId(), vertex);
         _labelVertexMap.put(vertex.getLabel(), vertex);
         _edgeMap.put(vertex.getId(), new HashMap<Integer, Integer>());
+
+    }
+
+    public void IdenticalTaskListBuild(){
+
+        for (int vId: _idVertexMap.keySet()){
+
+            Vertex v = _idVertexMap.get(vId); // checking this is not identical to another task
+            for (int vIdTwo: _idVertexMap.keySet()) {
+                if (vId != vIdTwo){
+                    Vertex y = _idVertexMap.get(vIdTwo);
+                    boolean incomingVertMatch = ((v.getIncomingVertices().size() == y.getIncomingVertices().size()) &&
+                            (v.getIncomingVertices().containsAll(y.getIncomingVertices())));
+
+
+                    boolean outgoingVertMarch = ((v.getOutgoingVertices().size() == y.getOutgoingVertices().size()) &&
+                            (v.getOutgoingVertices().containsAll(y.getOutgoingVertices())));
+
+
+                    boolean incomingEdgeWeightSame = true;
+                    boolean outgoingEdgeWeightSame = true;
+
+                    if ((v.getIncomingVertices().size()) != (y.getIncomingVertices().size())) {
+                        incomingEdgeWeightSame = false;
+                    } else {
+                        for (Vertex z: v.getIncomingVertices()){
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            if (!incomingEdgeWeightSame){
+                                break;
+                            }
+                        }
+                    }
+
+
+
+
+                    if ((v.getOutgoingVertices().size()) != (y.getOutgoingVertices().size())) {
+                        incomingEdgeWeightSame = false;
+                    } else {
+                        for (Vertex z: v.getIncomingVertices()){
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            if (!incomingEdgeWeightSame){
+                                break;
+                            }
+                        }
+                    }
+
+
+
+
+
+                    if ((v.getCost() == y.getCost()) && incomingVertMatch && outgoingVertMarch &&
+                            incomingEdgeWeightSame && outgoingEdgeWeightSame){
+
+                        if (_identicalList.containsKey(v.getId())){
+                            _identicalList.get(v.getId()).add(y.getId());
+                        } else {
+                            _identicalList.put(v.getId(), new HashSet<>(y.getId()));
+                        }
+
+                    }
+                }
+            }
+
+        }
+
     }
 
     public Vertex getVertex(int id) {
