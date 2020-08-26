@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PartialScheduleTests {
@@ -34,6 +35,10 @@ public class PartialScheduleTests {
         dependencyGraph.addEdge(a.getId(), c.getId(), 2);
         dependencyGraph.addEdge(b.getId(), d.getId(), 2);
         dependencyGraph.addEdge(c.getId(), d.getId(), 1);
+
+        List<HashSet<Integer>> identicalList = new ArrayList<HashSet<Integer>>();
+
+
 
     }
 

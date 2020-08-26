@@ -25,7 +25,7 @@ public class Main {
 
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
-        graph.IdenticalTaskListBuild();
+        graph.identicalTaskVirtualEdgeBuild();
         AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
         PartialSchedule schedule = aStar.findOptimalSchedule();
 

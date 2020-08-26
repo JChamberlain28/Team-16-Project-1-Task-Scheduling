@@ -37,6 +37,10 @@ public class Vertex {
         outgoingVertices.add(outgoingVertex);
     }
 
+    public void clearIncomingVertices() { incomingVertices.clear(); }
+
+    public void clearOutgoingVertices() { outgoingVertices.clear(); }
+
 
     public int getId() {
         return _id;
