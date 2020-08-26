@@ -18,6 +18,8 @@ import java.util.concurrent.Executors;
 import algorithm.ParallelisedDfsBranchAndBound;
 import algorithm.helperForRunnable;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -35,8 +37,11 @@ public class Main {
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
         graph.buildVirtualEdges();
-        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
-        PartialSchedule schedule = aStar.findOptimalSchedule();
+        //AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
+        //PartialSchedule schedule = aStar.findOptimalSchedule();
+
+        ParallelisedDfsBranchAndBound pdbb = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), 4);
+        PartialSchedule schedule = pdbb.findOptimalSchedule();
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){

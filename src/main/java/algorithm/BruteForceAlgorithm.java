@@ -31,7 +31,7 @@ public class BruteForceAlgorithm {
                 bestSchedule = schedule;
                 earliestFinishTime = schedule.getFinishTime();
             } else {
-                schedules.addAll(schedule.extend());
+                schedules.addAll(schedule.extend(_dependencyGraph));
             }
         }
 

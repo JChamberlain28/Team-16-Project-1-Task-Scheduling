@@ -47,7 +47,7 @@ public class DfsBranchAndBound {
                 //        else:
                 else {
                     //    Extend curr_schedule and add all children schedules to the stack
-                    stack.addAll(currentSchedule.extend());
+                    stack.addAll(currentSchedule.extend(_dependencyGraph));
                     //
                 }
 
