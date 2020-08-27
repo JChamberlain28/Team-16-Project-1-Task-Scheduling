@@ -125,7 +125,11 @@ public class Graph {
         } else {
             int maxBottomLevel = 0;
             for (Vertex vChild : v.getOutgoingVertices()) {
-                maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
+                if ((_edgeMap.get(v.getId()).get(vChild.getId())) == -1){ // this is virtual edge, ignore this childs cost
+                    maxBottomLevel = Math.max(maxBottomLevel, (getBottomLevel(vChild) - vChild.getCost()));
+                } else {
+                    maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
+                }
             }
 
             int botLevel = v.getCost() + maxBottomLevel;

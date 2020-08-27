@@ -1,19 +1,25 @@
 package algorithm;
 
-import graph.Graph;
-import java.util.List;
 
-public class helperForRunnable implements Runnable{
+import graph.Graph;
+import javafx.concurrent.Task;
+
+import java.sql.ClientInfoStatus;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
+
+public class helperForRunnable implements Runnable {
 
     private final ParallelisedDfsBranchAndBound _algo;
     private Graph _graph;
     private List<PartialSchedule> _stack;
+    //private LinkedBlockingDeque _stack;
     private int _numProcessors;
     private List<Boolean> _busyList;
     private int _threadId;
 
-    public helperForRunnable(List<PartialSchedule>stack, int numProcessors, List<Boolean> busyList,
-                             int threadId, Graph graph, ParallelisedDfsBranchAndBound algo) {
+    public helperForRunnable(List<PartialSchedule> stack, int numProcessors, List<Boolean> busyList,
+                             int threadId, Graph graph, ParallelisedDfsBranchAndBound algo) { //TODO: better way to close threads, experament
         _stack = stack;
         _numProcessors = numProcessors;
         _threadId = threadId;
@@ -25,7 +31,7 @@ public class helperForRunnable implements Runnable{
 
     @Override
     public void run() {
-        //System.out.println("thread working");
+        System.out.println("thread " + _threadId + " working");
 
         boolean dontExit = true;
 
@@ -67,9 +73,12 @@ public class helperForRunnable implements Runnable{
 
             }
             dontExit = _busyList.contains(true);
-            System.out.println("Thread " + _threadId + " exiting");
+            //System.out.println(_threadId + ": dontExit = " + dontExit);
         }
+        System.out.println("Thread " + _threadId + " closing");
 
 
     }
+
+
 }

@@ -35,7 +35,7 @@ public class DfsBranchAndBound {
             //    Get cost of curr_schedule as curr_cost
             int currentFinishTime = currentSchedule.getFinishTime();
             //    if curr_cost < lowest_cost:
-            if (currentFinishTime < earliestFinishTime){
+            if ((currentFinishTime + CostFunction.getHeuristicCost(currentSchedule, _dependencyGraph)) < earliestFinishTime){
                 //            if curr_schedule is a complete schedule:
                 if (currentSchedule.isComplete()){
                     //    lowest_cost = curr_cost

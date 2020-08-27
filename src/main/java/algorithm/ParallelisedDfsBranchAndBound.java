@@ -1,12 +1,16 @@
 package algorithm;
 
 import graph.Graph;
+import org.apache.commons.lang3.mutable.MutableByte;
+import org.omg.CORBA.TIMEOUT;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class  ParallelisedDfsBranchAndBound {
@@ -17,6 +21,7 @@ public class  ParallelisedDfsBranchAndBound {
     List<Boolean> _busy = new ArrayList<Boolean>();
 
     private List<PartialSchedule> _stack = new ArrayList<PartialSchedule>();
+    //private LinkedBlockingDeque<PartialSchedule> _stack = new LinkedBlockingDeque<PartialSchedule>();
 
     static public PartialSchedule _bestSchedule = null;
 
@@ -34,7 +39,7 @@ public class  ParallelisedDfsBranchAndBound {
     }
 
 
-    synchronized public PartialSchedule popOffStack(){
+    synchronized  PartialSchedule popOffStack(){
         if (_stack.isEmpty()){
             return null;
         }
@@ -43,19 +48,19 @@ public class  ParallelisedDfsBranchAndBound {
     }
 
 
-    synchronized public void addAllToStack(List<PartialSchedule> psList){
+    public void addAllToStack(List<PartialSchedule> psList){
 
         _stack.addAll(psList);
 
     }
 
-    synchronized public void setIfBestSchedule(PartialSchedule ps, int finishTime){
+    public void setIfBestSchedule(PartialSchedule ps, int finishTime){
 
         if (finishTime < _earliestFinishTime){
             _earliestFinishTime = finishTime;
             _bestSchedule = ps;
         }
-        System.out.println(" Stack Size: " + _stack.size());
+        //System.out.println(" Stack Size: " + _stack.size());
     }
 
 
@@ -67,18 +72,22 @@ public class  ParallelisedDfsBranchAndBound {
 
         _stack.add(new PartialSchedule(_dependencyGraph, _numProcessors));
         ExecutorService service = Executors.newFixedThreadPool(_threads);
+        List<helperForRunnable> runnables = new ArrayList<helperForRunnable>();
         for(int i=0; i<_threads;i++) {
-            service.execute(new helperForRunnable(_stack, _numProcessors, _busy, i, _dependencyGraph, this));
+            service.submit(new helperForRunnable(_stack, _numProcessors, _busy, i, _dependencyGraph, this));
         }
 
+
+        service.shutdown();
         try {
+
             service.awaitTermination(120, TimeUnit.HOURS);
         } catch (InterruptedException e){
             e.printStackTrace();
         }
 
 
-
+        System.out.println("Stack Exit size: " + _stack.size());
         return _bestSchedule;
     }
 
