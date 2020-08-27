@@ -7,6 +7,10 @@ public class CostFunction {
 
     public static float getHeuristicCost(PartialSchedule p, Graph graph) {
 
+        if (p.isComplete()) {
+            return p.getFinishTime();
+        }
+
         if (p.getScheduledTask() == null){
             return 0.0f;
         }

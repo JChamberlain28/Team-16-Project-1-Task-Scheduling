@@ -23,8 +23,8 @@ public class AStarAlgorithm {
         HashSet<Integer> scheduleSet = new HashSet<Integer>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
-                (a, b) -> Float.compare(CostFunction.getHeuristicCost(a, _dependencyGraph) + a.getFinishTime(),
-                        CostFunction.getHeuristicCost(b, _dependencyGraph) + b.getFinishTime())
+                (a, b) -> Float.compare(CostFunction.getHeuristicCost(a, _dependencyGraph),
+                        CostFunction.getHeuristicCost(b, _dependencyGraph))
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
@@ -50,59 +50,5 @@ public class AStarAlgorithm {
         return null;
 
     }
-
-//    private float getHeuristicCost(PartialSchedule p) {
-//
-//        if (p.getScheduledTask() == null){
-//            return 0.0f;
-//        }
-//
-//        // Calculate idle time heuristic
-//        float idleTimeHeuristic = (float) p.getIdleTime();
-//        for (Vertex v : _dependencyGraph.getVertices()) {
-//            idleTimeHeuristic += v.getCost();
-//        }
-//        idleTimeHeuristic /= p.getProcessorEndTimes().length;
-//
-//        // Calculate bottom level heuristic
-//        float bottomLevelHeuristic = 0;
-//        for (ScheduledTask st : p.getScheduledTasks()){
-//            bottomLevelHeuristic = Math.max(bottomLevelHeuristic, st.getStartTime() +
-//                    _dependencyGraph.getBottomLevel(st.getTask()));
-//        }
-//
-//        // Calculate Data Ready Time heuristic
-//        float drtHeuristic = 0;
-//        for (int childId : p.getToSchedule()) {
-//
-//            Vertex child = _dependencyGraph.getVertex(childId);
-//            float minDataReadyTime = Integer.MAX_VALUE;
-//
-//            for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
-//
-//                int maxDataReadyTime = 0;
-//                for (Vertex dep : child.getIncomingVertices()) {
-//
-//                    ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
-//                    int dataReadyTime = depScheduledTask.getStartTime() + dep.getCost();
-//                    if (depScheduledTask.getProcessor() == i) {
-//                        // Do nothing, as there is no cross-processor communication delay
-//                    } else {
-//                        // doing Math.abs to negate virtual edges
-//                        dataReadyTime += Math.abs(_dependencyGraph.getEdgeWeight(dep.getId(), child.getId()));
-//                    }
-//                    maxDataReadyTime = Math.max(maxDataReadyTime, dataReadyTime);
-//
-//                }
-//                minDataReadyTime = Math.min(maxDataReadyTime, minDataReadyTime);
-//
-//            }
-//            drtHeuristic = Math.max(minDataReadyTime + _dependencyGraph.getBottomLevel(child), drtHeuristic);
-//
-//        }
-//
-//        return Math.max(idleTimeHeuristic, Math.max(bottomLevelHeuristic, drtHeuristic));
-//
-//    }
 
 }

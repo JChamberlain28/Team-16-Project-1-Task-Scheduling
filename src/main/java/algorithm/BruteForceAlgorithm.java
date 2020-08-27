@@ -20,7 +20,7 @@ public class BruteForceAlgorithm {
     public PartialSchedule findOptimalSchedule() {
 
         List<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
-        schedules.add(new PartialSchedule(_dependencyGraph, 8));
+        schedules.add(new PartialSchedule(_dependencyGraph, _numProcessors));
 
         int earliestFinishTime = Integer.MAX_VALUE;
         PartialSchedule bestSchedule = null;

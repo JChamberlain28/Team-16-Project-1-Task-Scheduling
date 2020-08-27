@@ -35,22 +35,18 @@ public class DfsBranchAndBound {
             //    Get cost of curr_schedule as curr_cost
             int currentFinishTime = currentSchedule.getFinishTime();
             //    if curr_cost < lowest_cost:
-            if ((currentFinishTime + CostFunction.getHeuristicCost(currentSchedule, _dependencyGraph)) < earliestFinishTime){
-                //            if curr_schedule is a complete schedule:
-                if (currentSchedule.isComplete()){
+            if (currentSchedule.isComplete()) {
+
+                if (currentFinishTime < earliestFinishTime) {
                     //    lowest_cost = curr_cost
                     earliestFinishTime = currentFinishTime;
                     //            best_schedule = curr_schedule
                     bestSchedule = currentSchedule;
-
-                }
-                //        else:
-                else {
-                    //    Extend curr_schedule and add all children schedules to the stack
-                    stack.addAll(currentSchedule.extend(_dependencyGraph));
-                    //
                 }
 
+            } else if (CostFunction.getHeuristicCost(currentSchedule, _dependencyGraph) < earliestFinishTime) {
+                //            if curr_schedule is a complete schedule:
+                stack.addAll(currentSchedule.extend(_dependencyGraph));
             }
 
         }

@@ -24,10 +24,10 @@ public class DfsBranchAndBoundTests {
         Vertex c = new Vertex("c", 3);
         Vertex d = new Vertex("d", 2);
 
-        dependencyGraph.addVertex(a.getId(), a);
-        dependencyGraph.addVertex(b.getId(), b);
-        dependencyGraph.addVertex(c.getId(), c);
-        dependencyGraph.addVertex(d.getId(), d);
+        dependencyGraph.addVertex(a);
+        dependencyGraph.addVertex(b);
+        dependencyGraph.addVertex(c);
+        dependencyGraph.addVertex(d);
 
         dependencyGraph.addEdge(a.getId(), b.getId(), 1);
         dependencyGraph.addEdge(a.getId(), c.getId(), 2);

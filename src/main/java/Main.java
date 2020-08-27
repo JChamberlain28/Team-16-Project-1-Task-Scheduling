@@ -35,8 +35,9 @@ public class Main {
         graph.buildVirtualEdges();
 //        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
 //        PartialSchedule schedule = aStar.findOptimalSchedule();
-            DfsBranchAndBound dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
-            PartialSchedule schedule = dfs.findOptimalSchedule();
+        DfsBranchAndBound dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
+        PartialSchedule schedule = dfs.findOptimalSchedule();
+
 
 //        ParallelisedDfsBranchAndBound pdbb = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), 8);
 //        PartialSchedule schedule = pdbb.findOptimalSchedule();
