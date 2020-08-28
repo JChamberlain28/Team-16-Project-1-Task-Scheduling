@@ -3,9 +3,11 @@ package visualisation.controllers;
 
 
 import algorithm.AStarAlgorithm;
+import algorithm.Algorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
 import com.sun.tracing.dtrace.DependencyClass;
+import graph.Graph;
 import input.CliParser;
 import javafx.collections.FXCollections;
 import javafx.scene.chart.CategoryAxis;
@@ -65,10 +67,12 @@ public class GUIController {
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
 
-    AStarAlgorithm _algorithm;
+    private Algorithm _algorithm;
+    private Graph _graph;
 
-    GUIController(AStarAlgorithm  algorithm){
+    public GUIController(Algorithm  algorithm,Graph graph ){
         this._algorithm = algorithm;
+        this._graph = graph;
     }
 
 
@@ -107,10 +111,10 @@ public class GUIController {
                 Platform.runLater(() -> {
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0],(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
                     _cpuSeries.getData().add(new XYChart.Data<>(increment[0], (osMxBean.getProcessCpuLoad())*100));
-
+                    updateGantt();
                 });
             }
-        }, 0, 1000);
+        }, 0, 250);
     }
 
     /*
@@ -209,23 +213,30 @@ public class GUIController {
 
         //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
-        PartialSchedule bestSchedule = null;  //??!!!!!!!!!!!!!!!!!!!!!! SOMEHOW GET SCHEULE HERE
-        // @@@@@@@@@@@@ this throws a null poiner exception
-        // to get rid of null pointer remove the for loop and unco,,emt line 205 with the schedualed task construter
-        for ( ScheduledTask scheduledTask:  bestSchedule.getScheduledTasks()) {
-            int taskProcessor = scheduledTask.getProcessor();
-            XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
-                    new GanttChart.ExtraData(scheduledTask, "status-red"));
-            seriesProcessors[taskProcessor].getData().add(newData);
+
+
+        PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
+
+        if (currentBestSchedule!=null) {
+            // @@@@@@@@@@@@ this throws a null poiner exception
+            // to get rid of null pointer remove the for loop and unco,,emt line 205 with the schedualed task construter
+            for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
+
+                int taskProcessor = scheduledTask.getProcessor();
+                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
+                        new GanttChart.ExtraData(scheduledTask, _graph, "status-red"));
+                seriesProcessors[taskProcessor].getData().add(newData);
+            }
+
+
+            // clear current gantt and repopulate chart with new series
+            chart.getData().clear();
+            for (Series series : seriesProcessors) {
+                chart.getData().add(series);
+            }
+        } else {
+            System.out.println("null schdule");
         }
-
-
-        // clear current gantt and repopulate chart with new series
-        chart.getData().clear();
-        for (Series series: seriesProcessors){
-            chart.getData().add(series);
-        }
-
 
     }
 

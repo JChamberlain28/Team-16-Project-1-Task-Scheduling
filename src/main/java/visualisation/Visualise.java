@@ -1,6 +1,8 @@
 package visualisation;
 
 
+import algorithm.Algorithm;
+import graph.Graph;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
@@ -16,18 +18,27 @@ public class Visualise extends Application {
     private final String visualiserTitle = "Visualisation";
     private final String SCENE_PATH = "views/GUI.fxml";
 
+    static private Algorithm _algorithm;
+    static private Graph _graph;
 
-    public Visualise() {
+    /*public Visualise(Algorithm algorithm,Graph graph) {
         super();
-    }
+        this._algorithm = algorithm;
+        this._graph = graph;
+    }*/
 
 
 
     // start visualisation
-    public static void startVisual(String[] args) {
-        launch(args);
+    public static void startVisual(String[] args, Algorithm algorithm,Graph graph) {
 
+        Visualise._algorithm = algorithm;
+        Visualise._graph = graph;
+        launch(args);
     }
+
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -35,10 +46,10 @@ public class Visualise extends Application {
         try {
             FXMLLoader loader=new FXMLLoader();
             loader.setLocation(Visualise.class.getResource(SCENE_PATH));
-            //System.out.println("loader =" + loader);
+            System.out.println("loader @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=" + loader);
 
-            //GUIController _GUIController = new GUIController();
-
+            GUIController GUIController = new GUIController(Visualise._algorithm, Visualise._graph);
+            loader.setController(GUIController);
             Parent root=loader.load();
 
 

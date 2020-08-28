@@ -38,14 +38,13 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
             return scheduledTask;
         }
 
-        public ExtraData(ScheduledTask scheduledTask, String styleClass) {
+        public ExtraData(ScheduledTask scheduledTask, Graph _graph, String styleClass) {
             super();
-            Vertex taskVertex = Graph.graphInstance.getVertex(scheduledTask.getTask()); //lol
+            Vertex taskVertex = _graph.getVertex(scheduledTask.getTask()); //lol
             this.taskTimeLength = taskVertex.getCost();
             this.scheduledTask = scheduledTask;
             this.styleClass = styleClass;
 
-            //Vertex task = dependencyGraph.getVertex(taskId);
 
         }
 
