@@ -32,7 +32,7 @@ public class OutputGenerator {
             for (Vertex v : graph.getVertices()) {
 
                 // Vertex format: a [ Weight=2, Start=0, Processor=1];
-                String vString = v.getId() + " [ Weight=" + v.getCost() + ", " + "Start=" +
+                String vString = v.getLabel() + " [ Weight=" + v.getCost() + ", " + "Start=" +
                         v.getStartTime() + ", Processor=" + v.getProcessorNumber() + " ];";
                 out.write("\t" + vString);
                 out.newLine();
@@ -41,7 +41,7 @@ public class OutputGenerator {
                 for (Vertex other : v.getIncomingVertices()) {
 
                     // Edge format: a −> b [ Weight=1 ];
-                    String eString = other.getId() + " -> " + v.getId() + " [ Weight=" +
+                    String eString = other.getLabel() + " -> " + v.getLabel() + " [ Weight=" +
                             graph.getEdgeWeight(other.getId(), v.getId()) + " ];";
                     out.write("\t" + eString);
                     out.newLine();

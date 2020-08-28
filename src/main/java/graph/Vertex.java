@@ -37,6 +37,10 @@ public class Vertex {
         outgoingVertices.add(outgoingVertex);
     }
 
+    public void clearIncomingVertices() { incomingVertices.clear(); }
+
+    public void clearOutgoingVertices() { outgoingVertices.clear(); }
+
 
     public int getId() {
         return _id;
@@ -72,6 +76,11 @@ public class Vertex {
 
     public int getCost() {
         return _cost;
+    }
+
+    public static void resetIdCount() {
+        // only required for testing purposes
+        currId = 0;
     }
 
 }

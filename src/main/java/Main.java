@@ -1,7 +1,4 @@
-import algorithm.AStarAlgorithm;
-import algorithm.PartialSchedule;
-import algorithm.ScheduledTask;
-
+import algorithm.*;
 import graph.Graph;
 
 
@@ -11,6 +8,7 @@ import output.OutputGenerator;
 import visualisation.Visualise;
 
 import java.io.IOException;
+
 
 
 public class Main {
@@ -35,10 +33,18 @@ public class Main {
         }
 
         // Parse the input file and create the graph object
-        Graph graph = InputParser.readInput(cliparser.getFileName());
+        Graph graph = InputParser.readInput(cliparser.getFilePathName());
+        graph.buildVirtualEdges();
+//        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
+//        PartialSchedule schedule = aStar.findOptimalSchedule();
+            DfsBranchAndBound dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
+            PartialSchedule schedule = dfs.findOptimalSchedule();
 
-        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
-        PartialSchedule schedule = aStar.findOptimalSchedule();
+//        ParallelisedDfsBranchAndBound pdbb = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), 8);
+//        PartialSchedule schedule = pdbb.findOptimalSchedule();
+        if (cliparser.isVisualisationDisplay()) {
+            Visualise.startVisual(args);
+        }
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){
@@ -58,6 +64,8 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
     }
 
