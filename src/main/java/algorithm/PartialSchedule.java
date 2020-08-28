@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class PartialSchedule {
 
+    // Store heuristic cost of this partial schedule
+    private float _heuristicCost;
+
     // Stores the current end times for each processor
     private final int[] _processorEndTimes;
 
@@ -32,6 +35,8 @@ public class PartialSchedule {
      * @param numProcessors Number of processors that the tasks are being scheduled on.
      */
     public PartialSchedule(Graph dependencyGraph, int numProcessors) {
+
+        _heuristicCost = 0.0f;
 
         _processorEndTimes = new int[numProcessors];
         for (int i = 0; i < numProcessors; i++) {
@@ -119,6 +124,15 @@ public class PartialSchedule {
 
     public List<ScheduledTask> getScheduledTasks() {
         return Arrays.stream(_scheduledTasks).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public float getHeuristicCost(Graph dependencyGraph) {
+        if (_heuristicCost == 0.0f) {
+            _heuristicCost = CostFunction.getHeuristicCost(this, dependencyGraph);
+            return _heuristicCost;
+        } else {
+            return _heuristicCost;
+        }
     }
 
     /**

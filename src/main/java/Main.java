@@ -9,6 +9,7 @@ import output.OutputGenerator;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -18,6 +19,8 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        System.out.println("Started: " + LocalDateTime.now());
 
         CliParser cliparser = CliParser.getCliParserInstance();
 
@@ -33,15 +36,10 @@ public class Main {
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
         graph.buildVirtualEdges();
-//        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
-//        PartialSchedule schedule = aStar.findOptimalSchedule();
-        DfsBranchAndBound dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
+
+        Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
+                cliparser.getNumberOfCores());
         PartialSchedule schedule = dfs.findOptimalSchedule();
-
-
-//        ParallelisedDfsBranchAndBound pdbb = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), 8);
-//        PartialSchedule schedule = pdbb.findOptimalSchedule();
-
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){
@@ -50,7 +48,7 @@ public class Main {
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
 
-
+        System.out.println("Ended: " + LocalDateTime.now());
 
     }
 

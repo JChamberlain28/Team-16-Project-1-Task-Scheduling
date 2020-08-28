@@ -11,10 +11,6 @@ public class CostFunction {
             return p.getFinishTime();
         }
 
-        if (p.getScheduledTask() == null){
-            return 0.0f;
-        }
-
         // Calculate idle time heuristic
         float idleTimeHeuristic = (float) p.getIdleTime();
         for (Vertex v : graph.getVertices()) {

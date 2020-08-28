@@ -8,16 +8,13 @@ import java.util.PriorityQueue;
 import java.util.*;
 
 
-public class AStarAlgorithm {
+public class AStarAlgorithm extends Algorithm {
 
-    private final Graph _dependencyGraph;
-    private final int _numProcessors;
-
-    public AStarAlgorithm(Graph dependencyGraph, int numProcessors){
-        _dependencyGraph = dependencyGraph;
-        _numProcessors = numProcessors;
+    public AStarAlgorithm(Graph dependencyGraph, int numProcessors) {
+        super(dependencyGraph, numProcessors);
     }
 
+    @Override
     public PartialSchedule findOptimalSchedule() {
 
         HashSet<Integer> scheduleSet = new HashSet<Integer>();
@@ -32,8 +29,10 @@ public class AStarAlgorithm {
 
         while(!open.isEmpty()) {
             PartialSchedule p = open.poll();
+            _numPartialSchedulesGenerated++;
 
             if (p.isComplete()) {
+                _numCompleteSchedulesGenerated++;
                 return p;
             }
 

@@ -1,96 +1,100 @@
 package algorithm;
 
 import graph.Graph;
-import org.apache.commons.lang3.mutable.MutableByte;
-import org.omg.CORBA.TIMEOUT;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-public class  ParallelisedDfsBranchAndBound {
+public class  ParallelisedDfsBranchAndBound extends Algorithm {
 
-    private Graph _dependencyGraph;
-    private int _numProcessors;
-    private int _threads;
+    private final int _threads;
+    private int _earliestFinishTime;
     List<Boolean> _busy = new ArrayList<Boolean>();
 
-    private List<PartialSchedule> _stack = new ArrayList<PartialSchedule>();
-    //private LinkedBlockingDeque<PartialSchedule> _stack = new LinkedBlockingDeque<PartialSchedule>();
+    private LinkedList<Integer> _cacheList;
+    private Set<Integer> _cacheSet;
+    private int _cacheCapacity;
 
-    static public PartialSchedule _bestSchedule = null;
+    public ParallelisedDfsBranchAndBound(Graph dependencyGraph, int numProcessors, int threads){
 
-    static public int _earliestFinishTime = Integer.MAX_VALUE;
-
-    public  ParallelisedDfsBranchAndBound(Graph dependencyGraph, int numProcessors, int threads){
-
-        _dependencyGraph = dependencyGraph;
-        _numProcessors = numProcessors;
+        super(dependencyGraph, numProcessors);
         _threads = threads;
-        for(int i=0;i<threads;i++){
+        for (int i = 0; i < threads; i++) {
             _busy.add(false);
-
         }
-    }
+        _earliestFinishTime = Integer.MAX_VALUE;
 
-
-    synchronized  PartialSchedule popOffStack(){
-        if (_stack.isEmpty()){
-            return null;
-        }
-        return _stack.remove(_stack.size() -1);
+        _cacheList = new LinkedList<Integer>();
+        _cacheSet = ConcurrentHashMap.newKeySet();
+        _cacheCapacity = 10000000;
 
     }
 
-
-    public void addAllToStack(List<PartialSchedule> psList){
-
-        _stack.addAll(psList);
-
-    }
-
-    public void setIfBestSchedule(PartialSchedule ps, int finishTime){
-
-        if (finishTime < _earliestFinishTime){
-            _earliestFinishTime = finishTime;
+    public void setIfBestSchedule(PartialSchedule ps) {
+        _numCompleteSchedulesGenerated++;
+        if (ps.getFinishTime() < _earliestFinishTime) {
             _bestSchedule = ps;
+            _earliestFinishTime = ps.getFinishTime();
+            System.out.println(_bestSchedule.getFinishTime());
         }
-        //System.out.println(" Stack Size: " + _stack.size());
     }
 
+    public int getEarliestFinishTime() {
+        return _earliestFinishTime;
+    }
 
+    public boolean updateCache(PartialSchedule ps) {
 
+        int hashCode = ps.hashCode();
+        if (_cacheSet.add(hashCode)) {
+            _cacheList.addLast(hashCode);
+            for (int i = 0; i < _cacheSet.size() - _cacheCapacity; i++) {
+                _cacheSet.remove(_cacheList.removeFirst());
+            }
+            return true;
+        } else {
+            return false;
+        }
 
+    }
 
     public PartialSchedule findOptimalSchedule() {
 
-
-        _stack.add(new PartialSchedule(_dependencyGraph, _numProcessors));
-        ExecutorService service = Executors.newFixedThreadPool(_threads);
-        List<helperForRunnable> runnables = new ArrayList<helperForRunnable>();
-        for(int i=0; i<_threads;i++) {
-            service.submit(new helperForRunnable(_stack, _numProcessors, _busy, i, _dependencyGraph, this));
+        List<PartialSchedule> rootSchedules = new ArrayList<PartialSchedule>();
+        rootSchedules.add(new PartialSchedule(_dependencyGraph, _numProcessors));
+        while (rootSchedules.size() < _threads) {
+            rootSchedules.addAll(rootSchedules.remove(0).extend(_dependencyGraph));
         }
 
+        ExecutorService service = Executors.newFixedThreadPool(_threads);
+        List<ArrayList<PartialSchedule>> initStacks = new ArrayList<ArrayList<PartialSchedule>>();
+        for (int i = 0; i < _threads; i++) {
+            initStacks.add(new ArrayList<PartialSchedule>());
+        }
+        int remaining = rootSchedules.size();
 
-        service.shutdown();
+        for (int i = remaining-1; i >= 0; i--) {
+            List<PartialSchedule> initStack = initStacks.get(i % _threads);
+            initStack.add(rootSchedules.remove(i));
+        }
+
+        List<DfsBranchAndBoundCallable> callables = new ArrayList<DfsBranchAndBoundCallable>();
+        for (int i = 0; i < _threads; i++) {
+            callables.add(new DfsBranchAndBoundCallable(this, _numProcessors, initStacks.get(i), i));
+        }
+
         try {
-
-            service.awaitTermination(120, TimeUnit.HOURS);
-        } catch (InterruptedException e){
+            service.invokeAll(callables);
+            service.shutdown();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-
-        System.out.println("Stack Exit size: " + _stack.size());
         return _bestSchedule;
-    }
 
+    }
 
 }
 

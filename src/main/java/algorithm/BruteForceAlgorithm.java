@@ -5,16 +5,10 @@ import graph.Graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BruteForceAlgorithm {
-
-    private Graph _dependencyGraph;
-    private int _numProcessors;
+public class BruteForceAlgorithm extends Algorithm {
 
     public BruteForceAlgorithm(Graph dependencyGraph, int numProcessors){
-
-        _dependencyGraph = dependencyGraph;
-        _numProcessors = numProcessors;
-
+        super(dependencyGraph, numProcessors);
     }
 
     public PartialSchedule findOptimalSchedule() {
@@ -26,10 +20,18 @@ public class BruteForceAlgorithm {
         PartialSchedule bestSchedule = null;
 
         while (!schedules.isEmpty()) {
+
             PartialSchedule schedule = schedules.remove(0);
-            if (schedule.isComplete() && schedule.getFinishTime() < earliestFinishTime) {
-                bestSchedule = schedule;
-                earliestFinishTime = schedule.getFinishTime();
+            _numPartialSchedulesGenerated++;
+
+            if (schedule.isComplete()) {
+
+                _numCompleteSchedulesGenerated++;
+                if (schedule.getFinishTime() < earliestFinishTime) {
+                    bestSchedule = schedule;
+                    earliestFinishTime = schedule.getFinishTime();
+                }
+
             } else {
                 schedules.addAll(schedule.extend(_dependencyGraph));
             }
