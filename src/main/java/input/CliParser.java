@@ -1,13 +1,9 @@
 package input;
 
-import graph.Graph;
 import org.apache.commons.cli.*;
 import util.FilenameMethods;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
 
 /*
  * The CliParser class will parse the command line arguments and store the
@@ -23,11 +19,16 @@ public class CliParser {
     // parsed inputs from the command line
     // The inputs filePathName and numberOfProcessors are required inputs.
     // The inputs numberOfCores, outputFileName and visualisationDisplay are optional inputs
-    private String _filePathName;
+
     private String _fileName;
+    private String _filePathName;
+
     private int _numberOfProcessors;
     private int _numberOfCores;
+
     private String _outputFileName;
+    private String _outputFilePath;
+
     private boolean _visualisationDisplay;
     private boolean _successfulCliParse=true;
 
@@ -70,19 +71,60 @@ public class CliParser {
         if (args.length > 1) {
             // Checking valid input file name.
             if (checkValidFileName(args[0])) {
-                _CliParsedInputs._filePathName = args[0]; // File path
-                String dir = FilenameMethods.getDirectoryOfJar();
+                // handles absolute file names
+                File file;
+                if (FilenameMethods.checkIfAbsolutePath(args[0])){
+                    System.out.println("Absolute path input");
+                    String noFolderFileName = FilenameMethods.getFileName(args[0]);
+                        _CliParsedInputs._fileName = noFolderFileName; // File name
+                        _CliParsedInputs._filePathName = args[0];
+                        file = new File(args[0]);
+                } else {
+                    // relative paths
+                    // could have folders
+                    String noFolderFileName = FilenameMethods.getFileName(args[0]);
 
-                //File file = new File(dir + File.separator + fileName);
-                File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+                    System.out.println ("args0 =" +args[0] + "noFolderfileName =" + noFolderFileName);
 
-                if (!file.exists()) {
-                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
+                    if (args[0].startsWith("./") || args[0].startsWith(".\\") ){ // TODO: fix?
+
+                        String fileNameNoRelativeSlash = noFolderFileName.substring(2);
+                        _CliParsedInputs._fileName = fileNameNoRelativeSlash; // File name
+
+                        String filePathNoRelativeSlash = args[0].substring(2);
+                        _CliParsedInputs._filePathName = filePathNoRelativeSlash;
+                        System.out.println("got Rid of ./");
+                        System.out.println(" = " + filePathNoRelativeSlash);
+                    } else if (!args[0].startsWith(".") &&  args[0] != noFolderFileName){
+                        // it has folders but does not have '.' or '..' at the start is invalid
+                        throw new IllegalArgumentException("Error: Input relative path is invalid path." +
+                                " Please enter a valid file path.");
+                    } else {
+                        // just the file name
+
+                        _CliParsedInputs._fileName = noFolderFileName; // File name
+
+                        String inputDir = FilenameMethods.getDirectoryOfJar();
+                        String inputFilePath = (inputDir  + File.separator + noFolderFileName);
+
+                        _CliParsedInputs._filePathName = inputFilePath;
+                        System.out.println("just file name input: file name is  = "+ _CliParsedInputs._fileName
+                                +"file path is  = " + _CliParsedInputs._filePathName+"\n");
+
+
+                    }
+
+                    String dir = FilenameMethods.getDirectoryOfJar();
+                    System.out.println(""+dir + File.separator + _filePathName + "\n");
+
+                    //File file = new File(dir + File.separator + _filePathName);
+
+                    file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
                 }
+                    if (!file.exists()) {
+                        throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
+                    }
 
-            } else {
-                throw new IllegalArgumentException("Error: Invalid file path name. Please provide a valid file " +
-                        "name with the full '.dot' extension included.");
             }
 
             // Checking valid number of processors.
@@ -105,9 +147,16 @@ public class CliParser {
         //default number of cores
         _CliParsedInputs._numberOfCores = 1;
         // default output file name
-        String fileName = _CliParsedInputs._filePathName;
+        String fileName = _CliParsedInputs._fileName;
+        System.out.println("\n filename = "+fileName);
         String defaultOutputFileName =  ( fileName.replaceAll(".dot$", "") +  "-output.dot" );
         _CliParsedInputs._outputFileName = defaultOutputFileName;
+
+        String defaultDir = FilenameMethods.getDirectoryOfJar();
+        String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
+        _CliParsedInputs._outputFilePath = defaultOutputFilePath;
+
+
         // default visualisation boolean (true or false)
         _CliParsedInputs._visualisationDisplay = false;
 
@@ -145,7 +194,46 @@ public class CliParser {
             String outputFileNameInput = commandLineParsed.getOptionValue("o");
             // Checking valid output file name.
             if (outputFileNameInput!=null && checkValidFileName(outputFileNameInput)) {
-                _CliParsedInputs._outputFileName = outputFileNameInput;
+
+                if (FilenameMethods.checkIfAbsolutePath(outputFileNameInput)){
+                    String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
+                    _CliParsedInputs._outputFileName = noFolderFileName; // File name
+                    _CliParsedInputs._outputFilePath = outputFileNameInput; // file path
+
+                } else {
+                    // relative paths
+                    // could have folders
+                    String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
+
+                    if (outputFileNameInput.startsWith("./") || outputFileNameInput.startsWith(".\\")){ // TODO: fix this?
+                        String fileOutputNameNoRelativeSlash = noFolderFileName.substring(2);
+                        _CliParsedInputs._outputFileName = fileOutputNameNoRelativeSlash; // File name
+
+                        String filePathNoRelativeSlash = args[0].substring(2);
+                        _CliParsedInputs._outputFilePath = filePathNoRelativeSlash;
+                    } else if (!args[0].startsWith(".") &&  outputFileNameInput != noFolderFileName){
+                        // it has folders but does not have '.' or '..' at the start is invalid
+                        throw new IllegalArgumentException("Error: Output relative path is invalid path." +
+                                " Please enter a valid file path.");
+                    } else {
+                        System.out.println("only output file name given\n");
+                        // just the name of the output given use default for path
+
+                        System.out.println("only output file fiven under exception if contiioon: "+ _CliParsedInputs._outputFileName);
+
+                        _CliParsedInputs._outputFileName = noFolderFileName; // File name
+
+                        String outputDir = FilenameMethods.getDirectoryOfJar();
+                        String outputFilePath = (outputDir + File.separator + _CliParsedInputs._outputFileName);
+                        _CliParsedInputs._outputFilePath = outputFilePath;
+                        System.out.println("output file name =  "+  _CliParsedInputs._outputFileName + "\noutput file path =  "+ _CliParsedInputs._outputFilePath);
+
+                    }
+
+                    String dir = FilenameMethods.getDirectoryOfJar();
+                    System.out.println(""+dir + File.separator + _outputFilePath + "\n");
+                }
+
             } else{
                 throw new IllegalArgumentException("Error: invalid output file name. " +
                         "Please provide a valid file name with the full '.dot' extension included.");
@@ -163,19 +251,25 @@ public class CliParser {
     /* Method to check if input filename is valid.
      */
     public static boolean checkValidFileName(String fileName){
-        return (fileName.endsWith(".dot"));
+
+        if (!fileName.endsWith(".dot")) {
+            throw new IllegalArgumentException("Error: Invalid file name. Please provide a valid file " +
+                    "name with the full '.dot' extension included.");
+        } else if ( (fileName.startsWith("/")) || (fileName.startsWith("\\")) ) {
+            throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
+        } else {
+            return true;
+        }
+
+
     }
 
-    /* Method to check if input filename is valid absolute or relative path.
-     */
-    public static boolean checkIfAbsolutePath(String fileName){
-        File file = new File(fileName);
-        if (file.isAbsolute()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
+
+
+
+
+
 
     /* Method to check if input integer is valid.
      */
@@ -263,15 +357,19 @@ public class CliParser {
     }
 
     // Getters for the parsed command line inputs.
-    public String getFileName() {
-        return _fileName;
+    public String getFilePathName() {
+        return _filePathName;
     }
-    public String getFilePathName() { return _filePathName; } // new return
+    public String getFileName() { return _fileName; } // new return
+
     public int getNumberOfProcessors() {
         return _numberOfProcessors;
     }
     public String getOutputFileName() {
         return _outputFileName;
+    }
+    public String getOutputFilePath() {
+        return _outputFilePath;
     }
     public boolean isVisualisationDisplay() {
         return _visualisationDisplay;

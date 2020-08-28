@@ -10,10 +10,14 @@ import input.InputParser;
 import output.OutputGenerator;
 import visualisation.Visualise;
 
+import java.io.IOException;
+
 
 public class Main {
     public static void main(String[] args) {
-        String[] inputArgs = {  "digraph2.dot", "2" };
+        //String[] inputArgs = {  "digraph2.dot", "2", "-o", "C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\outputfiles\\digraph2-output.dot"  };
+        String[] inputArgs = {  "digraph2.dot", "2","-o", "digraph22.dot" };
+        //String[] inputArgs = {  "\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot", "2" };
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
@@ -49,7 +53,11 @@ public class Main {
 
 
         // Create output with the output file.
-        OutputGenerator.generate(graph, cliparser.getOutputFileName());
+        try {
+            OutputGenerator.generate(graph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

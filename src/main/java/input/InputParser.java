@@ -16,15 +16,15 @@ import java.io.IOException;
  * */
 public class InputParser {
 
-    public static Graph readInput(String fileName) {
+    public static Graph readInput(String filePathName) {
 
         Graph algoGraph = new Graph("newGraph");
         int edgeCount = 0;
 
         BufferedReader bufferReader = null;
 
-        String dir = FilenameMethods.getDirectoryOfJar();
-        //File file = new File(dir + File.separator + fileName);
+
+        //File file = new File(filePathName);
         File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
 
         try {
