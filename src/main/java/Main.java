@@ -6,6 +6,7 @@ import input.CliParser;
 import input.InputParser;
 import output.OutputGenerator;
 import visualisation.Visualise;
+import visualisation.controllers.GUIController;
 
 import java.io.IOException;
 
@@ -53,6 +54,7 @@ public class Main {
 
 
         if (cliparser.isVisualisationDisplay()) {
+
             Visualise.startVisual(args);
         }
 
