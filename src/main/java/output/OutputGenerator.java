@@ -5,6 +5,8 @@ import graph.Vertex;
 import util.FilenameMethods;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class OutputGenerator {
 
@@ -13,10 +15,14 @@ public class OutputGenerator {
      * @param graph Graph object describing the task dependencies
      * @param fileName Name of file to write to ([fileName].dot)
      */
-    public static void generate(Graph graph, String fileName) {
-        String dir = FilenameMethods.getDirectoryOfJar();
-        String path = (dir + File.separator + fileName);
-        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
+    public static void generate(Graph graph, String fileName, String filePathName) throws IOException {
+        System.out.println("filename: " + fileName + "\n path output name "+filePathName);
+        String directoriesForOutput = filePathName.substring(0, filePathName.lastIndexOf(fileName));
+        System.out.println("directories needed " + directoriesForOutput);
+
+        Files.createDirectories(Paths.get(directoriesForOutput));
+        System.out.println("output location " + filePathName);
+        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePathName)))) {
 
             // TODO: Determine proper digraph naming scheme. Assume same as file name for now
             out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");

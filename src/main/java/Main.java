@@ -5,6 +5,8 @@ import graph.Graph;
 import input.CliParser;
 import input.InputParser;
 import output.OutputGenerator;
+import visualisation.Visualise;
+import visualisation.controllers.GUIController;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.swing.*;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -26,7 +28,12 @@ public class Main {
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            cliparser.UI(args);
+            //cliparser.UI(args);
+            cliparser.UI(inputArgs);
+            if (!cliparser.getSuccessfulCliParse()){
+                // in the case that we should not run the algorithm
+                return;
+            }
         } catch ( IllegalArgumentException e ) {
             // in the case that the input cannot be parsed the program is terminated.
             System.err.println(e.getMessage());
@@ -45,8 +52,21 @@ public class Main {
         for (ScheduledTask st : schedule.getScheduledTasks()){
             st.updateVertex(graph);
         }
+
+
+        if (cliparser.isVisualisationDisplay()) {
+
+            Visualise.startVisual(args);
+        }
+
+
+
         // Create output with the output file.
-        OutputGenerator.generate(graph, cliparser.getOutputFileName());
+        try {
+            OutputGenerator.generate(graph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Ended: " + LocalDateTime.now());
 

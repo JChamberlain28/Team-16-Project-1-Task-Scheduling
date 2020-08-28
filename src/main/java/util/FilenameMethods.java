@@ -30,4 +30,40 @@ public class FilenameMethods {
     }
 
 
+    /* Method to check if input filename is valid absolute or relative path.
+     */
+    public static boolean checkIfAbsolutePath(String fileName){
+        File file = new File(fileName);
+        if (file.isAbsolute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // remove the folder part of name
+    public static String getFileName(String pathName) {
+
+        if (pathName.contains("/") || pathName.contains("\\")) { // This removes the folder part of the file path
+            if (!System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+                // linux
+                return pathName.substring(pathName.lastIndexOf('/') + 1);
+
+            } else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+
+
+                return pathName.substring(pathName.lastIndexOf('\\') + 1);
+            } else{
+                return pathName;
+            }
+        } else {
+            // just a regular file name
+            return pathName;
+        }
+
+    }
+
+
+
+
 }
