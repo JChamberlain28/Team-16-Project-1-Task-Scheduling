@@ -2,6 +2,7 @@ package visualisation.controllers;
 
 
 
+import algorithm.AStarAlgorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
 import com.sun.tracing.dtrace.DependencyClass;
@@ -64,7 +65,11 @@ public class GUIController {
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
 
+    AStarAlgorithm _algorithm;
 
+    GUIController(AStarAlgorithm  algorithm){
+        this._algorithm = algorithm;
+    }
 
 
 
@@ -78,7 +83,7 @@ public class GUIController {
 
 
         // this should be inside polling but left for testing
-        updateGantt();
+        //updateGantt();
 
     }
 

@@ -16,6 +16,7 @@ public class Visualise extends Application {
     private final String visualiserTitle = "Visualisation";
     private final String SCENE_PATH = "views/GUI.fxml";
 
+
     public Visualise() {
         super();
     }
@@ -25,6 +26,7 @@ public class Visualise extends Application {
     // start visualisation
     public static void startVisual(String[] args) {
         launch(args);
+
     }
 
     @Override

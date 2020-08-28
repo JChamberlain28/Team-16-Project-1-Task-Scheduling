@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import input.CliParser;
 
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -47,7 +46,7 @@ public class CliParsingTesting {
         CliParser cliParser = CliParser.getCliParserInstance();
         cliParser.UI(argsInput);
 
-        assertEquals("digraph2.dot", cliParser.getFilePathName());
+        assertEquals("digraph2.dot", cliParser.getFileName());
         assertEquals(2, cliParser.getNumberOfProcessors());
         assertEquals("digraph2-output.dot",cliParser.getOutputFileName());
 

@@ -24,10 +24,15 @@ public class CliParser {
     // The inputs filePathName and numberOfProcessors are required inputs.
     // The inputs numberOfCores, outputFileName and visualisationDisplay are optional inputs
     private String _filePathName;
+    private String _fileName;
     private int _numberOfProcessors;
     private int _numberOfCores;
     private String _outputFileName;
     private boolean _visualisationDisplay;
+    private boolean _successfulCliParse=true;
+
+    // Detect and parse all command line arg options flags
+    private CommandLine commandLineParsed;
 
     /*
      * Private Constructor preventing any other class from instantiating.
@@ -38,13 +43,18 @@ public class CliParser {
      * Method called in the main class. This takes in the arguments provided in command line to parse.
      */
     public void UI(String[] args) {
+
         if (args.length == 0) {
             throw new IllegalArgumentException("Error: No arguments provided. " +
                     "Please enter a valid filename and number of processors in the format: \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
-        }
-        else {
-
+        } else {
+            commandLineParsed = parseOptionArguments(args);
+            if (commandLineParsed.hasOption("h") /*&& args.length == 1*/) {
+                printHelpMessage();
+                _CliParsedInputs._successfulCliParse=false;
+                return;
+            }
             // Parse the command line inputs and store them for use in the program.
             parseCli(args);
 
@@ -102,14 +112,23 @@ public class CliParser {
         _CliParsedInputs._visualisationDisplay = false;
 
         // Detect and parse all command line arg options flags
-        CommandLine commandLineParsed = parseOptionArguments(args);
+        //commandLineParsed = parseOptionArguments(args);
 
         // option flag provided for parallisation with n number of cores.
         if (commandLineParsed.hasOption("p")) {
             String numberOfCoresInput = commandLineParsed.getOptionValue("p");
             // Checking valid number of cores.
             if (numberOfCoresInput!=null && checkValidStringInt(numberOfCoresInput)) {
-                _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
+                int numberOfCoresInt = Integer.parseInt(numberOfCoresInput);
+                if ( Runtime.getRuntime().availableProcessors() > numberOfCoresInt) {
+                    System.out.println("num of cores available - " + Runtime.getRuntime().availableProcessors());
+                    _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
+                } else {
+                    // does not have this many cores
+                    throw new IllegalArgumentException("Error: Too large for number of cores inputted." +
+                            " Please enter a valid number of cores. There are " + Runtime.getRuntime().availableProcessors()
+                            + " cores available");
+                }
             }else{
                 throw new IllegalArgumentException("Error: invalid number of cores." +
                         " Please enter a valid number of cores.");
@@ -145,6 +164,17 @@ public class CliParser {
      */
     public static boolean checkValidFileName(String fileName){
         return (fileName.endsWith(".dot"));
+    }
+
+    /* Method to check if input filename is valid absolute or relative path.
+     */
+    public static boolean checkIfAbsolutePath(String fileName){
+        File file = new File(fileName);
+        if (file.isAbsolute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /* Method to check if input integer is valid.
@@ -198,9 +228,34 @@ public class CliParser {
         createdOptions.addOption("p", true, "Number of cores for execution in parallel");
         createdOptions.addOption("v", false, "Boolean for visualisation of the search");
         createdOptions.addOption("o", true, "The output file name");
-
+        // additional option for helping user
+        createdOptions.addOption("h", false, "user needs help message");
         return createdOptions;
     }
+
+
+
+    private void printHelpMessage(){
+        System.out.println("Boomer\n"+
+                "ok boomer\n" +
+                "You're a boomer\n" +
+                "Ok boomer\n" +
+                "Do you say \"Oh back in my day\"\n" +
+                "" +
+                "" +
+                "" +
+                "" +
+                "" +
+                "" );
+
+
+
+    }
+
+
+
+
+
 
     // Getter to return the CliParser object that contains the parsed command line inputs
     public static CliParser getCliParserInstance(){
@@ -208,9 +263,10 @@ public class CliParser {
     }
 
     // Getters for the parsed command line inputs.
-    public String getFilePathName() {
-        return _filePathName;
+    public String getFileName() {
+        return _fileName;
     }
+    public String getFilePathName() { return _filePathName; } // new return
     public int getNumberOfProcessors() {
         return _numberOfProcessors;
     }
@@ -223,5 +279,12 @@ public class CliParser {
     public int getNumberOfCores(){
         return _numberOfCores;
     }
+
+    public boolean getSuccessfulCliParse(){
+        return _successfulCliParse;
+    }
+
+
+
 
 }

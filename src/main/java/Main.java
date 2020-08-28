@@ -13,13 +13,17 @@ import visualisation.Visualise;
 
 public class Main {
     public static void main(String[] args) {
-        String[] inputArgs = { "digraph2.dot", "3" ,"-v"};
+        String[] inputArgs = {  "digraph2.dot", "2" };
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
             //cliparser.UI(args);
             cliparser.UI(inputArgs);
+            if (!cliparser.getSuccessfulCliParse()){
+                // in the case that we should not run the algorithm
+                return;
+            }
         } catch ( IllegalArgumentException e ) {
             // in the case that the input cannot be parsed the program is terminated.
             System.err.println(e.getMessage());
@@ -27,7 +31,7 @@ public class Main {
         }
 
         // Parse the input file and create the graph object
-        Graph graph = InputParser.readInput(cliparser.getFilePathName());
+        Graph graph = InputParser.readInput(cliparser.getFileName());
 
         AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
         PartialSchedule schedule = aStar.findOptimalSchedule();
@@ -41,6 +45,7 @@ public class Main {
         if (cliparser.isVisualisationDisplay()) {
             Visualise.startVisual(args);
         }
+
 
 
         // Create output with the output file.

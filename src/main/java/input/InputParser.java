@@ -95,8 +95,10 @@ public class InputParser {
                     algoGraph.addVertex(graphVertex);
 
                 } else {
+                    if(!line.isEmpty()) {
                     throw new IllegalArgumentException("Error: Input '.dot' file is not a valid graph. " +
-                            "The input dot file should be valid.");
+                            "There is an invalid line in the dot file." +
+                            " The input dot file should be valid.");}
                 }
                 line = bufferReader.readLine();
             }

@@ -22,7 +22,7 @@ public class Graph {
     public static Graph graphInstance;
 
     public Graph(String name) {
-        Graph.graphInstance = this;
+        Graph.graphInstance = this; // lol graph is only made once so this is only assigned once. should really be refactored
         _name = name;
         _idVertexMap = new HashMap<Integer, Vertex>();
         _labelVertexMap = new HashMap<String, Vertex>();
