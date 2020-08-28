@@ -1,7 +1,4 @@
-import algorithm.AStarAlgorithm;
-import algorithm.PartialSchedule;
-import algorithm.ScheduledTask;
-
+import algorithm.*;
 import graph.Graph;
 
 
@@ -10,16 +7,25 @@ import input.InputParser;
 import output.OutputGenerator;
 import visualisation.Visualise;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        String[] inputArgs = {  "digraph2.dot", "2" };
+
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
             //cliparser.UI(args);
-            cliparser.UI(inputArgs);
+            cliparser.UI(args);
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
                 return;
@@ -31,25 +37,27 @@ public class Main {
         }
 
         // Parse the input file and create the graph object
-        Graph graph = InputParser.readInput(cliparser.getFileName());
+        Graph graph = InputParser.readInput(cliparser.getFilePathName());
+        graph.buildVirtualEdges();
+//        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
+//        PartialSchedule schedule = aStar.findOptimalSchedule();
+            DfsBranchAndBound dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
+            PartialSchedule schedule = dfs.findOptimalSchedule();
 
-        AStarAlgorithm aStar = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
-        PartialSchedule schedule = aStar.findOptimalSchedule();
+//        ParallelisedDfsBranchAndBound pdbb = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), 8);
+//        PartialSchedule schedule = pdbb.findOptimalSchedule();
+        if (cliparser.isVisualisationDisplay()) {
+            Visualise.startVisual(args);
+        }
 
         // persist start times and processor numbers in the graph for use in output
         for (ScheduledTask st : schedule.getScheduledTasks()){
             st.updateVertex(graph);
         }
-
-
-        if (cliparser.isVisualisationDisplay()) {
-            Visualise.startVisual(args);
-        }
-
-
-
         // Create output with the output file.
         OutputGenerator.generate(graph, cliparser.getOutputFileName());
+
+
 
     }
 

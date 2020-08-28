@@ -1,14 +1,12 @@
 package graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /*
- * Graph implementation to store the data in the ".dot" file.
- * This class is instantiated in the cli parser.
- * the and called with the algorithm.
- * */
+* Graph implementation to store the data in the ".dot" file.
+* This class is instantiated in the cli parser.
+* the and called with the algorithm.
+* */
 public class Graph {
 
     private String _name;
@@ -19,10 +17,9 @@ public class Graph {
     // Stores the bottom level for each vertex
     private HashMap<Integer, Integer> _bottomLevelMap;
 
-    public static Graph graphInstance;
+
 
     public Graph(String name) {
-        Graph.graphInstance = this; // lol graph is only made once so this is only assigned once. should really be refactored
         _name = name;
         _idVertexMap = new HashMap<Integer, Vertex>();
         _labelVertexMap = new HashMap<String, Vertex>();
@@ -31,10 +28,15 @@ public class Graph {
     }
 
     public void addVertex(Vertex vertex) {
+
+
         _idVertexMap.put(vertex.getId(), vertex);
         _labelVertexMap.put(vertex.getLabel(), vertex);
         _edgeMap.put(vertex.getId(), new HashMap<Integer, Integer>());
+
     }
+
+
 
     public Vertex getVertex(int id) {
         return _idVertexMap.get(id);
@@ -83,8 +85,11 @@ public class Graph {
             throw new RuntimeException("No vertex with id '" + toId + "' exists in this graph.");
         }
         _edgeMap.get(fromId).put(toId, weight);
-        _idVertexMap.get(fromId).addOutgoingVertex(_idVertexMap.get(toId));
-        _idVertexMap.get(toId).addIncomingVertex(_idVertexMap.get(fromId));
+        if (weight != -1){ // dont add to vertices lists if its a virtual edge
+            _idVertexMap.get(fromId).addOutgoingVertex(_idVertexMap.get(toId));
+            _idVertexMap.get(toId).addIncomingVertex(_idVertexMap.get(fromId));
+        }
+
     }
 
     /**
@@ -112,7 +117,7 @@ public class Graph {
      * @param vertexId ID of the vertex.
      * @return The bottom level of the vertex with ID vertexId.
      */
-    public int getBottomLevel(int vertexId) {
+    public int getBottomLevel(int vertexId) { //TODO: Consider accounting for virtual edges (not incl in bottom lvl calc
 
         Vertex v = _idVertexMap.get(vertexId);
         if (_bottomLevelMap.containsKey(vertexId)) {
@@ -120,7 +125,11 @@ public class Graph {
         } else {
             int maxBottomLevel = 0;
             for (Vertex vChild : v.getOutgoingVertices()) {
-                maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
+                if ((_edgeMap.get(v.getId()).get(vChild.getId())) == -1){ // this is virtual edge, ignore this childs cost
+                    maxBottomLevel = Math.max(maxBottomLevel, (getBottomLevel(vChild) - vChild.getCost()));
+                } else {
+                    maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
+                }
             }
 
             int botLevel = v.getCost() + maxBottomLevel;
@@ -128,6 +137,105 @@ public class Graph {
             return botLevel;
         }
 
+    }
+
+
+    public List<HashSet<Integer>> buildVirtualEdges(){ // returns a list of hashsets for unit test purposes
+        List<HashSet<Integer>> identicalList = new ArrayList<HashSet<Integer>>();
+
+        for (int vId: _idVertexMap.keySet()){
+
+            Vertex v = _idVertexMap.get(vId); // checking this is not identical to another task
+            for (int vIdTwo: _idVertexMap.keySet()) {
+                if (vId != vIdTwo){
+                    Vertex y = _idVertexMap.get(vIdTwo);
+                    boolean incomingVertMatch = ((v.getIncomingVertices().size() == y.getIncomingVertices().size()) &&
+                            (v.getIncomingVertices().containsAll(y.getIncomingVertices())));
+
+
+                    boolean outgoingVertMarch = ((v.getOutgoingVertices().size() == y.getOutgoingVertices().size()) &&
+                            (v.getOutgoingVertices().containsAll(y.getOutgoingVertices())));
+
+
+                    boolean incomingEdgeWeightSame = true;
+                    boolean outgoingEdgeWeightSame = true;
+
+                    if ((v.getIncomingVertices().size()) != (y.getIncomingVertices().size())) {
+                        incomingEdgeWeightSame = false;
+                    } else {
+                        for (Vertex z: v.getIncomingVertices()){
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            if (!incomingEdgeWeightSame){
+                                break;
+                            }
+                        }
+                    }
+
+
+
+
+                    if ((v.getOutgoingVertices().size()) != (y.getOutgoingVertices().size())) {
+                        incomingEdgeWeightSame = false;
+                    } else {
+                        for (Vertex z: v.getIncomingVertices()){
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            if (!incomingEdgeWeightSame){
+                                break;
+                            }
+                        }
+                    }
+
+
+
+
+
+                    if ((v.getCost() == y.getCost()) && incomingVertMatch && outgoingVertMarch &&
+                            incomingEdgeWeightSame && outgoingEdgeWeightSame){
+                        boolean stored = false;
+                        for (HashSet<Integer> identSubList : identicalList){
+                            if (identSubList.contains(v.getId())){
+                                identSubList.add(y.getId());
+                                stored = true;
+                            } else if (identSubList.contains((y.getId()))) {
+                                identSubList.add(v.getId());
+                                stored = true;
+                            }
+
+                        }
+                        if (!stored){
+                            identicalList.add(new HashSet<Integer>(Arrays.asList(v.getId(), y.getId())));
+                        }
+
+
+
+                    }
+                }
+            }
+
+        }
+
+        for (HashSet<Integer> identSubList : identicalList){
+            System.out.println("---------------");
+            for (int i=0; i<identSubList.size(); i++) {
+                List<Integer> list = new ArrayList(identSubList);
+                System.out.println(_idVertexMap.get(list.get(i)).getLabel());
+            }
+            System.out.println("---------------");
+            // add virtual edges
+            for (int i=0; i < (identSubList.size()-1); i++){
+                List<Integer> list = new ArrayList(identSubList);
+                _idVertexMap.get(list.get(i)).clearOutgoingVertices();
+                _idVertexMap.get(list.get(i+1)).clearIncomingVertices();
+                _idVertexMap.get(list.get(i)).addOutgoingVertex(_idVertexMap.get(list.get(i+1)));
+                _idVertexMap.get(list.get(i+1)).addIncomingVertex(_idVertexMap.get(list.get(i)));
+
+                addEdge(list.get(i), list.get(i+1), -1); // -1 weight is virtual edge
+
+            }
+
+        }
+
+        return identicalList;
     }
 
 

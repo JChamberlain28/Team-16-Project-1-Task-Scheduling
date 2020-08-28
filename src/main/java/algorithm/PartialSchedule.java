@@ -2,6 +2,7 @@ package algorithm;
 
 import graph.Graph;
 import graph.Vertex;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,16 +18,12 @@ public class PartialSchedule {
     // Stores information regarding what task has been scheduled on top of the parent and how.
     private final ScheduledTask _scheduledTask;
 
-    // Used to prevent the creation of duplicate PartialSchedule objects, i.e. schedules where the tasks are ordered
-    // in the same way at the same time but are simply scheduled on different processors.
-    private final List<String> _processorStrings;
-
     // TODO: storing an entire HashMap / HashSet seems inefficient - consider removing _parent field: see below
 
     // Protects against duplicate task scheduling due to multiple dependencies
     private final HashSet<Integer> _toSchedule;
 
-    // Maps the label of a Vertex to its corresponding ScheduledTask object
+    // Maps the id of a Vertex to its corresponding ScheduledTask object
     private final ScheduledTask[] _scheduledTasks;
 
     /**
@@ -43,11 +40,6 @@ public class PartialSchedule {
         _idleTime = 0;
 
         _scheduledTask = null;
-        _processorStrings = new ArrayList<String>(numProcessors);
-        for (int i = 0; i < numProcessors; i++) {
-            _processorStrings.add("");  // Initialise empty processor strings
-        }
-
         _toSchedule = new HashSet<Integer>(dependencyGraph.getRoots());
 
         _scheduledTasks = new ScheduledTask[dependencyGraph.getVertices().size()];
@@ -63,8 +55,7 @@ public class PartialSchedule {
      * @param startTime Start time of the new task.
      * @param taskId The id of the task that is being scheduled.
      */
-    private PartialSchedule(Graph dependencyGraph, PartialSchedule parent, int processor, int startTime, int taskId,
-                            List<String> processorStrings) {
+    private PartialSchedule(Graph dependencyGraph, PartialSchedule parent, int processor, int startTime, int taskId) {
 
         Vertex task = dependencyGraph.getVertex(taskId);
 
@@ -86,8 +77,6 @@ public class PartialSchedule {
                 _toSchedule.add(child.getId());
             }
         }
-
-        _processorStrings = processorStrings;
 
     }
 
@@ -147,46 +136,43 @@ public class PartialSchedule {
      */
     public List<PartialSchedule> extend(Graph dependencyGraph) {
 
-        List<PartialSchedule> partialSchedules = new ArrayList<PartialSchedule>();
+        Set<PartialSchedule> partialSchedules = new HashSet<PartialSchedule>();
         for (int taskId : _toSchedule) {
 
             // TODO: This is overall pretty inefficient (nested loops), and could do with some optimising in future.
             Vertex task = dependencyGraph.getVertex(taskId);
-            HashSet<HashSet<String>> processorStringsSet = new HashSet<HashSet<String>>();
             for (int i = 0; i < _processorEndTimes.length; i++) {  // Loop through each processor
 
                 int pEarliestStartTime = _processorEndTimes[i];
                 for (Vertex dependency : task.getIncomingVertices()) {
 
+
+
                     ScheduledTask scheduledTask = _scheduledTasks[dependency.getId()];
                     if (scheduledTask.getProcessor() == i) {
                         // Do nothing as this start time would have to be <= processor end time
                     } else {
-                        int tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
-                                dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                        int tempStartTime;
+                        if ((dependencyGraph.getEdgeWeight(dependency.getId(), taskId)) == -1){
+                            // this is a virtual edge
+                            // It does not include the dependency cost in start time
+                            tempStartTime = scheduledTask.getStartTime();
+                        } else {
+                            tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
+                                    dependencyGraph.getEdgeWeight(dependency.getId(), task.getId());
+                        }
                         pEarliestStartTime = Math.max(pEarliestStartTime, tempStartTime);
                     }
 
                 }
 
-                // TODO: come up with more unique separator character ('?' *may* be used as a label for a vertex)
-                List<String> processorStrings = new ArrayList<String>(this._processorStrings);
-                processorStrings.set(i, processorStrings.get(i) + task.getId() + "?" + pEarliestStartTime);
-
-                HashSet<String> processorStringSet = new HashSet<String>(processorStrings);
-
-                if (!processorStringsSet.contains(processorStringSet)) {
-                    // No duplicate of this PartialSchedule exists
-                    processorStringsSet.add(new HashSet<String>(processorStrings));
-                    partialSchedules.add(new PartialSchedule(dependencyGraph, this, i, pEarliestStartTime, taskId,
-                            processorStrings));
-                }
+                partialSchedules.add(new PartialSchedule(dependencyGraph, this, i, pEarliestStartTime, taskId));
 
             }
 
         }
 
-        return partialSchedules;
+        return new ArrayList<PartialSchedule>(partialSchedules);
 
     }
 
@@ -206,25 +192,6 @@ public class PartialSchedule {
 
     }
 
-    /**
-     * Returns whether or not two PartialSchedule objects are equivalent. Equivalent in this context means that each
-     * PartialSchedule has the same task schedulings irrespective of the processor numbers.
-     * @param other The PartialSchedule to compare against.
-     * @return Whether or not the passed PartialSchedule is equivalent.
-     */
-    public boolean isEquivalent(PartialSchedule other) {
-        HashSet<String> pStringSet = new HashSet<String>(this._processorStrings);
-        pStringSet.removeAll(new HashSet<String>(other._processorStrings));
-        return pStringSet.isEmpty();
-    }
-
-    /**
-     * Returns a set of String objects to represent the task schedulings irrespective of processor.
-     */
-    public Set<String> getProcessorStringSet() {
-        return new HashSet<String>(_processorStrings);
-    }
-
 
     /**
      * it return a set of IDs corresponding to the vertices that are eligible to be scheduled next.
@@ -232,6 +199,39 @@ public class PartialSchedule {
      */
     public Set<Integer> getToSchedule(){
         return _toSchedule;
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder pScheduleBuilder = new HashCodeBuilder(17, 37);
+
+        Set<Integer> processorHashes = new HashSet<Integer>();
+        for (int i = 0; i < _processorEndTimes.length; i++) {
+            if (_processorEndTimes[i] != 0) {  // assuming every task has cost > 0
+                HashCodeBuilder pBuilder = new HashCodeBuilder(911, 97);
+                for (ScheduledTask st : _scheduledTasks) {
+                    if (st != null && st.getProcessor() == i) {
+                        pBuilder.append(st);
+                    }
+                }
+                processorHashes.add(pBuilder.toHashCode());
+            }
+        }
+
+        return pScheduleBuilder.append(processorHashes).toHashCode();
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        } else if (o.getClass() != this.getClass()) {
+            return false;
+        }
+
+        return o.hashCode() == this.hashCode();
+
     }
 
 }
