@@ -357,7 +357,7 @@ public class GUIController {
 
                 int taskProcessor = scheduledTask.getProcessor();
                 XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
-                        new GanttChart.ExtraData(scheduledTask, _graph, "status-red"));
+                        new GanttChart.ExtraData(scheduledTask, _graph, "task-ganttchart"));
                 seriesProcessors[taskProcessor].getData().add(newData);
             }
 

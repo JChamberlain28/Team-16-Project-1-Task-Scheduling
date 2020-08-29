@@ -1,10 +1,6 @@
 
- .status-red {
+ .task-ganttchart {
      -fx-background-color:rgba(255,140,0,0.7);
- }
- .status-green {
-     -fx-background-color:rgba(0,128,0,0.7);
- }
- .status-blue {
-     -fx-background-color:rgba(0,0,128,0.7);
+
+    -fx-border-color: rgba(0,0,0, 0.5);
  }
