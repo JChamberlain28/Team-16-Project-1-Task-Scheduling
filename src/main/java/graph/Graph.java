@@ -17,8 +17,6 @@ public class Graph {
     // Stores the bottom level for each vertex
     private HashMap<Integer, Integer> _bottomLevelMap;
 
-
-
     public Graph(String name) {
         _name = name;
         _idVertexMap = new HashMap<Integer, Vertex>();
@@ -36,7 +34,17 @@ public class Graph {
 
     }
 
+    public HashMap<Integer, Vertex> getIdVertexMap() {
+        return _idVertexMap;
+    }
 
+    public HashMap<Integer, HashMap<Integer, Integer>> getEdgeMap() {
+        return _edgeMap;
+    }
+
+    public void setEdgeMap(HashMap<Integer, HashMap<Integer, Integer>> edgeMap) {
+        _edgeMap = edgeMap;
+    }
 
     public Vertex getVertex(int id) {
         return _idVertexMap.get(id);
@@ -215,12 +223,9 @@ public class Graph {
         }
 
         for (HashSet<Integer> identSubList : identicalList){
-            System.out.println("---------------");
             for (int i=0; i<identSubList.size(); i++) {
                 List<Integer> list = new ArrayList(identSubList);
-                System.out.println(_idVertexMap.get(list.get(i)).getLabel());
             }
-            System.out.println("---------------");
             // add virtual edges
             for (int i=0; i < (identSubList.size()-1); i++){
                 List<Integer> list = new ArrayList(identSubList);

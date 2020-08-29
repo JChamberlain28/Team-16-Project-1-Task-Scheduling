@@ -46,6 +46,10 @@ public class Vertex {
         return _id;
     }
 
+    public void setId(int id) {
+        _id = id;
+    }
+
     public String getLabel() {
         return _label;
     }

@@ -2,6 +2,7 @@ import algorithm.*;
 import graph.Graph;
 
 
+import graph.GraphCopier;
 import input.CliParser;
 import input.InputParser;
 import output.OutputGenerator;
@@ -35,18 +36,19 @@ public class Main {
 
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
+        Graph originalGraph = GraphCopier.copyGraph(graph);
         graph.buildVirtualEdges();
 
-        Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
-                cliparser.getNumberOfCores());
+        Algorithm dfs = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
         PartialSchedule schedule = dfs.findOptimalSchedule();
 
         // persist start times and processor numbers in the graph for use in output
-        for (ScheduledTask st : schedule.getScheduledTasks()){
-            st.updateVertex(graph);
+        for (ScheduledTask st : schedule.getScheduledTasks()) {
+            st.updateVertex(originalGraph);
         }
+
         // Create output with the output file.
-        OutputGenerator.generate(graph, cliparser.getOutputFileName());
+        OutputGenerator.generate(originalGraph, cliparser.getOutputFileName());
 
         System.out.println("Ended: " + LocalDateTime.now());
 

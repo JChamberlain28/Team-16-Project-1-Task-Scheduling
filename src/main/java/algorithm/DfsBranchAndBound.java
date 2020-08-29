@@ -22,34 +22,27 @@ public class DfsBranchAndBound extends Algorithm {
     }
 
     public PartialSchedule findOptimalSchedule(){
+
         //    Initialise stack to store partial schedules to explore
         List<PartialSchedule> stack = new ArrayList<PartialSchedule>();
 
-        //    Add null solution to stack
         stack.add(new PartialSchedule(_dependencyGraph, _numProcessors));
-        //
-        //    Set lowest_cost = Infinity
+
         int earliestFinishTime = Integer.MAX_VALUE;
-        //    Set best_schedule = null
         PartialSchedule bestSchedule = null;
 
-        int count = 0;
-
-        //while stack is not empty:
         while (!stack.isEmpty()) {
-            //    Pop partial schedule off of stack and name curr_schedule
+
             PartialSchedule currentSchedule = stack.remove(stack.size()-1);
             _numPartialSchedulesGenerated++;
-            //    Get cost of curr_schedule as curr_cost
+
             int currentFinishTime = currentSchedule.getFinishTime();
-            //    if curr_cost < lowest_cost:
+
             if (currentSchedule.isComplete()) {
 
                 _numCompleteSchedulesGenerated++;
                 if (currentFinishTime < earliestFinishTime) {
-                    //  lowest_cost = curr_cost
                     earliestFinishTime = currentFinishTime;
-                    //  best_schedule = curr_schedule
                     bestSchedule = currentSchedule;
                 }
 
@@ -64,7 +57,7 @@ public class DfsBranchAndBound extends Algorithm {
                         _seenCacheSize--;
                     }
 
-                    if (CostFunction.getHeuristicCost(currentSchedule, _dependencyGraph) < earliestFinishTime) {
+                    if (currentSchedule.getHeuristicCost(_dependencyGraph) < earliestFinishTime) {
                         stack.addAll(currentSchedule.extend(_dependencyGraph));
                     }
 

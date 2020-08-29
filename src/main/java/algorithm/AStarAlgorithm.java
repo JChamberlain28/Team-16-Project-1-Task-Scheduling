@@ -20,8 +20,8 @@ public class AStarAlgorithm extends Algorithm {
         HashSet<Integer> scheduleSet = new HashSet<Integer>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
-                (a, b) -> Float.compare(CostFunction.getHeuristicCost(a, _dependencyGraph),
-                        CostFunction.getHeuristicCost(b, _dependencyGraph))
+                (a, b) -> Float.compare(a.getHeuristicCost(_dependencyGraph),
+                        b.getHeuristicCost(_dependencyGraph))
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);

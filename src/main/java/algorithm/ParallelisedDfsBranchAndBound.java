@@ -1,20 +1,23 @@
 package algorithm;
 
 import graph.Graph;
+import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
 import java.lang.reflect.Array;
 import java.util.*;
 
 import java.util.concurrent.*;
 
-public class  ParallelisedDfsBranchAndBound extends Algorithm {
+
+
+public class ParallelisedDfsBranchAndBound extends Algorithm {
 
     private final int _threads;
     private int _earliestFinishTime;
     List<Boolean> _busy = new ArrayList<Boolean>();
 
-    private LinkedList<Integer> _cacheList;
-    private Set<Integer> _cacheSet;
+    ConcurrentLinkedQueue<Integer> _cacheList;
+    Set<Integer> _cacheSet;
     private int _cacheCapacity;
 
     public ParallelisedDfsBranchAndBound(Graph dependencyGraph, int numProcessors, int threads){
@@ -26,9 +29,9 @@ public class  ParallelisedDfsBranchAndBound extends Algorithm {
         }
         _earliestFinishTime = Integer.MAX_VALUE;
 
-        _cacheList = new LinkedList<Integer>();
-        _cacheSet = ConcurrentHashMap.newKeySet();
-        _cacheCapacity = 10000000;
+        _cacheList = new ConcurrentLinkedQueue<Integer>();
+        _cacheSet = new NonBlockingHashSet<Integer>();
+        _cacheCapacity = 100000;
 
     }
 
@@ -37,7 +40,6 @@ public class  ParallelisedDfsBranchAndBound extends Algorithm {
         if (ps.getFinishTime() < _earliestFinishTime) {
             _bestSchedule = ps;
             _earliestFinishTime = ps.getFinishTime();
-            System.out.println(_bestSchedule.getFinishTime());
         }
     }
 
@@ -49,9 +51,9 @@ public class  ParallelisedDfsBranchAndBound extends Algorithm {
 
         int hashCode = ps.hashCode();
         if (_cacheSet.add(hashCode)) {
-            _cacheList.addLast(hashCode);
+            _cacheList.add(hashCode);
             for (int i = 0; i < _cacheSet.size() - _cacheCapacity; i++) {
-                _cacheSet.remove(_cacheList.removeFirst());
+                _cacheSet.remove(_cacheList.remove());
             }
             return true;
         } else {
