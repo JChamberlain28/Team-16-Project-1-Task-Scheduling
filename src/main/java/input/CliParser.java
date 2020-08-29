@@ -75,7 +75,7 @@ public class CliParser {
             if (FilenameMethods.checkValidDotFileExtension(args[0])) {
                 // handles absolute file names
                 File file = new File((args[0]));
-                ;
+
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
                 } else {

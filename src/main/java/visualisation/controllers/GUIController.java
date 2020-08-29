@@ -86,9 +86,6 @@ public class GUIController {
         setUpGanttBox();
 
 
-        // this should be inside polling but left for testing
-        //updateGantt();
-
     }
 
 
@@ -180,7 +177,7 @@ public class GUIController {
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
         chart.setTitle("best schedule");
         chart.setLegendVisible(false);
-        chart.setBlockHeight(200/numberOfProcessors);
+        chart.setBlockHeight(100/numberOfProcessors);
 
         chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GanttChart.css").toExternalForm());
         //chart.getStylesheets().add(getClass().getResource("visualisationutil/GanttChart.css").toExternalForm());
