@@ -62,6 +62,7 @@ public class GUIController {
     private NumberAxis _xAxisMem;
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
+    private Label _bestScheduleTime;
 
     private Algorithm _algorithm;
     private Graph _graph;
@@ -92,15 +93,15 @@ public class GUIController {
 
 
     @FXML
-    private void setupTextComponents(){//todo readd styling and layout ,fix input graph
-        Label title = new Label("Team 16 - Saadboys" );//TODO add logo + easter egg
+    private void setupTextComponents(){
+        Label title = new Label("Team 16 - Saadboys" );
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: chocolate; -fx-font-family: Consolas");
 
         Region filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
 
         Label statusUpper = new Label("Program status:");
-        _statusLower = new Label(" Running");//TODO add update for this + chart + timer when program ends
+        _statusLower = new Label(" Running");//TODO add update for this + chart + timer when program ends - when polling stop update gantt one more time
         _statusLower.setStyle("-fx-text-fill: chocolate; -fx-font-weight: bold");
 
         Label elapsedUpper = new Label("Time elapsed:");
@@ -110,8 +111,8 @@ public class GUIController {
         Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFileName());
         Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
 
-        //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 2 or nah
-        //Label taskNum or total schedules
+        //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 3 or nah
+        //Label taskNum or total schedules checked
 
         Label parallelUpper = new Label("Number of threads:");
         Label parallelLower = new Label(" Off");
@@ -120,8 +121,11 @@ public class GUIController {
             parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores());
         }
 
+        _bestScheduleTime = new Label("Current best schedule end time: ");
+
         //Label theme = new Label("");
-        textCont.getChildren().addAll(title, filler, inputName, outputName, new HBox(parallelUpper, parallelLower), new HBox(statusUpper, _statusLower), new HBox(elapsedUpper, _elapsedLower));
+        textCont.getChildren().addAll(title, filler, inputName, outputName, new HBox(parallelUpper, parallelLower),
+                new HBox(statusUpper, _statusLower), new HBox(elapsedUpper, _elapsedLower), _bestScheduleTime);
         textCont.setMinWidth(Region.USE_PREF_SIZE);
         textCont.setStyle("-fx-padding: 10; -fx-background-color: lightgray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
 
@@ -133,7 +137,7 @@ public class GUIController {
     * adds this data to the series displayed on each linechart
      */
     @FXML
-    private void startTimer(){//TODO set X axes to 60 second fix
+    private void startTimer(){
         OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double startTime = System.currentTimeMillis();
         int[] increment = {0};
@@ -183,6 +187,7 @@ public class GUIController {
         _xAxisMem.setAutoRanging(false);
         _xAxisMem.setLabel("Time (seconds)");
         yAxisMem.setLabel("Memory Usage (Mb)");
+
         _memoryChart = new LineChart<>(_xAxisMem, yAxisMem);
         _memorySeries = new XYChart.Series();
         _memoryChart.getData().add(_memorySeries);
@@ -199,6 +204,7 @@ public class GUIController {
         _xAxisCPU.setAutoRanging(false);
         _xAxisCPU.setLabel("Time (seconds)");
         yAxisCPU.setLabel("CPU Load (%)");
+
         _cpuChart = new LineChart<>(_xAxisCPU, yAxisCPU);
         _cpuSeries = new XYChart.Series();
         _cpuChart.getData().add(_cpuSeries);
@@ -230,26 +236,26 @@ public class GUIController {
         final CategoryAxis processorsAxis = new CategoryAxis();  // y axis
 
         // Setting time axis
-        timeAxis.setLabel("");
-        timeAxis.setTickLabelFill(Color.CHOCOLATE);
+        timeAxis.setLabel("Time (seconds)");
+        //timeAxis.setTickLabelFill(Color.CHOCOLATE);
         timeAxis.setMinorTickCount(4);
 
 
         // Setting processors axis
         processorsAxis.setLabel("");
-        timeAxis.setTickLabelFill(Color.CHOCOLATE);
         processorsAxis.setTickLabelGap(10);
         processorsAxis.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(processorList)));
 
         // Setting chart
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
-        chart.setTitle("Current best schedule found: ");
+        chart.setTitle("Current Best Schedule");//TODO gantt modify look, add growth
         chart.setLegendVisible(false);
-        chart.setBlockHeight(200/numberOfProcessors);
+        chart.setBlockHeight(100/numberOfProcessors);
 
         chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GanttChart.css").toExternalForm());
         //chart.getStylesheets().add(getClass().getResource("visualisationutil/GanttChart.css").toExternalForm());
         chart.setMaxHeight(400);
+        chart.animatedProperty().setValue(false);
         ganttHBox.getChildren().add(chart);
 
     }
@@ -282,6 +288,8 @@ public class GUIController {
 
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
 
+        _bestScheduleTime.setText("Current best schedule end time: " + currentBestSchedule.getFinishTime());
+
         if (currentBestSchedule!=null) {
             // @@@@@@@@@@@@ this throws a null poiner exception
             // to get rid of null pointer remove the for loop and unco,,emt line 205 with the schedualed task construter
@@ -300,7 +308,7 @@ public class GUIController {
                 chart.getData().add(series);
             }
         } else {
-            System.out.println("null schdule");
+            System.out.println("null schedule");
         }
 
 
