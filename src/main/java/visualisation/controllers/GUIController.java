@@ -15,42 +15,24 @@ import javafx.scene.paint.Color;
 import visualisation.GanttChart;
 
 import com.sun.management.OperatingSystemMXBean;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.layout.*;
-
-import javafx.animation.Animation;
+import input.CliParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.Stop;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
-
-
+import visualisation.GanttChart;
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class GUIController {
@@ -67,6 +49,21 @@ public class GUIController {
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
 
+    @FXML
+    private VBox textCont;
+
+    @FXML
+    private HBox lowerHbox;
+
+    @FXML
+    private Label _statusLower;
+
+    @FXML
+    private Label _elapsedLower;
+
+    @FXML
+    private HBox parent;
+
     private Algorithm _algorithm;
     private Graph _graph;
 
@@ -81,6 +78,7 @@ public class GUIController {
 
     @FXML
     public void initialize() {
+        setupTextComponents();
         setupUsageCharts();
         startTimer();
         setUpGanttBox();
@@ -89,10 +87,39 @@ public class GUIController {
         // this should be inside polling but left for testing
         //updateGantt();
 
+        parent.setStyle("-fx-background-color: white");
     }
 
 
 
+    @FXML
+    private void setupTextComponents(){//todo readd styling and layout ,fix input graph
+        Label title = new Label("Team 16 - Saadboys" );//TODO add logo + easter egg
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: chocolate; -fx-font-family: Consolas");
+        Region filler = new Region();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+        Label statusUpper = new Label("Program status:");
+        _statusLower = new Label(" Running");//TODO add update for this + chart + timer when program ends
+        _statusLower.setStyle("-fx-text-fill: chocolate; -fx-font-weight: bold");
+        Label elapsedUpper = new Label("Time elapsed:");
+        _elapsedLower = new Label("");
+        _elapsedLower.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
+        Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFilePathName());
+        Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
+        //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 2 or nah
+        //Label taskNum or total schedules
+        Label parallelUpper = new Label("Parallelisation:");
+        Label parallelLower = new Label(" Off");
+        parallelLower.setStyle("-fx-text-fill: chocolate");
+        if (CliParser.getCliParserInstance().getNumberOfCores()>1){
+            parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores());
+        }
+        //Label theme = new Label("");
+        textCont.getChildren().addAll(title, filler, inputName, outputName, new HBox(parallelUpper, parallelLower), new HBox(statusUpper, _statusLower), new HBox(elapsedUpper, _elapsedLower));
+        textCont.setMinWidth(Region.USE_PREF_SIZE);
+        textCont.setStyle("-fx-padding: 10; -fx-background-color: lightgray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
+
+    }
 
 
     /*
@@ -101,20 +128,27 @@ public class GUIController {
      */
     @FXML
     private void startTimer(){
-        Timer timer = new Timer();
         OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        final int[] increment = {0};
-        timer.schedule(new TimerTask() {//TODO consider using javafx timeline instead
-            @Override
-            public void run() {
-                increment[0]++;
-                Platform.runLater(() -> {
+        double startTime = System.currentTimeMillis();
+        int[] increment = {0};
+        Timeline timer = new Timeline(
+            new KeyFrame(Duration.seconds(0.1), event -> {
+                double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
+                if (increment[0]%10 == 0){
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0],(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
                     _cpuSeries.getData().add(new XYChart.Data<>(increment[0], (osMxBean.getProcessCpuLoad())*100));
                     updateGantt();
-                });
-            }
-        }, 0, 250);
+                }
+                if (currentTime<60){
+                    _elapsedLower.setText(" " + currentTime + " seconds");
+                } else {
+                    _elapsedLower.setText(" " + (int)Math.floor(currentTime/60) + " minutes " + Math.round((currentTime%60)*10.0)/10.0 + " seconds");
+                }
+                increment[0]++;
+            })
+        );
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
     }
 
     /*
@@ -125,22 +159,24 @@ public class GUIController {
         final NumberAxis xAxisMem = new NumberAxis();
         final NumberAxis yAxisMem = new NumberAxis();//TODO set upper bound for y axis
         xAxisMem.setLabel("Time (seconds)");
-        yAxisMem.setLabel("Memory Usage (MB)");
+        yAxisMem.setLabel("JVM Memory Usage (Mb)");
         final LineChart<Number, Number> memoryChart = new LineChart<>(xAxisMem, yAxisMem);
         _memorySeries = new XYChart.Series();
         memoryChart.getData().add(_memorySeries);
         memoryChart.setLegendVisible(false);
+        memoryChart.setCreateSymbols(false);
 
         final NumberAxis xAxisCPU = new NumberAxis();
         final NumberAxis yAxisCPU = new NumberAxis();
         yAxisCPU.setUpperBound(100);
         yAxisCPU.setAutoRanging(false);
         xAxisCPU.setLabel("Time (seconds)");
-        yAxisCPU.setLabel("CPU Usage (%)");
+        yAxisCPU.setLabel("JVM CPU Load (%)");
         final LineChart<Number, Number> cpuChart = new LineChart<>(xAxisCPU, yAxisCPU);
         _cpuSeries = new XYChart.Series();
         cpuChart.getData().add(_cpuSeries);
         cpuChart.setLegendVisible(false);
+        cpuChart.setCreateSymbols(false);
 
         chartHBox.getChildren().addAll(memoryChart, cpuChart);
     }
@@ -178,7 +214,7 @@ public class GUIController {
 
         // Setting chart
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
-        chart.setTitle("best schedule");
+        chart.setTitle("Current best schedule found: ");
         chart.setLegendVisible(false);
         chart.setBlockHeight(200/numberOfProcessors);
 
@@ -237,6 +273,7 @@ public class GUIController {
         } else {
             System.out.println("null schdule");
         }
+
 
     }
 

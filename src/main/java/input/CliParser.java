@@ -117,12 +117,16 @@ public class CliParser {
                     String dir = FilenameMethods.getDirectoryOfJar();
                     System.out.println(""+dir + File.separator + _filePathName + "\n");
 
-                    //File file = new File(dir + File.separator + _filePathName);
+                //File file = new File(dir + File.separator + fileName);
+                file = new File("C:\\Users\\OEM\\IdeaProjects\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
 
-                    file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+
+                //file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
                 }
                     if (!file.exists()) {
+                        System.out.println(file.toString());
                         throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
+
                     }
 
             }
