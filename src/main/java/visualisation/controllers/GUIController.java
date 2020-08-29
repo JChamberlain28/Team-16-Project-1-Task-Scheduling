@@ -2,11 +2,9 @@ package visualisation.controllers;
 
 
 
-import algorithm.AStarAlgorithm;
 import algorithm.Algorithm;
 import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
-import com.sun.tracing.dtrace.DependencyClass;
 import graph.Graph;
 import input.CliParser;
 import javafx.collections.FXCollections;
@@ -15,22 +13,17 @@ import javafx.scene.paint.Color;
 import visualisation.GanttChart;
 
 import com.sun.management.OperatingSystemMXBean;
-import input.CliParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
-import visualisation.GanttChart;
+
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 
@@ -46,8 +39,7 @@ public class GUIController {
     @FXML
     private HBox ganttHBox;
 
-    private XYChart.Series _memorySeries;
-    private XYChart.Series _cpuSeries;
+
 
     @FXML
     private VBox textCont;
@@ -63,6 +55,13 @@ public class GUIController {
 
     @FXML
     private HBox parent;
+
+    private  LineChart<Number, Number> _memoryChart;
+    private  LineChart<Number, Number> _cpuChart;
+    private NumberAxis _xAxisCPU;
+    private NumberAxis _xAxisMem;
+    private XYChart.Series _memorySeries;
+    private XYChart.Series _cpuSeries;
 
     private Algorithm _algorithm;
     private Graph _graph;
@@ -96,24 +95,31 @@ public class GUIController {
     private void setupTextComponents(){//todo readd styling and layout ,fix input graph
         Label title = new Label("Team 16 - Saadboys" );//TODO add logo + easter egg
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: chocolate; -fx-font-family: Consolas");
+
         Region filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
+
         Label statusUpper = new Label("Program status:");
         _statusLower = new Label(" Running");//TODO add update for this + chart + timer when program ends
         _statusLower.setStyle("-fx-text-fill: chocolate; -fx-font-weight: bold");
+
         Label elapsedUpper = new Label("Time elapsed:");
         _elapsedLower = new Label("");
         _elapsedLower.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
+
         Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFileName());
         Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
+
         //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 2 or nah
         //Label taskNum or total schedules
+
         Label parallelUpper = new Label("Number of threads:");
         Label parallelLower = new Label(" Off");
         parallelLower.setStyle("-fx-text-fill: chocolate");
         if (CliParser.getCliParserInstance().getNumberOfCores()>1){
             parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores());
         }
+
         //Label theme = new Label("");
         textCont.getChildren().addAll(title, filler, inputName, outputName, new HBox(parallelUpper, parallelLower), new HBox(statusUpper, _statusLower), new HBox(elapsedUpper, _elapsedLower));
         textCont.setMinWidth(Region.USE_PREF_SIZE);
@@ -127,7 +133,7 @@ public class GUIController {
     * adds this data to the series displayed on each linechart
      */
     @FXML
-    private void startTimer(){
+    private void startTimer(){//TODO set X axes to 60 second fix
         OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double startTime = System.currentTimeMillis();
         int[] increment = {0};
@@ -135,8 +141,23 @@ public class GUIController {
             new KeyFrame(Duration.seconds(0.1), event -> {
                 double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (increment[0]%10 == 0){
-                    _memorySeries.getData().add(new XYChart.Data<>(increment[0],(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
-                    _cpuSeries.getData().add(new XYChart.Data<>(increment[0], (osMxBean.getProcessCpuLoad())*100));
+                    _memorySeries.getData().add(new XYChart.Data<>(increment[0]/10,(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
+                    if (_memorySeries.getData().size()>60){
+                        _xAxisMem.setUpperBound(increment[0]/10);
+                        _xAxisMem.setLowerBound(increment[0]/10 - 60);
+                        _memorySeries.getData().remove(0);
+                        _memoryChart.getData().remove(0);
+                        _memoryChart.getData().add(_memorySeries);
+
+                    }
+                    _cpuSeries.getData().add(new XYChart.Data<>(increment[0]/10, (osMxBean.getProcessCpuLoad())*100));
+                    if (_cpuSeries.getData().size()>60){
+                        _xAxisCPU.setUpperBound(increment[0]/10);
+                        _xAxisCPU.setLowerBound(increment[0]/10 - 60);
+                        _cpuSeries.getData().remove(0);
+                        _cpuChart.getData().remove(0);
+                        _cpuChart.getData().add(_cpuSeries);
+                    }
                     updateGantt();
                 }
                 if (currentTime<60){
@@ -156,31 +177,37 @@ public class GUIController {
      */
     @FXML
     private void setupUsageCharts(){
-        final NumberAxis xAxisMem = new NumberAxis();
-        final NumberAxis yAxisMem = new NumberAxis();//TODO set upper bound for y axis
-        xAxisMem.setLabel("Time (seconds)");
+        _xAxisMem = new NumberAxis();
+        final NumberAxis yAxisMem = new NumberAxis();
+        _xAxisMem.setUpperBound(60);
+        _xAxisMem.setAutoRanging(false);
+        _xAxisMem.setLabel("Time (seconds)");
         yAxisMem.setLabel("Memory Usage (Mb)");
-        final LineChart<Number, Number> memoryChart = new LineChart<>(xAxisMem, yAxisMem);
+        _memoryChart = new LineChart<>(_xAxisMem, yAxisMem);
         _memorySeries = new XYChart.Series();
-        memoryChart.getData().add(_memorySeries);
-        memoryChart.setLegendVisible(false);
-        memoryChart.setCreateSymbols(false);
-        memoryChart.setTitle("JVM Memory Usage");
+        _memoryChart.getData().add(_memorySeries);
+        _memoryChart.setLegendVisible(false);
+        _memoryChart.setCreateSymbols(false);
+        _memoryChart.setTitle("JVM Memory Usage");
+        _memoryChart.animatedProperty().setValue(false);
 
-        final NumberAxis xAxisCPU = new NumberAxis();
+        _xAxisCPU = new NumberAxis();
         final NumberAxis yAxisCPU = new NumberAxis();
         yAxisCPU.setUpperBound(100);
         yAxisCPU.setAutoRanging(false);
-        xAxisCPU.setLabel("Time (seconds)");
+        _xAxisCPU.setUpperBound(60);
+        _xAxisCPU.setAutoRanging(false);
+        _xAxisCPU.setLabel("Time (seconds)");
         yAxisCPU.setLabel("CPU Load (%)");
-        final LineChart<Number, Number> cpuChart = new LineChart<>(xAxisCPU, yAxisCPU);
+        _cpuChart = new LineChart<>(_xAxisCPU, yAxisCPU);
         _cpuSeries = new XYChart.Series();
-        cpuChart.getData().add(_cpuSeries);
-        cpuChart.setLegendVisible(false);
-        cpuChart.setCreateSymbols(false);
-        cpuChart.setTitle("JVM CPU Usage");
+        _cpuChart.getData().add(_cpuSeries);
+        _cpuChart.setLegendVisible(false);
+        _cpuChart.setCreateSymbols(false);
+        _cpuChart.setTitle("JVM CPU Usage");
+        _cpuChart.animatedProperty().setValue(false);
 
-        chartHBox.getChildren().addAll(memoryChart, cpuChart);
+        chartHBox.getChildren().addAll(_memoryChart, _cpuChart);
     }
 
 
