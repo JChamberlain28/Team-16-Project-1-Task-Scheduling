@@ -65,12 +65,14 @@ public class FilenameMethods {
 
     /* Method to check if input filename is valid.
      */
-    public static boolean checkValidFileName(String fileName){
+    public static boolean checkValidDotFileExtension(String fileName){
 
         if (!fileName.endsWith(".dot")) {
             throw new IllegalArgumentException("Error: Invalid file name. Please provide a valid file " +
                     "name with the full '.dot' extension included.");
-        } else if ( (fileName.startsWith("\\")) ) {
+        }
+        return true;
+        /*else if ( (fileName.startsWith("\\")) ) {
             // windows input is a folder which is invalid
             throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
 
@@ -79,7 +81,7 @@ public class FilenameMethods {
             throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
         } else {
             return true;
-        }
+        }*/
 
 
     }

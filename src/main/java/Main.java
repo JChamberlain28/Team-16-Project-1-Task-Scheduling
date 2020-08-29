@@ -24,15 +24,15 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        String[] inputArgs = {"C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot", "4", "-v", "-p", "4"};
+
         System.out.println("Started: " + LocalDateTime.now());
 
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            //cliparser.UI(args);
-            cliparser.UI(inputArgs);
+            cliparser.UI(args);
+
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
                 return;
@@ -50,14 +50,12 @@ public class Main {
         Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
                 cliparser.getNumberOfCores());
 
-
-
         if (cliparser.isVisualisationDisplay()) {
 
             (new Thread() {
                 @Override
                 public void run() {
-                    Visualise.startVisual(inputArgs, dfs, graph);
+                    Visualise.startVisual(args, dfs, graph);
                 }
             }).start();
 
