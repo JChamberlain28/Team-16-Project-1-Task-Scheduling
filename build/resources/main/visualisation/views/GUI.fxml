@@ -7,7 +7,7 @@
       fx:id="parent"
       prefHeight="400.0" prefWidth="600.0">
     <VBox  fx:id="textCont" />
-    <VBox>
+    <VBox fx:id="rhsBox">
         <HBox fx:id="chartHBox" />
         <HBox fx:id="ganttHBox" />
     </VBox>

@@ -1,3 +1,10 @@
 .chart-plot-background {
     -fx-background-color: transparent;
 }
+
+.default-color0.chart-series-line { -fx-stroke: darkorange}
+
+.chart-title { -fx-text-fill: darkblue}
+
+.axis-label { -fx-text-fill: darkblue}
+
