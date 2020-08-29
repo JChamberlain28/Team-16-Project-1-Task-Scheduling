@@ -8,14 +8,10 @@ import algorithm.ScheduledTask;
 import graph.Graph;
 import input.CliParser;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import visualisation.GanttChart;
 
@@ -31,9 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
 import java.lang.management.ManagementFactory;
-import java.net.URL;
 import java.util.Arrays;
 
 
@@ -93,7 +87,7 @@ public class GUIController {
     public void initialize() {
         setupTextComponents();
         setupUsageCharts();
-        setUpGanttBox();
+        setUpGanttAxis();
         startTimer();
 
         parent.setStyle("-fx-background-color: white");
@@ -205,7 +199,7 @@ public class GUIController {
                         _cpuChart.getData().remove(0);
                         _cpuChart.getData().add(_cpuSeries);
                     }
-                    updateGantt();
+                    updateGantt(chart);
                 }
                 double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (currentTime<60){
@@ -223,7 +217,7 @@ public class GUIController {
     }
 
     private void stopTimer(){
-        updateGantt();
+        updateGantt(chart);
         _statusLower.setText("Done");
         _statusLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
         _elapsedLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
@@ -280,15 +274,15 @@ public class GUIController {
 
 
 
+    /*
+     * Taken from: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
+     */
+    private void setUpGanttAxis(){
 
-    private void setUpGanttBox(){
 
-        // number of processors
-        int numberOfProcessors = CliParser.getCliParserInstance().getNumberOfProcessors();
-
-        String[] processorList = new String[numberOfProcessors];
-        for (int i = 0;i<numberOfProcessors ;i++){
-            processorList[i]="Processor "+i;
+        String[] processorList = new String[CliParser.getCliParserInstance().getNumberOfProcessors()];
+        for (int i = 0;i<CliParser.getCliParserInstance().getNumberOfProcessors() ;i++){
+            processorList[i]="Processor "+(i+1);
         }
 
         // intitialise x and y axis
@@ -300,21 +294,24 @@ public class GUIController {
         timeAxis.setTickLabelFill(Color.DARKBLUE);
         timeAxis.setMinorTickCount(4);
 
-
         // Setting processors axis
         processorsAxis.setLabel("");
         processorsAxis.setTickLabelGap(10);
         processorsAxis.setTickLabelFill(Color.DARKBLUE);
         processorsAxis.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(processorList)));
 
+        setUpGanttChart(timeAxis , processorsAxis);
+    }
+
+    private void setUpGanttChart(NumberAxis timeAxis , CategoryAxis processorsAxis){
         // Setting chart
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
         chart.setTitle("Current Best Schedule");
         chart.setLegendVisible(false);
-        chart.setBlockHeight(100/numberOfProcessors);
+        chart.setBlockHeight(100/CliParser.getCliParserInstance().getNumberOfProcessors());
 
-        chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GanttChart.css").toExternalForm());
-        //chart.getStylesheets().add(getClass().getResource("visualisationutil/GanttChart.css").toExternalForm());
+        chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GUI.css").toExternalForm());
+
         chart.setMaxHeight(400);
         chart.animatedProperty().setValue(false);
         ganttHBox.getChildren().add(chart);
@@ -323,18 +320,16 @@ public class GUIController {
     }
 
 
-
-
     /*This must be put inside the polling and update along with the other aspects. */
-    private void updateGantt(){
+    private void updateGantt( GanttChart<Number,String> chart){
 
-        int numberOfProcessors = CliParser.getCliParserInstance().getNumberOfProcessors();
+
 
         // new array of series to write onto
-        Series[] seriesProcessors = new Series[numberOfProcessors];
+        Series[] seriesProcessors = new Series[CliParser.getCliParserInstance().getNumberOfProcessors()];
 
         // initializing series obj
-        for (int i=0;i<numberOfProcessors;i++){
+        for (int i=0;i<CliParser.getCliParserInstance().getNumberOfProcessors();i++){
             seriesProcessors[i]=new Series();
         }
 
@@ -351,20 +346,19 @@ public class GUIController {
         _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
 
         if (currentBestSchedule!=null) {
-            // @@@@@@@@@@@@ this throws a null pointer exception
             // to get rid of null pointer remove the for loop and uncomment line 205 with the scheduled task constructor
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
 
                 int taskProcessor = scheduledTask.getProcessor();
-                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
+                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + (taskProcessor+1)),
                         new GanttChart.ExtraData(scheduledTask, _graph, "task-ganttchart"));
                 seriesProcessors[taskProcessor].getData().add(newData);
             }
 
             // clear current gantt and repopulate chart with new series
             chart.getData().clear();
-            for (Series series : seriesProcessors) {
-                chart.getData().add(series);
+            for (int i=0;i<CliParser.getCliParserInstance().getNumberOfProcessors();i++) {
+                chart.getData().add(seriesProcessors[i]);
             }
         } else {
             System.out.println("null schedule");
