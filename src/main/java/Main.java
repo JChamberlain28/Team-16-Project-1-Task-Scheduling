@@ -24,14 +24,15 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-
+        String[] hardcodedArgs = {"C:\\Users\\dh\\Downloads\\testfolder\\hello\\a1.dot", "2", "-v"};
         System.out.println("Started: " + LocalDateTime.now());
 
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            cliparser.UI(args);
+            //cliparser.UI(args);
+            cliparser.UI(hardcodedArgs);
 
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
@@ -55,7 +56,9 @@ public class Main {
             (new Thread() {
                 @Override
                 public void run() {
-                    Visualise.startVisual(args, dfs, graph);
+                    //Visualise.startVisual(args, dfs, graph);
+                    Visualise.startVisual(hardcodedArgs, dfs, graph);
+
                 }
             }).start();
 

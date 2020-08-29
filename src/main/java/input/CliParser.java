@@ -230,12 +230,12 @@ public class CliParser {
                         System.out.println("file exists");
                         outputFile.delete();
                     } else {
-                        throw new IllegalArgumentException("Error: invalid output file path." +
+                        throw new IllegalArgumentException("Error: File could not be created." +
                                 " Please enter a valid output file path.");
                     }
 
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Error: invalid output file path." +
+                    throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
                             " Please enter a valid output file path.");
                 }
 

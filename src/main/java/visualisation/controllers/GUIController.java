@@ -156,7 +156,7 @@ public class GUIController {
         int numberOfProcessors = CliParser.getCliParserInstance().getNumberOfProcessors();
 
         String[] processorList = new String[numberOfProcessors];
-        for (int i = 0;i<numberOfProcessors ;i++){
+        for (int i = 1;i<=numberOfProcessors ;i++){
             processorList[i]="Processor "+i;
         }
 
@@ -223,7 +223,7 @@ public class GUIController {
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
 
                 int taskProcessor = scheduledTask.getProcessor();
-                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
+                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + (taskProcessor+1)),
                         new GanttChart.ExtraData(scheduledTask, _graph, "status-red"));
                 seriesProcessors[taskProcessor].getData().add(newData);
             }
@@ -235,7 +235,7 @@ public class GUIController {
                 chart.getData().add(series);
             }
         } else {
-            System.out.println("null schdule");
+            //System.out.println("null schdule");
         }
 
     }
