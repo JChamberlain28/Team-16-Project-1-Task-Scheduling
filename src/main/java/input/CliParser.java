@@ -70,7 +70,7 @@ public class CliParser {
         // should include both file path and number of processors.
         if (args.length > 1) {
             // Checking valid input file name.
-            if (checkValidFileName(args[0])) {
+            if (FilenameMethods.checkValidFileName(args[0])) {
                 // handles absolute file names
                 File file;
                 if (FilenameMethods.checkIfAbsolutePath(args[0])){
@@ -193,7 +193,7 @@ public class CliParser {
         if (commandLineParsed.hasOption("o")) {
             String outputFileNameInput = commandLineParsed.getOptionValue("o");
             // Checking valid output file name.
-            if (outputFileNameInput!=null && checkValidFileName(outputFileNameInput)) {
+            if (outputFileNameInput!=null && FilenameMethods.checkValidFileName(outputFileNameInput)) {
 
                 if (FilenameMethods.checkIfAbsolutePath(outputFileNameInput)){
                     String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
@@ -205,7 +205,8 @@ public class CliParser {
                     // could have folders
                     String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
 
-                    if (outputFileNameInput.startsWith("./") || outputFileNameInput.startsWith(".\\")){ // TODO: fix this?
+                    if ( (outputFileNameInput.startsWith("./") && !System.getProperty("os.name").toLowerCase().startsWith("windows"))
+                            || (System.getProperty("os.name").toLowerCase().startsWith("windows")  && outputFileNameInput.startsWith(".\\")) ){ // TODO: fix this?
                         String fileOutputNameNoRelativeSlash = noFolderFileName.substring(2);
                         _CliParsedInputs._outputFileName = fileOutputNameNoRelativeSlash; // File name
 
@@ -248,21 +249,7 @@ public class CliParser {
         return(booleanString.equalsIgnoreCase("true") || booleanString.equalsIgnoreCase("false"));
     }
 
-    /* Method to check if input filename is valid.
-     */
-    public static boolean checkValidFileName(String fileName){
 
-        if (!fileName.endsWith(".dot")) {
-            throw new IllegalArgumentException("Error: Invalid file name. Please provide a valid file " +
-                    "name with the full '.dot' extension included.");
-        } else if ( (fileName.startsWith("/")) || (fileName.startsWith("\\")) ) {
-            throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
-        } else {
-            return true;
-        }
-
-
-    }
 
 
 
