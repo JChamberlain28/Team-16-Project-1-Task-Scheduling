@@ -104,7 +104,7 @@ public class GUIController {
         Label elapsedUpper = new Label("Time elapsed:");
         _elapsedLower = new Label("");
         _elapsedLower.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
-        Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFilePathName());
+        Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFileName());
         Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
         //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 2 or nah
         //Label taskNum or total schedules
