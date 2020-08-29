@@ -74,7 +74,12 @@ public class Main {
 
 
         // Create output with the output file.
-        OutputGenerator.generate(originalGraph, cliparser.getOutputFileName());
+        try {
+            OutputGenerator.generate(originalGraph, cliparser.getOutputFileName(), cliparser.getFilePathName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         System.out.println("Ended: " + LocalDateTime.now());
 
