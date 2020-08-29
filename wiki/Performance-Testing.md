@@ -8,10 +8,13 @@ Performance testing was conducted for A*, DFS Branch and Bound and DFS Branch an
 
 ## Results
 
+
+
 | Graph                       | A* Time         | DFS Branch and Bound Time       |  DFS Branch and Bound Parallelised (8 threads) 
 | ----------------------------|--------------| ---------------------------------------------| ---------------------------------------------|
-| Nodes_11_OutTree          | 3.125s      | 0.98s  | 0.803s |
-| g2    | time     | time | times |
+|--------------||--------------||--------------||--------------||--------------|
+| Nodes_11_OutTree          | 3.125s      | 1.31s | 1.232s |
+| g2    | 0.252s    | 0.251ms | times |
 | g3              | time      | time  | time |
 | g4               | time      | time  | time |
 | g5              | time       | time | time |
