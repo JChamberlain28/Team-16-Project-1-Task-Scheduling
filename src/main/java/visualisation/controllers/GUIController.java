@@ -39,8 +39,6 @@ public class GUIController {
     @FXML
     private HBox ganttHBox;
 
-
-
     @FXML
     private VBox textCont;
 
@@ -54,6 +52,9 @@ public class GUIController {
     private Label _elapsedLower;
 
     @FXML
+    private Label _bestScheduleTime;
+
+    @FXML
     private HBox parent;
 
     private  LineChart<Number, Number> _memoryChart;
@@ -62,7 +63,7 @@ public class GUIController {
     private NumberAxis _xAxisMem;
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
-    private Label _bestScheduleTime;
+    private Timeline _timer;
 
     private Algorithm _algorithm;
     private Graph _graph;
@@ -74,18 +75,12 @@ public class GUIController {
 
 
 
-
-
     @FXML
     public void initialize() {
         setupTextComponents();
         setupUsageCharts();
-        startTimer();
         setUpGanttBox();
-
-
-        // this should be inside polling but left for testing
-        //updateGantt();
+        startTimer();
 
         parent.setStyle("-fx-background-color: white");
     }
@@ -100,30 +95,29 @@ public class GUIController {
         Region filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
 
-        Label statusUpper = new Label("Program status:");
-        _statusLower = new Label(" Running");//TODO add update for this + chart + timer when program ends - when polling stop update gantt one more time
+        Label statusUpper = new Label("Program status: ");
+        _statusLower = new Label("Running");
         _statusLower.setStyle("-fx-text-fill: chocolate; -fx-font-weight: bold");
 
         Label elapsedUpper = new Label("Time elapsed:");
         _elapsedLower = new Label("");
         _elapsedLower.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
 
-        Label inputName = new Label("Input file name: " + CliParser.getCliParserInstance().getFileName());
-        Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
+        Label inputName = new Label("Input file: " + CliParser.getCliParserInstance().getFileName());
+        Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
 
         //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 3 or nah
         //Label taskNum or total schedules checked
 
-        Label parallelUpper = new Label("Number of threads:");
+        Label parallelUpper = new Label("Parallelisation:");
         Label parallelLower = new Label(" Off");
         parallelLower.setStyle("-fx-text-fill: chocolate");
         if (CliParser.getCliParserInstance().getNumberOfCores()>1){
-            parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores());
+            parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores() + " cores");
         }
 
-        _bestScheduleTime = new Label("Current best schedule end time: ");
+        _bestScheduleTime = new Label("Current best finish time: ");
 
-        //Label theme = new Label("");
         textCont.getChildren().addAll(title, filler, inputName, outputName, new HBox(parallelUpper, parallelLower),
                 new HBox(statusUpper, _statusLower), new HBox(elapsedUpper, _elapsedLower), _bestScheduleTime);
         textCont.setMinWidth(Region.USE_PREF_SIZE);
@@ -141,9 +135,12 @@ public class GUIController {
         OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double startTime = System.currentTimeMillis();
         int[] increment = {0};
-        Timeline timer = new Timeline(
+
+        _timer = new Timeline(
             new KeyFrame(Duration.seconds(0.1), event -> {
-                double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
+                if (_algorithm.isFinished()){
+                    stopTimer();
+                }
                 if (increment[0]%10 == 0){
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0]/10,(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
                     if (_memorySeries.getData().size()>60){
@@ -164,16 +161,24 @@ public class GUIController {
                     }
                     updateGantt();
                 }
+                double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (currentTime<60){
-                    _elapsedLower.setText(" " + currentTime + " seconds");
+                    _elapsedLower.setText(" " + currentTime + "s");
                 } else {
-                    _elapsedLower.setText(" " + (int)Math.floor(currentTime/60) + " minutes " + Math.round((currentTime%60)*10.0)/10.0 + " seconds");
+                    _elapsedLower.setText(" " + (int)Math.floor(currentTime/60) + "m " + Math.round((currentTime%60)*10.0)/10.0 + "s");
                 }
                 increment[0]++;
             })
         );
-        timer.setCycleCount(Timeline.INDEFINITE);
-        timer.play();
+
+        _timer.setCycleCount(Timeline.INDEFINITE);
+        _timer.play();
+    }
+
+    private void stopTimer(){
+        updateGantt();
+        _statusLower.setText("Done");
+        _timer.stop();
     }
 
     /*
@@ -284,15 +289,13 @@ public class GUIController {
 
         //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
-
-
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
 
-        _bestScheduleTime.setText("Current best schedule end time: " + currentBestSchedule.getFinishTime());
+        _bestScheduleTime.setText("Current best finish time: " + currentBestSchedule.getFinishTime() + "s");
 
         if (currentBestSchedule!=null) {
-            // @@@@@@@@@@@@ this throws a null poiner exception
-            // to get rid of null pointer remove the for loop and unco,,emt line 205 with the schedualed task construter
+            // @@@@@@@@@@@@ this throws a null pointer exception
+            // to get rid of null pointer remove the for loop and uncomment line 205 with the scheduled task constructor
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
 
                 int taskProcessor = scheduledTask.getProcessor();
@@ -300,7 +303,6 @@ public class GUIController {
                         new GanttChart.ExtraData(scheduledTask, _graph, "status-red"));
                 seriesProcessors[taskProcessor].getData().add(newData);
             }
-
 
             // clear current gantt and repopulate chart with new series
             chart.getData().clear();
@@ -311,10 +313,7 @@ public class GUIController {
             System.out.println("null schedule");
         }
 
-
     }
-
-
 
 
 }
