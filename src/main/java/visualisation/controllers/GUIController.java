@@ -108,7 +108,7 @@ public class GUIController {
         Label outputName = new Label("Output file name: " + CliParser.getCliParserInstance().getOutputFileName());
         //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 2 or nah
         //Label taskNum or total schedules
-        Label parallelUpper = new Label("Parallelisation:");
+        Label parallelUpper = new Label("Number of threads:");
         Label parallelLower = new Label(" Off");
         parallelLower.setStyle("-fx-text-fill: chocolate");
         if (CliParser.getCliParserInstance().getNumberOfCores()>1){
@@ -159,24 +159,26 @@ public class GUIController {
         final NumberAxis xAxisMem = new NumberAxis();
         final NumberAxis yAxisMem = new NumberAxis();//TODO set upper bound for y axis
         xAxisMem.setLabel("Time (seconds)");
-        yAxisMem.setLabel("JVM Memory Usage (Mb)");
+        yAxisMem.setLabel("Memory Usage (Mb)");
         final LineChart<Number, Number> memoryChart = new LineChart<>(xAxisMem, yAxisMem);
         _memorySeries = new XYChart.Series();
         memoryChart.getData().add(_memorySeries);
         memoryChart.setLegendVisible(false);
         memoryChart.setCreateSymbols(false);
+        memoryChart.setTitle("JVM Memory Usage");
 
         final NumberAxis xAxisCPU = new NumberAxis();
         final NumberAxis yAxisCPU = new NumberAxis();
         yAxisCPU.setUpperBound(100);
         yAxisCPU.setAutoRanging(false);
         xAxisCPU.setLabel("Time (seconds)");
-        yAxisCPU.setLabel("JVM CPU Load (%)");
+        yAxisCPU.setLabel("CPU Load (%)");
         final LineChart<Number, Number> cpuChart = new LineChart<>(xAxisCPU, yAxisCPU);
         _cpuSeries = new XYChart.Series();
         cpuChart.getData().add(_cpuSeries);
         cpuChart.setLegendVisible(false);
         cpuChart.setCreateSymbols(false);
+        cpuChart.setTitle("JVM CPU Usage");
 
         chartHBox.getChildren().addAll(memoryChart, cpuChart);
     }
