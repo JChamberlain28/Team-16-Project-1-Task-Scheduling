@@ -16,17 +16,18 @@ import java.io.IOException;
  * */
 public class InputParser {
 
-    public static Graph readInput(String fileName) {
+    public static Graph readInput(String filePathName) {
 
         Graph algoGraph = new Graph("newGraph");
         int edgeCount = 0;
 
         BufferedReader bufferReader = null;
 
-        String dir = FilenameMethods.getDirectoryOfJar();
-        File file = new File(dir + File.separator + fileName);
 
-            try {
+        //File file = new File(filePathName);
+        File file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
+
+        try {
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine();
@@ -94,8 +95,10 @@ public class InputParser {
                     algoGraph.addVertex(graphVertex);
 
                 } else {
+                    if(!line.isEmpty()) {
                     throw new IllegalArgumentException("Error: Input '.dot' file is not a valid graph. " +
-                            "The input dot file should be valid.");
+                            "There is an invalid line in the dot file." +
+                            " The input dot file should be valid.");}
                 }
                 line = bufferReader.readLine();
             }
@@ -117,11 +120,3 @@ public class InputParser {
 
     }
 }
-
-
-
-
-
-
-
-
