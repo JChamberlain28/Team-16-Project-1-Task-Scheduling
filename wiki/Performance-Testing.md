@@ -9,10 +9,18 @@ Performance testing was conducted for A*, DFS Branch and Bound and DFS Branch an
 ## Results
 
 
-
+### Scheduling on 2 cores
 | Graph                       | A* Time         | DFS Branch and Bound Time       |  DFS Branch and Bound Parallelised (8 threads) 
 | ----------------------------|--------------| ---------------------------------------------| ---------------------------------------------|
-|--------------||--------------||--------------||--------------||--------------|
+| Nodes_11_OutTree          | 3.125s      | 1.31s | 1.232s |
+| Nodes_10_Random    | 0.252s    | 0.251ms | 0.272s |
+| Nodes_9_SeriesParallel              | 0.273s      | 0.258s  | 0.271s |
+| Nodes_8_Random              | 0.189s      | 0.215s  | 0.230s |
+| Nodes_7_OutTree              | 0.210s       | 0.233s | 0.238s |
+
+### Scheduling on 8 cores
+| Graph                       | A* Time         | DFS Branch and Bound Time       |  DFS Branch and Bound Parallelised (8 threads) 
+| ----------------------------|--------------| ---------------------------------------------| ---------------------------------------------|
 | Nodes_11_OutTree          | 3.125s      | 1.31s | 1.232s |
 | g2    | 0.252s    | 0.251ms | times |
 | g3              | time      | time  | time |
