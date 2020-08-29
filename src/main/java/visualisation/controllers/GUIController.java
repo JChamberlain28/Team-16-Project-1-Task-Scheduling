@@ -8,8 +8,14 @@ import algorithm.ScheduledTask;
 import graph.Graph;
 import input.CliParser;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import visualisation.GanttChart;
 
@@ -25,7 +31,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
+import java.io.FileInputStream;
 import java.lang.management.ManagementFactory;
+import java.net.URL;
 import java.util.Arrays;
 
 
@@ -68,6 +76,8 @@ public class GUIController {
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
     private Timeline _timer;
+    private Button _close;
+    private final String logoTitle = "/main/resources/visualisation/controllers/logo.png";
 
     private Algorithm _algorithm;
     private Graph _graph;
@@ -93,54 +103,72 @@ public class GUIController {
 
     @FXML
     private void setupTextComponents(){
-        Label title = new Label("Team 16 - Saadboys" );
-        title.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: darkorange; -fx-font-family: 'Century Gothic'");
-        HBox fill1 = new HBox();
-        fill1.prefHeightProperty().bind(textCont.heightProperty().divide(8));
+        try {
+            Label title = new Label("Team 16 - Saadboys" );
+            title.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: orange; -fx-font-family: 'Century Gothic'");
+            HBox fill1 = new HBox();
+            fill1.prefHeightProperty().bind(textCont.heightProperty().divide(4));
 
-        Label statusUpper = new Label("Program status: ");
-        statusUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        _statusLower = new Label("Running");
-        _statusLower.setStyle("-fx-text-fill: darkorange; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 14");
 
-        Label elapsedUpper = new Label("Time elapsed:");
-        elapsedUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        _elapsedLower = new Label("");
-        _elapsedLower.setStyle("-fx-text-fill: green; -fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
-        _elapsedLower.setPadding(new Insets(0,0,5,0));
+            //Image logo = new Image(logoTitle);
+            //ImageView logoView = new ImageView(logo);
 
-        Label inputName = new Label("Input file:  " + CliParser.getCliParserInstance().getFileName());
-        inputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        inputName.setPadding(new Insets(0,0,5,0));
-        Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
-        outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        HBox fill2 = new HBox();
-        fill2.prefHeightProperty().bind(textCont.heightProperty().divide(12));
+            Label inputName = new Label("Input file:  " + CliParser.getCliParserInstance().getFileName());
+            inputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            inputName.setPadding(new Insets(0,0,5,0));
+            Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
+            outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            HBox fill2 = new HBox();
+            fill2.prefHeightProperty().bind(textCont.heightProperty().divide(12));
 
-        //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add these 3 or nah
-        //Label taskNum or total schedules checked/iterations
+            Label parallelUpper = new Label("Parallelisation:");
+            parallelUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            parallelUpper.setPadding(new Insets(0,0,5,0));
+            Label parallelLower = new Label(" Off");
+            parallelLower.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+            if (CliParser.getCliParserInstance().getNumberOfCores()>1){
+                parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores() + " threads");
+            }
 
-        Label parallelUpper = new Label("Parallelisation:");
-        parallelUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        parallelUpper.setPadding(new Insets(0,0,5,0));
-        Label parallelLower = new Label(" Off");
-        parallelLower.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        if (CliParser.getCliParserInstance().getNumberOfCores()>1){
-            parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores() + " cores");
+            Label bestScheduleTimeStart = new Label("Current best:   ");
+            bestScheduleTimeStart.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            _bestScheduleTimeEnd = new Label( " ");
+            _bestScheduleTimeEnd.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+            HBox fill3 = new HBox();
+            fill3.prefHeightProperty().bind(textCont.heightProperty().divide(12));
+
+            Label elapsedUpper = new Label("Time elapsed:");
+            elapsedUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            _elapsedLower = new Label("");
+            _elapsedLower.setStyle("-fx-text-fill: orange; -fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16");
+            _elapsedLower.setPadding(new Insets(0,0,5,0));
+
+            Label statusUpper = new Label("Program status: ");
+            statusUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            _statusLower = new Label("Running");
+            _statusLower.setStyle("-fx-text-fill: lightgreen; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 16");
+            HBox fill4 = new HBox();
+            fill4.prefHeightProperty().bind(textCont.heightProperty().divide(6));
+            HBox fill5 = new HBox();
+            fill5.prefWidthProperty().bind(textCont.widthProperty().divide(8));//TODO centre
+
+            //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add
+
+            _close = new Button("Exit Program");
+            _close.setVisible(true);
+            _close.setStyle("-fx-background-color: lightgreen; -fx-text-fill: white; -fx-font-family: Consolas; -fx-font-size: 20; -fx-font-weight: bold");
+            _close.setAlignment(Pos.CENTER);
+            _close.setOnAction(event -> System.exit(0));
+
+            textCont.getChildren().addAll(new HBox(title), fill1, inputName, outputName, fill2, new HBox(parallelUpper, parallelLower),
+                    new HBox(bestScheduleTimeStart, _bestScheduleTimeEnd), fill3, new HBox(elapsedUpper, _elapsedLower), new HBox(statusUpper, _statusLower),
+                    fill4, new HBox(fill5, _close));
+            textCont.setMinWidth(Region.USE_PREF_SIZE);
+            textCont.setStyle("-fx-padding: 10; -fx-background-color: slategray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
+
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        Label bestScheduleTimeStart = new Label("Current best:   ");
-        bestScheduleTimeStart.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        _bestScheduleTimeEnd = new Label( " ");
-        _bestScheduleTimeEnd.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-        _bestScheduleTimeEnd.setPadding(new Insets(0, 0, 20, 0));
-
-
-        textCont.getChildren().addAll(title, fill1, inputName, outputName, fill2, new HBox(parallelUpper, parallelLower),
-                new HBox(bestScheduleTimeStart, _bestScheduleTimeEnd),  new HBox(elapsedUpper, _elapsedLower), new HBox(statusUpper, _statusLower));
-        textCont.setMinWidth(Region.USE_PREF_SIZE);
-        textCont.setStyle("-fx-padding: 10; -fx-background-color: darkslategray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
-
     }
 
 
@@ -197,8 +225,9 @@ public class GUIController {
     private void stopTimer(){
         updateGantt();
         _statusLower.setText("Done");
-        _statusLower.setStyle("-fx-text-fill: green;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
-        _elapsedLower.setStyle("-fx-text-fill: green;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
+        _statusLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
+        _elapsedLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
+        _close.setVisible(true);
         _timer.stop();
     }
 
@@ -280,7 +309,7 @@ public class GUIController {
 
         // Setting chart
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
-        chart.setTitle("Current Best Schedule");//TODO gantt modify look, add growth
+        chart.setTitle("Current Best Schedule");
         chart.setLegendVisible(false);
         chart.setBlockHeight(100/numberOfProcessors);
 
