@@ -72,7 +72,7 @@ public class Main {
 
         // Create output with the output file.
         try {
-            OutputGenerator.generate(originalGraph, cliparser.getOutputFileName(), cliparser.getFilePathName());
+            OutputGenerator.generate(originalGraph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
