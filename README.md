@@ -28,7 +28,7 @@ go to ```File -> Project Structure -> Project SDK -> 1.8```
 go to ```View -> Tool Windows -> Gradle -> Spanner Icon -> Gradle Settings -> Gradle JVM -> 1.8```    
 
 
-Type the following in the IntelliJ terminal and then press CTRL + ENTER (the command should be highlighted green)
+Type the following in the IntelliJ terminal and then press CTRL + ENTER (the command should be highlighted green)    
 `` gradle fatJar ``
 
 
