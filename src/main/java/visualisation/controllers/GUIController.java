@@ -222,7 +222,7 @@ public class GUIController {
 
     /*
     **Timer with increment 1s. Generates new CPU/Memory usage data for JVM every second and
-    * adds this data to the series displayed on each linechart, also updates gantt chart containing best schedule.
+    * adds this data to the series displayed on each line chart, also updates gantt chart containing best schedule.
     * On a shorter poll time, updates elapsed time.
      */
     @FXML
@@ -298,7 +298,7 @@ public class GUIController {
     }
 
     /*
-    ** Creation of linecharts for both cpu/memory usage, and addition of these to hbox container
+    ** Creation of line charts for both cpu/memory usage, and addition of these to hbox container
      */
     @FXML
     private void setupUsageCharts(){

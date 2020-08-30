@@ -69,7 +69,7 @@ public class Graph {
      * @return Root Vertex of the graph
      */
     public List<Integer> getRoots() {
-        // TODO: May need optimising in future.
+
         List<Integer> roots = new ArrayList<Integer>();
         for (Vertex v : _idVertexMap.values()) {
             if (v.getIncomingVertices().size() == 0) {
