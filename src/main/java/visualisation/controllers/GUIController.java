@@ -420,8 +420,7 @@ public class GUIController {
             }
         } else {
             //null schedule, do nothing
-            _bestScheduleTimeEnd.setText(" " + noTimeYet + "s");
-
+            _bestScheduleTimeEnd.setText(" " + noTimeYet);
 
         }
 
