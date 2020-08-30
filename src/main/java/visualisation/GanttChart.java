@@ -151,7 +151,7 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                         // Create label for each task (vertex id) // Daniels awesome code
                         Label vertexLabel = new Label(getVertexLabel(item.getExtraValue()));
                         vertexLabel.setPadding(new Insets(ellipseHeight, 0, 0, ellipseWidth));
-                        vertexLabel.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+                        vertexLabel.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 12; -fx-text-fill: white");
                         region.getChildren().add(vertexLabel);
                         // Daniels awesome code -  adds vertex id label to each gantt chart element
 
