@@ -11,7 +11,7 @@
 | Saad Siddiqui               | msid633       | [Saad-Siddiqui27](http://github.com/Saad-Siddiqui27) |
 
 
-## Helpful Links
+## Navigation 
 * [How to use](How-to-use.md)
 * [Software Architecture](Software-Architecture.md)
 * [Command Line Interface](CLI-Parsing.md)
