@@ -9,9 +9,11 @@ import graph.Graph;
 import input.CliParser;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.paint.Color;
 import visualisation.GanttChart;
 
@@ -55,6 +57,12 @@ public class GUIController {
     private Label _elapsedLower;
 
     @FXML
+    private Label _numSchedule;
+    @FXML
+    private Label _numScheduleComplete;
+
+
+    @FXML
     private Label _bestScheduleTimeEnd;
 
     @FXML
@@ -71,7 +79,7 @@ public class GUIController {
     private XYChart.Series _cpuSeries;
     private Timeline _timer;
     private Button _close;
-    private final String logoTitle = "/main/resources/visualisation/controllers/logo.png";
+    //private final String logoTitle = "file:///+ C:\\Users\\dh\\2020assignments\\SE306\\project-1-saadboys-16\\src\\main\\resources\\visualisation\\controllers\\cry.png";
 
     private Algorithm _algorithm;
     private Graph _graph;
@@ -100,20 +108,40 @@ public class GUIController {
         try {
             Label title = new Label("Team 16 - Saadboys" );
             title.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: orange; -fx-font-family: 'Century Gothic'");
+            HBox fill0 = new HBox();
+            fill0.prefHeightProperty().bind(textCont.heightProperty().divide(24));
             HBox fill1 = new HBox();
-            fill1.prefHeightProperty().bind(textCont.heightProperty().divide(4));
+            fill1.prefHeightProperty().bind(textCont.heightProperty().divide(18));
+            HBox fill1v2 = new HBox();
+            fill1v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill2 = new HBox();
+            fill2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill2v2 = new HBox();
+            fill2v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
 
+            HBox fill3 = new HBox();
+            fill3.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill3v2 = new HBox();
+            fill3v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill4 = new HBox();
+            fill4.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill4v2 = new HBox();
+            fill4v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
+            HBox fill5 = new HBox();
+            fill5.prefHeightProperty().bind(textCont.heightProperty().divide(10));
 
-            //Image logo = new Image(logoTitle);
-            //ImageView logoView = new ImageView(logo);
+            Separator separator1 = new Separator(Orientation.HORIZONTAL);
+            Separator separator2 = new Separator(Orientation.HORIZONTAL);
+            Separator separator3 = new Separator(Orientation.HORIZONTAL);
+            Separator separator4 = new Separator(Orientation.HORIZONTAL);
+
 
             Label inputName = new Label("Input file:  " + CliParser.getCliParserInstance().getFileName());
             inputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             inputName.setPadding(new Insets(0,0,5,0));
             Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
             outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
-            HBox fill2 = new HBox();
-            fill2.prefHeightProperty().bind(textCont.heightProperty().divide(12));
+
 
             Label parallelUpper = new Label("Parallelisation:");
             parallelUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
@@ -128,8 +156,7 @@ public class GUIController {
             bestScheduleTimeStart.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _bestScheduleTimeEnd = new Label( " ");
             _bestScheduleTimeEnd.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
-            HBox fill3 = new HBox();
-            fill3.prefHeightProperty().bind(textCont.heightProperty().divide(12));
+
 
             Label elapsedUpper = new Label("Time elapsed:");
             elapsedUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
@@ -141,12 +168,27 @@ public class GUIController {
             statusUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _statusLower = new Label("Running");
             _statusLower.setStyle("-fx-text-fill: lightgreen; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 16");
-            HBox fill4 = new HBox();
-            fill4.prefHeightProperty().bind(textCont.heightProperty().divide(6));
-            HBox fill5 = new HBox();
-            fill5.prefWidthProperty().bind(textCont.widthProperty().divide(8));//TODO centre
+
+
+
 
             //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add
+
+            Label _numScheduleInfo = new Label("Partial Schedules: ");
+            _numScheduleInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            _numSchedule = new Label("Partial Schedules generated: ");
+            _numSchedule.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+            _numScheduleInfo.setPadding(new Insets(0,0,5,0));
+
+            Label _numScheduleCompletedInfo = new Label("Complete Schedules: ");
+            _numScheduleCompletedInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
+            _numScheduleComplete = new Label("Complete Schedules: ");
+            _numScheduleComplete.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+
+
+            //_numScheduleComplete = new Label("Complete Schedules: ");
+            //_numScheduleComplete.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+
 
             _close = new Button("Exit Program");
             _close.setVisible(true);
@@ -154,9 +196,17 @@ public class GUIController {
             _close.setAlignment(Pos.CENTER);
             _close.setOnAction(event -> System.exit(0));
 
-            textCont.getChildren().addAll(new HBox(title), fill1, inputName, outputName, fill2, new HBox(parallelUpper, parallelLower),
-                    new HBox(bestScheduleTimeStart, _bestScheduleTimeEnd), fill3, new HBox(elapsedUpper, _elapsedLower), new HBox(statusUpper, _statusLower),
-                    fill4, new HBox(fill5, _close));
+            HBox closeButtonContainer = new HBox(fill5, _close);
+            closeButtonContainer.setAlignment(Pos.CENTER);
+
+            textCont.getChildren().addAll(fill0, new HBox(title), fill1 , separator1, fill1v2, inputName, outputName,
+                    fill2, separator2, fill2v2, new HBox(parallelUpper, parallelLower),
+                    new HBox(bestScheduleTimeStart, _bestScheduleTimeEnd), fill3, new HBox(_numScheduleInfo , _numSchedule),
+                    new HBox(_numScheduleCompletedInfo , _numScheduleComplete) , fill3v2, new HBox(elapsedUpper, _elapsedLower),
+                     new HBox(statusUpper, _statusLower),
+                    fill4, separator4, fill4v2,
+                    closeButtonContainer
+                    );
             textCont.setMinWidth(Region.USE_PREF_SIZE);
             textCont.setStyle("-fx-padding: 10; -fx-background-color: slategray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
 
@@ -208,6 +258,11 @@ public class GUIController {
                     _elapsedLower.setText("   " + (int)Math.floor(currentTime/60) + "m " + Math.round((currentTime%60)*10.0)/10.0 + "s");
 
                 }
+
+                _numSchedule.setText(" " +_algorithm.getNumPartialSchedules());
+
+                _numScheduleComplete.setText("" + _algorithm.getNumCompleteSchedules());
+
                 increment[0]++;
             })
         );
@@ -266,7 +321,7 @@ public class GUIController {
         _cpuChart.setCreateSymbols(false);
         _cpuChart.setTitle("JVM CPU Usage");
         _cpuChart.animatedProperty().setValue(false);
-
+        chartHBox.setPrefHeight(300);
         chartHBox.getChildren().addAll(_memoryChart, _cpuChart);
     }
 
@@ -312,11 +367,13 @@ public class GUIController {
 
         chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GUI.css").toExternalForm());
 
-        chart.setMaxHeight(400);
+        //chart.setMaxHeight(400); ganttBox.getPrefHeight()
+
         chart.animatedProperty().setValue(false);
         ganttHBox.getChildren().add(chart);
-        HBox.setHgrow(chart, Priority.ALWAYS);
 
+        HBox.setHgrow(chart, Priority.ALWAYS);
+        VBox.setVgrow(ganttHBox, Priority.ALWAYS);
     }
 
 
@@ -342,10 +399,13 @@ public class GUIController {
         //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
-
+        String noTimeYet = "NA";
         _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
 
         if (currentBestSchedule!=null) {
+
+
+
             // to get rid of null pointer remove the for loop and uncomment line 205 with the scheduled task constructor
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
 
@@ -361,7 +421,7 @@ public class GUIController {
                 chart.getData().add(seriesProcessors[i]);
             }
         } else {
-            System.out.println("null schedule");
+            //null schedule, do nothing
         }
 
     }

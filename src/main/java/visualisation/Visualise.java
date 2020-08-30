@@ -55,7 +55,7 @@ public class Visualise extends Application {
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(Visualise.class.getResource("visualisationutil/GUI.css").toString());
-            stage.setWidth(900);
+            stage.setWidth(1000);
             stage.setHeight(600);
 
 
