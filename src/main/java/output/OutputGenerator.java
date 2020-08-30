@@ -16,17 +16,16 @@ public class OutputGenerator {
      * @param fileName Name of file to write to ([fileName].dot)
      */
     public static void generate(Graph graph, String fileName, String filePathName) throws IOException {
-        /*System.out.println("filename: " + fileName + "\n path output name "+filePathName);
-        String directoriesForOutput = filePathName.substring(0, filePathName.lastIndexOf(fileName));
-        System.out.println("directories needed " + directoriesForOutput);
 
-        Files.createDirectories(Paths.get(directoriesForOutput));*/
+        System.out.println("PATH: " + filePathName);
+
+
+        //Files.createDirectories(Paths.get(directoriesForOutput));
 
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePathName)))) {
-            String directoriesForOutput = filePathName.substring(0, filePathName.lastIndexOf(fileName));
+            //directoriesForOutput = filePathName.substring(0, filePathName.lastIndexOf(fileName));
 
-            System.out.println("output file created at directory: " + directoriesForOutput + "with file name: "+ fileName);
-            // TODO: Determine proper digraph naming scheme. Assume same as file name for now
+            //System.out.println("output file created at directory: " + directoriesForOutput + "with file name: "+ fileName);
             out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");
             out.newLine();
 

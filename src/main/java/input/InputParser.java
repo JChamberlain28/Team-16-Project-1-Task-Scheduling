@@ -32,9 +32,11 @@ public class InputParser {
             String line = bufferReader.readLine();
             // Remove all lines until it finds the last line of the title,
             // which is the first line with a vertex.
+
             while (!line.contains("[Weight=")) {
                 line = bufferReader.readLine();
             }
+
 
             while (line!= null) {
 

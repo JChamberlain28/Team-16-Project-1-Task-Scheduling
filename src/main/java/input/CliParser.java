@@ -220,7 +220,7 @@ public class CliParser {
                 System.out.println("output file name =  "+  _CliParsedInputs._outputFileName +
                         "\noutput file path =  "+ _CliParsedInputs._outputFilePath);
 
-                //System.out.println("filename: " + fileName + "\n path output name "+filePathName);
+
                 String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
                 System.out.println("directories needed " + directoriesForOutput);
 
