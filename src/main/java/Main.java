@@ -40,10 +40,8 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-
-
         Algorithm  algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
-                    cliparser.getNumberOfCores());
+                cliparser.getNumberOfCores());
 
 
         if (cliparser.isVisualisationDisplay()) {

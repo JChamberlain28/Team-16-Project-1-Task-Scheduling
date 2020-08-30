@@ -172,7 +172,7 @@ public class Graph {
                         incomingEdgeWeightSame = false;
                     } else {
                         for (Vertex z: v.getIncomingVertices()){
-                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()).equals(_edgeMap.get(z.getId()).get(y.getId()));
                             if (!incomingEdgeWeightSame){
                                 break;
                             }
@@ -183,11 +183,11 @@ public class Graph {
 
 
                     if ((v.getOutgoingVertices().size()) != (y.getOutgoingVertices().size())) {
-                        incomingEdgeWeightSame = false;
+                        outgoingEdgeWeightSame = false;
                     } else {
-                        for (Vertex z: v.getIncomingVertices()){
-                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
-                            if (!incomingEdgeWeightSame){
+                        for (Vertex z: v.getOutgoingVertices()){
+                            outgoingEdgeWeightSame = _edgeMap.get(v.getId()).get(z.getId()).equals(_edgeMap.get(y.getId()).get(z.getId()));
+                            if (!outgoingEdgeWeightSame){
                                 break;
                             }
                         }
@@ -214,8 +214,6 @@ public class Graph {
                             identicalList.add(new HashSet<Integer>(Arrays.asList(v.getId(), y.getId())));
                         }
 
-
-
                     }
                 }
             }
@@ -223,11 +221,10 @@ public class Graph {
         }
 
         for (HashSet<Integer> identSubList : identicalList){
-            for (int i=0; i<identSubList.size(); i++) {
-                List<Integer> list = new ArrayList(identSubList);
-            }
             // add virtual edges
             for (int i=0; i < (identSubList.size()-1); i++){
+                // TODO: edge map still contains old edges, but it is not queried for the incoming / outgoing vertices
+                // of a vertex, so it shouldn't cause a problem
                 List<Integer> list = new ArrayList(identSubList);
                 _idVertexMap.get(list.get(i)).clearOutgoingVertices();
                 _idVertexMap.get(list.get(i+1)).clearIncomingVertices();
@@ -235,9 +232,7 @@ public class Graph {
                 _idVertexMap.get(list.get(i+1)).addIncomingVertex(_idVertexMap.get(list.get(i)));
 
                 addEdge(list.get(i), list.get(i+1), -1); // -1 weight is virtual edge
-
             }
-
         }
 
         return identicalList;
