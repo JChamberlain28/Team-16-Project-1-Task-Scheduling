@@ -67,7 +67,14 @@ public class ParallelisedDfsBranchAndBound extends Algorithm {
         List<PartialSchedule> rootSchedules = new ArrayList<PartialSchedule>();
         rootSchedules.add(new PartialSchedule(_dependencyGraph, _numProcessors));
         while (rootSchedules.size() < _threads) {
-            rootSchedules.addAll(rootSchedules.remove(0).extend(_dependencyGraph));
+            PartialSchedule ps = rootSchedules.remove(0);
+            if (ps.isComplete()) {
+                // if we have gotten to the point where we are generating complete schedules,
+                // we must have a huge amount of threads and so leaving some threads with no work
+                // won't cause much of a problem
+                break;
+            }
+            rootSchedules.addAll(ps.extend(_dependencyGraph));
         }
 
         ExecutorService service = Executors.newFixedThreadPool(_threads);
