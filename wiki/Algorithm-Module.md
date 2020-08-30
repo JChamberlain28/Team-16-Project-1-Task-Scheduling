@@ -7,7 +7,7 @@ branch and bound being the slower algorithm was parallelised to imrove the progr
 The design of our program allows us to change the algorithm that is being used according to the user's specification.   
 
 ##Subsections
-* [Ideas and Approaches](Software-Architecture.md)
+* [Ideas and Approaches](ideas-and-Approaches.md)
 * [Schedule Representation](Schedule-Representation.md)
 * [Pruning Techniques ](Project-Plan.md)
 

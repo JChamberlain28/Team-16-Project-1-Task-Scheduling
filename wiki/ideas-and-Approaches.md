@@ -1,9 +1,9 @@
-#Algorithms: ideas and approaches
+#Algorithms: Ideas and Approaches
 
 ##Sequential Algorithm
 * Sequentially order the tasks on one processor by preserving the dependency constraints
 * Execution time will be very fast
-* The Schedule created will not be optimal
+* The Schedule created will almost never be optimal
 * Use this approach for the milestone 1 due to time constraints 
 
 
