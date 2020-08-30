@@ -15,7 +15,7 @@ A Java application which facilitates the creation of optimal schedulings of task
 ## Compilation Instructions
 Required system packages (Linux):
 * gradle
-* Java JDK 8 or higher (Not OpenJDK, as JavaFX is not included)
+* Java JDK 8 or higher (Not OpenJDK, as JavaFX is not included. If used, compilation and execution will fail)
 * git    
 
 ### Clone the Repository
