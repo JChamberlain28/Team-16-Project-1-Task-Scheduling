@@ -31,7 +31,7 @@ Type the following to build the project and package it into a jar
 
 If the build fails, ensure java is in the classpath and the JAVA_HOME variable is set to the home directory of your java installation. This java installation must be Oracle JDK 8+. This is due to dependencies on JavaFX.       
 
-If you dont want to set the JAVA_HOME variable, please try the below command instead:
+If you dont want to set the JAVA_HOME variable, please try the below command instead:     
 ```gradle fatJar -Dorg.gradle.java.home=/<JDK HOME PATH>```
 
 Navigate to the produced jar.   
