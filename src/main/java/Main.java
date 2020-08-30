@@ -52,7 +52,7 @@ public class Main {
                 public void run() {
 
                     Visualise.startVisual(args, algorithm, graph);
-                    //Visualise.startVisual(forcedArgs, algorithm, graph);
+
 
                 }
             }).start();
