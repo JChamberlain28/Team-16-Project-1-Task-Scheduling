@@ -15,8 +15,7 @@ Tasks that have identical weight and edges may cause extra child partial schedul
  to explore.
 
 ### Processor Normalisation
-To reduce the solution space, partial schedules that schedule the same set of tasks in the same way but in a different 
-CPU order are considered the same. This cuts down on the solution space significantly.
+To reduce the solution space, partial schedules that schedule the same set of tasks in the same way but, in a different CPU order are considered the same. This cuts down on the solution space significantly.
 
 For example:   
 

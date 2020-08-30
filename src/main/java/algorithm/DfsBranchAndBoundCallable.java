@@ -5,7 +5,7 @@ import graph.Graph;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-
+// callable class to run on different threads
 public class DfsBranchAndBoundCallable implements Callable<Void> {
 
     private final DfsBranchAndBound _algo;

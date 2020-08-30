@@ -38,7 +38,7 @@ public class CliParsingTesting {
     }
 
 
-
+    // test must be run within IDE
     @Test
     public void testStandardInputs() {
 
