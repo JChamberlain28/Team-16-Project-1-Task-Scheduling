@@ -1,4 +1,4 @@
-# Welcome to the wiki for SOFTENG 306 Project 1 - Saadboys 16
+# Welcome to the wiki for SOFTENG 306 Project 1
 
 
 ## Team Members
