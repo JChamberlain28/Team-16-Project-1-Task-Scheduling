@@ -15,24 +15,23 @@ A Java application which facilitates the creation of optimal schedulings of task
 ## Compilation Instructions
 Required system packages (Linux):
 * gradle
-* Java JDK 8 or higher (Not OpenJDK, as JavaFX is not included)
+* Oracle Java JDK/JRE 8 ONLY (Incompatibilities with JavaFX have limited the java version to compile and run the jar. Apologies. Also do not use OpenJDK). Compile and run tested on linux with jre1.8.0_261
 * git    
 
 ### Clone the Repository
-Open terminal and run the following command   
-`` git clone https://github.com/SoftEng306-2020/project-1-saadboys-16.git ``
-
-Then navigate to the repository   
-`` cd project-1-saadboys-16 ``
+Create a new project in IntelliJ with "Add from version control". Use the following link to clone:
+```https://github.com/SoftEng306-2020/project-1-saadboys-16.git```
 
 ### Compile/Build the Project   
-Type the following to build the project and package it into a jar   
+Before continuing please ensure the project and gradle java version is set to 1.8 (JDK 8).
+To check these:
+go to ```File -> Project Structure -> Project SDK -> 1.8```
+go to ```View -> Tool Windows -> Gradle -> Spanner Icon -> Gradle Settings -> Gradle JVM -> 1.8
+
+
+Type the following in the IntelliJ terminal and then press CTRL + ENTER (the command should be highlighted green)
 `` gradle fatJar ``
 
-If the build fails, ensure java is in the classpath and the JAVA_HOME variable is set to the home directory of your java installation. This java installation must be Oracle JDK 8+. This is due to dependencies on JavaFX.       
-
-If you dont want to set the JAVA_HOME variable, please try the below command instead:     
-```gradle fatJar -Dorg.gradle.java.home=/<JDK HOME PATH>```
 
 Navigate to the produced jar.   
 `` cd ./build/libs ``
