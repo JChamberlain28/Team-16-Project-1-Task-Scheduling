@@ -39,6 +39,9 @@ public class InputParserTests {
     c -> d [Weight=1];*/
 
 
+    /*
+    **Test valid input file correctly parsed - compare each individual graph element with expected
+     */
     @Test
     public void testValidInputFileParsed() {
 
@@ -77,6 +80,9 @@ public class InputParserTests {
     }
 
 
+    /*
+    **Test program correctly throws error on invalid input file
+     */
     @Test
     public void testInvalidInputFileParsed() {
 

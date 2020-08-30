@@ -62,6 +62,7 @@ public class CliParsingTesting {
 
         assertEquals(inputDigraph, cliParser.getFilePathName() );
 
+        // checking default output file naem generated correctly
         String outputDir = FilenameMethods.getDirectoryOfJar();
         String outputFilePath = (outputDir + File.separator + "digraph2-output.dot");
         assertEquals(outputFilePath, cliParser.getOutputFilePath() );
@@ -71,8 +72,7 @@ public class CliParsingTesting {
     }
 
     /*
-     * Input name parsing
-     *
+     * Checking handling of invalid file name input
      *
      * */
     @Test
@@ -92,7 +92,9 @@ public class CliParsingTesting {
         }
     }
 
-
+    /*
+     **Checking invalid processor number input
+     */
     @Test
     public void testInvalidNumberOfProcessors() {
         try {
@@ -110,7 +112,9 @@ public class CliParsingTesting {
         }
     }
 
-
+    /*
+     ** Checking alternate invalid processor number input
+     */
     @Test
     public void testInvalidNumberOfProcessorsNotInt() {
         try {
@@ -127,7 +131,9 @@ public class CliParsingTesting {
 
 
 
-    //0 inputs
+    /*
+     **Checking program handling of 0 inputs given
+     */
     @Test
     public void testInvalidNumberOfInputs() {
         try {
@@ -148,7 +154,9 @@ public class CliParsingTesting {
 
     // OPTION testing
 
-
+    /*
+    **Check program correctly handles visualisation optional argument
+     */
     @Test
     public void testVisualisationOptionFlag() {
         String inputDigraph ="."+ File.separator +
@@ -165,7 +173,9 @@ public class CliParsingTesting {
 
     }
 
-
+    /*
+    **Check program correctly handles parallelisation optional argument
+     */
     @Test
     public void testCoresOptionFlag() {
         String inputDigraph ="."+ File.separator +
@@ -181,7 +191,9 @@ public class CliParsingTesting {
 
     }
 
-
+    /*
+    **Check program correctly handles custom output filename optional argument
+     */
     @Test
     public void testValidFileOutput() {
         String inputDigraph ="."+ File.separator +
@@ -199,6 +211,9 @@ public class CliParsingTesting {
         assertEquals("OutputOfDi.dot",cliParser.getOutputFileName());
     }
 
+    /*
+    **Testing case when input and output file are located in separate folders
+     */
     @Test
     public void testValidFilePathOutput() {
         String inputDigraph ="."+ File.separator +
@@ -249,6 +264,9 @@ public class CliParsingTesting {
 
 
 
+    /*
+    **Testing of standard valid input to program, with no optional parameters enabled
+     */
     @Test
     public void testNestedInputAsPathInput() {
         try {

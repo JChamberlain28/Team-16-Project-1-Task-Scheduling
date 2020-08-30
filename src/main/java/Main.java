@@ -46,9 +46,8 @@ public class Main {
                 +graph.getVertices().size()+ " nodes on " +cliparser.getNumberOfProcessors() + " processors. ");
         Algorithm algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), cliparser.getNumberOfCores());
 
-        System.out.println("Visualisation of scheduling presented on new window.");
         if (cliparser.isVisualisationDisplay()) {
-
+            System.out.println("Visualisation of scheduling presented in new window.");
             (new Thread() {
                 @Override
                 public void run() {
