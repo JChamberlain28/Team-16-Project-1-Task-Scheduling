@@ -42,7 +42,7 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-        Algorithm algorithm = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
+        Algorithm algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), cliparser.getNumberOfCores());
 
 
         if (cliparser.isVisualisationDisplay()) {
@@ -52,7 +52,7 @@ public class Main {
                 public void run() {
 
                     Visualise.startVisual(args, algorithm, graph);
-                    //Visualise.startVisual(forcedArgs, algorithm, graph);
+
 
                 }
             }).start();
