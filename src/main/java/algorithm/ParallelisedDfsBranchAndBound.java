@@ -72,6 +72,7 @@ public class ParallelisedDfsBranchAndBound extends Algorithm {
                 // if we have gotten to the point where we are generating complete schedules,
                 // we must have a huge amount of threads and so leaving some threads with no work
                 // won't cause much of a problem
+                rootSchedules.add(ps);
                 break;
             }
             rootSchedules.addAll(ps.extend(_dependencyGraph));
