@@ -394,12 +394,15 @@ public class GUIController {
         //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
-        String noTimeYet = "NA";
-        _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
+        String noTimeYet = "N/A";
+
+
+
+
 
         if (currentBestSchedule!=null) {
 
-
+            _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
 
             // to get rid of null pointer remove the for loop and uncomment line 205 with the scheduled task constructor
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
@@ -417,6 +420,8 @@ public class GUIController {
             }
         } else {
             //null schedule, do nothing
+            _bestScheduleTimeEnd.setText(" " + noTimeYet);
+
         }
 
     }
