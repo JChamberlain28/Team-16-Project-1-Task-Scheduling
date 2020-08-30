@@ -8,9 +8,9 @@ public abstract class Algorithm {
     protected int _numProcessors;
 
     protected PartialSchedule _bestSchedule;  // stores best schedule found thus far, used by GUI
-    protected boolean _finished;
-    protected int _numPartialSchedulesGenerated;
-    protected int _numCompleteSchedulesGenerated;
+    protected boolean _finished; // flag used by GUI to know when the algorithm execution has finished
+    protected int _numPartialSchedulesGenerated; // GUI stat
+    protected int _numCompleteSchedulesGenerated; // GUI stat
 
     public Algorithm(Graph dependencyGraph, int numProcessors) {
 
