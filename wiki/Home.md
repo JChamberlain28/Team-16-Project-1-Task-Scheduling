@@ -12,8 +12,11 @@
 
 
 ## Helpful Links
+* [How to use](How-to-use.md)
+* [Project Plan](Project-Plan.md)
 * [Software Architecture](Software-Architecture.md)
 * [Schedule Representation](Schedule-Representation.md)
-* [Project Plan](Project-Plan.md)
-* [How to use](How-to-use.md)
+* [Testing](Testing.md)
+* [Code Style](Code-Style.md)
 * [Meeting Minutes](Meeting-Minutes.md)
+* [References](References.md)

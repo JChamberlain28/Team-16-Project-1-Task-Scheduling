@@ -110,6 +110,9 @@ public class GUIController {
         }
     }
 
+    /*
+    Sets up text based components located on LHS of window. Deals with layout and styling of labels mainly.
+     */
     @FXML
     private void setupTextComponents(){
         try {
@@ -228,11 +231,12 @@ public class GUIController {
 
     /*
     **Timer with increment 1s. Generates new CPU/Memory usage data for JVM every second and
-    * adds this data to the series displayed on each linechart
+    * adds this data to the series displayed on each linechart, also updates gantt chart containing best schedule.
+    * On a shorter poll time, updates elapsed time.
      */
     @FXML
     private void startTimer(){
-        OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();//used to get JVM CPU usage
         double startTime = System.currentTimeMillis();
         int[] increment = {0};
 
@@ -241,9 +245,9 @@ public class GUIController {
                 if (_algorithm.isFinished()){
                     stopTimer();
                 }
-                if (increment[0]%10 == 0){
+                if (increment[0]%10 == 0){//every 1 second updates cpu and memory chart data
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0]/10,(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
-                    if (_memorySeries.getData().size()>60){
+                    if (_memorySeries.getData().size()>60){//section inside conditional ensures only last minute of data is displayed
                         _xAxisMem.setUpperBound(increment[0]/10);
                         _xAxisMem.setLowerBound(increment[0]/10 - 60);
                         _memorySeries.getData().remove(0);
@@ -340,6 +344,7 @@ public class GUIController {
 
     /*
      * Taken from: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
+     * Credit to 'Roland' for code
      */
     private void setUpGanttAxis(){
 
