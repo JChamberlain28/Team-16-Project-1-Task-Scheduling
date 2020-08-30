@@ -1,4 +1,4 @@
-# Team: Saadboys   
+# Team 16: Saadboys   
 
 # SOFTENG 306 Project 1: Task Scheduling
 A Java application which facilitates the creation of optimal schedulings of tasks.
