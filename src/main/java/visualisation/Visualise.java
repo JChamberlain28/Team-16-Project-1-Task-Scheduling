@@ -60,7 +60,7 @@ public class Visualise extends Application {
             stage.show();
             stage.setOnCloseRequest(event -> System.exit(0));
 
-            // this is incase the gantt chart is resized. To reintialise the labels
+            // this is in case the gantt chart is resized. To reinitialise the labels
             ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
                 GUIController.resizeReinitialise();
             };
