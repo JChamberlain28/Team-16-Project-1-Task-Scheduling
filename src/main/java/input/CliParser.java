@@ -250,7 +250,7 @@ public class CliParser {
         }
 
         // too many args have been provided
-        if (line.getArgList().size() > 2){
+        if (line.getArgList().size() > 2 && !line.hasOption("h")){
             throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
                     "For additional help enter the help option \"-h\" into the command line.");
