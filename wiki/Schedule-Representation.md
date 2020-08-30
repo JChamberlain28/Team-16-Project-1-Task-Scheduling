@@ -14,7 +14,7 @@ The Partial schedules can be expanded using the extend() method, which creates a
 children of the current partial schedule.
 
 
-##Representation of ScheduledTask
+## Representation of ScheduledTask
 The ```ScheduledTask``` object described above are represented as follows:
 
 ```java
