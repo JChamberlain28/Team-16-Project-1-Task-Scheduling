@@ -10,5 +10,5 @@ The design of our program allows us to change the algorithm that is being used a
 * [Ideas and Approaches](Software-Architecture.md)
 * [Schedule Representation](Schedule-Representation.md)
 * [Pruning Techniques ](Project-Plan.md)
-* [Allocation ordering](How-to-use.md)
+
    

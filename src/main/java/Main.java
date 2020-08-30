@@ -21,8 +21,8 @@ public class Main {
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            //cliparser.UI(args);
-            cliparser.UI(forcedArgs);
+            cliparser.UI(args);
+            //cliparser.UI(forcedArgs);
 
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
@@ -42,8 +42,7 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-        Algorithm  algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
-                cliparser.getNumberOfCores());
+        Algorithm algorithm = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
 
 
         if (cliparser.isVisualisationDisplay()) {
@@ -52,7 +51,7 @@ public class Main {
                 @Override
                 public void run() {
                    // Visualise.startVisual(args, algorithm, graph);
-                    Visualise.startVisual(forcedArgs, algorithm, graph);
+                    Visualise.startVisual(args, algorithm, graph);
                 }
             }).start();
         }

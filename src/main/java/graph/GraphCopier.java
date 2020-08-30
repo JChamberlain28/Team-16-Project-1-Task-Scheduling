@@ -6,6 +6,11 @@ import java.util.Set;
 
 public class GraphCopier {
 
+    /**
+     * Copies the vertices and edges from the passed Grah instance into a new Graph.
+     * @param other
+     * @return The newly created Graph instance.
+     */
     public static Graph copyGraph(Graph other) {
 
         Graph newGraph = new Graph("");
