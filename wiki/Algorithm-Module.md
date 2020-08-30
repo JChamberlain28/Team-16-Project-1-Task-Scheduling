@@ -9,6 +9,7 @@ The design of our program allows us to change the algorithm that is being used a
 ## Subsections
 * [Ideas and Approaches](ideas-and-Approaches.md)
 * [Schedule Representation](Schedule-Representation.md)
+* [Heuristics](Heuristics.md)
 * [Pruning Techniques ](Pruning.md)
 
    

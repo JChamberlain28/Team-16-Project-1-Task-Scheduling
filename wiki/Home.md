@@ -13,11 +13,23 @@
 
 ## Helpful Links
 * [How to use](How-to-use.md)
-* [Project Plan](Project-Plan.md)
 * [Software Architecture](Software-Architecture.md)
-  * f
-* [Schedule Representation](Schedule-Representation.md)
+* [Command Line Interface](CLI-Parsing.md)
+* [Input Parsing](Input-Parsing-Module.md)
+* [Algorithm ](Algorithm-Module.md)
+    * [Ideas & Approaches](ideas-and-Approaches.md)
+    * [Schedules](Schedule-Representation.md)
+    * [Heuristics](Heuristics.md)
+    * [Pruning](Pruning.md)
+* [Output Generation ](Output.md)
+* [Visualisation](Visualisation-Summary.md)
+    * [Design ](Visualisation-Design.md)
 * [Testing](Testing.md)
-* [Group Conventions](Conventions.md)
-* [Meeting Minutes](Meeting-Minutes.md)
+    * [Performance Testing](Performance-Testing.md)
 * [References](References.md)
+* [Administration](Adminstration.md)
+    * [Project Plan](Project-Plan.md)
+    * [Conventions](Conventions.md)
+    * [Meeting Minutes](Meeting-Minutes.md)
+
+
