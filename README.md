@@ -35,8 +35,8 @@ Type the following in the IntelliJ terminal and then press CTRL + ENTER (the com
 Navigate to the produced jar.   
 `` cd ./build/libs ``
 
-Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.
-Please ensure when running from terminal, the java version used is 1.8 (JDK 8)
+Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.    
+Please ensure when running from terminal, the java version used is 1.8 (JDK 8).
 
 ## Usage Instructions
 `` java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>] ``    
