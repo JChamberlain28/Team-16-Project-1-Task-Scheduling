@@ -102,7 +102,7 @@ public class InputParser {
                     int vertexWeightInt = Integer.valueOf(matcher.group());
                     System.out.println("vertexWeightInt : " +vertexWeightInt);
                     //vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
-                    //int vertexWeightInt = Integer.parseInt(vertexWeight);
+                    //int vertexWeightInt = Integer.parseInt(vertexWeight); depreciated
 
 
                     // Instantiate vertex using ID and weight
