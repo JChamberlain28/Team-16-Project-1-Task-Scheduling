@@ -30,4 +30,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    // https://mvnrepository.com/artifact/org.graphstream/gs-ui
+    compile group: 'org.graphstream', name: 'gs-ui', version: '1.3'
+
 }

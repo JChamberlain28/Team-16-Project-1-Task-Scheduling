@@ -15,7 +15,7 @@ import visualisation.controllers.GUIController;
 public class Visualise extends Application {
 
 
-    private final String visualiserTitle = "Visualisation";
+    private final String visualiserTitle = "Team 16 - Scheduling Visualisation";
     private final String SCENE_PATH = "views/GUI.fxml";
 
     static private Algorithm _algorithm;
