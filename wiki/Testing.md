@@ -4,11 +4,11 @@
 ##Testing Overview
 Software testing is a process to evaluate the functionality of the software application with the intent to find whether the developed software met the specified requirements.
 
-We did a series of functional and non funtional testing as detailed below in the testing phase of our development process to ensure that the system works as expected 
+We did a series of functional and non functional testing as detailed below in the testing phase of our development process to ensure that the system works as expected 
 
 
 ##Unit Testing
-Unit Testing is a testing phase of where individual components/units of the software are tested. Th purpose is to validate the 
+Unit Testing is a testing phase of where individual components/units of the software are tested. The purpose is to validate the 
 each unit of the software performs as designed. The unit tests are contained in the test package. There should be unit tests for 
 checking the optimality of the algorithm, input parsing of the ``dot`` file and the generation of correct output file after processing.
  
