@@ -24,9 +24,9 @@ Create a new project in IntelliJ with "Add from version control". Use the follow
 
 ### Compile/Build the Project   
 Before continuing please ensure the project and gradle java version is set to 1.8 (JDK 8).
-To check these:
-go to ```File -> Project Structure -> Project SDK -> 1.8```
-go to ```View -> Tool Windows -> Gradle -> Spanner Icon -> Gradle Settings -> Gradle JVM -> 1.8
+To check these:    
+go to ```File -> Project Structure -> Project SDK -> 1.8```    
+go to ```View -> Tool Windows -> Gradle -> Spanner Icon -> Gradle Settings -> Gradle JVM -> 1.8```    
 
 
 Type the following in the IntelliJ terminal and then press CTRL + ENTER (the command should be highlighted green)
