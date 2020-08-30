@@ -258,6 +258,11 @@ public class GUIController {
                     // update gantt chart
                     updateGantt(chart);
                 }
+               /*} else if (increment[0]%100 == 0){
+                    // update gantt chart
+                    updateGantt(chart);
+                }*/
+
                 // update time elapsed
                 double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (currentTime<60){
