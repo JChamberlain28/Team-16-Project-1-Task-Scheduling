@@ -11,12 +11,14 @@ import graph.Vertex;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -94,7 +96,9 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
         return ((ExtraData) obj).getTaskTimeLength();
     }
 
-    //private static Long getScheduledTask(Object obj){
+    private static String getVertexLabel(Object obj) { return ((ExtraData) obj).getVertexLabel(); }
+
+
     private static ScheduledTask getScheduledTask(Object obj){
         return ((ExtraData) obj).getScheduledTask();
     }
@@ -127,8 +131,12 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                         } else {
                             return;
                         }
-                        ellipse.setWidth(getLength(item.getExtraValue()) * ((getXAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis) getXAxis()).getScale()) : 1));
-                        ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis) getYAxis()).getScale()) : 1));
+
+                        double ellipseHeight = getBlockHeight() * ((getYAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis) getYAxis()).getScale()) : 1);
+                        double ellipseWidth = getLength( item.getExtraValue()) * ((getXAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis)getXAxis()).getScale()) : 1);
+
+                        ellipse.setWidth(ellipseWidth);
+                        ellipse.setHeight(ellipseHeight);
                         y -= getBlockHeight() / 2.0;
 
                         // Note: workaround for RT-7689 - saw this in ProgressControlSkin
@@ -139,6 +147,14 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                         region.setScaleShape(false);
                         region.setCenterShape(false);
                         region.setCacheShape(false);
+
+
+                        // Create label for each task (vertex id) // Daniels awesome code
+                        Label vertexLabel = new Label(getVertexLabel(item.getExtraValue()));
+                        vertexLabel.setPadding(new Insets(ellipseHeight, 0, 0, ellipseWidth));
+                        vertexLabel.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+                        region.getChildren().add(vertexLabel);
+                        // Daniels awesome code -  adds vertex id label to each gantt chart element
 
                         block.setLayoutX(x);
                         block.setLayoutY(y);
