@@ -1,4 +1,4 @@
-#Output generation
+# Output generation
 
 The output generation module converts a PartialSchedule representation into an output .dot file.
 
