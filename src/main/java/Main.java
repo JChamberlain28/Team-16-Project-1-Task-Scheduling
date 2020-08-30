@@ -14,6 +14,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
+        String[] forcedArgs = {"C:\\Users\\dh\\2020assignments\\SE306\\project-1-saadboys-16\\build\\libs\\a1.dot","2","-v"};
 
         // singleton class
         CliParser cliparser = CliParser.getCliParserInstance();
@@ -21,6 +22,7 @@ public class Main {
         // Parse the command line inputs and check for validity of all inputs
         try {
             cliparser.UI(args);
+            //cliparser.UI(forcedArgs);
 
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
@@ -40,10 +42,7 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-
-
-        Algorithm  algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
-                    cliparser.getNumberOfCores());
+        Algorithm algorithm = new AStarAlgorithm(graph, cliparser.getNumberOfProcessors());
 
 
         if (cliparser.isVisualisationDisplay()) {
@@ -51,6 +50,7 @@ public class Main {
             (new Thread() {
                 @Override
                 public void run() {
+                   // Visualise.startVisual(args, algorithm, graph);
                     Visualise.startVisual(args, algorithm, graph);
                 }
             }).start();

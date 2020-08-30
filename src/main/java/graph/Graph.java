@@ -125,7 +125,7 @@ public class Graph {
      * @param vertexId ID of the vertex.
      * @return The bottom level of the vertex with ID vertexId.
      */
-    public int getBottomLevel(int vertexId) { //TODO: Consider accounting for virtual edges (not incl in bottom lvl calc
+    public int getBottomLevel(int vertexId) {
 
         Vertex v = _idVertexMap.get(vertexId);
         if (_bottomLevelMap.containsKey(vertexId)) {
@@ -133,7 +133,7 @@ public class Graph {
         } else {
             int maxBottomLevel = 0;
             for (Vertex vChild : v.getOutgoingVertices()) {
-                if ((_edgeMap.get(v.getId()).get(vChild.getId())) == -1){ // this is virtual edge, ignore this childs cost
+                if ((_edgeMap.get(v.getId()).get(vChild.getId())) == -1) { // this is virtual edge, ignore this child's cost
                     maxBottomLevel = Math.max(maxBottomLevel, (getBottomLevel(vChild) - vChild.getCost()));
                 } else {
                     maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
@@ -147,8 +147,14 @@ public class Graph {
 
     }
 
+    /**
+     * Applies duplicate task pruning to the graph, where tasks with identical characteristics are linked with a virtual
+     * edge to enforce a certain scheduling order, reducing the number of permutations.
+     * @return
+     */
+    public List<HashSet<Integer>> buildVirtualEdges() { // returns a list of hashsets for unit test purposes
 
-    public List<HashSet<Integer>> buildVirtualEdges(){ // returns a list of hashsets for unit test purposes
+        // store all sets of identical tasks
         List<HashSet<Integer>> identicalList = new ArrayList<HashSet<Integer>>();
 
         for (int vId: _idVertexMap.keySet()){
@@ -172,33 +178,28 @@ public class Graph {
                         incomingEdgeWeightSame = false;
                     } else {
                         for (Vertex z: v.getIncomingVertices()){
-                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
+                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()).equals(_edgeMap.get(z.getId()).get(y.getId()));
                             if (!incomingEdgeWeightSame){
                                 break;
                             }
                         }
                     }
-
-
-
 
                     if ((v.getOutgoingVertices().size()) != (y.getOutgoingVertices().size())) {
-                        incomingEdgeWeightSame = false;
+                        outgoingEdgeWeightSame = false;
                     } else {
-                        for (Vertex z: v.getIncomingVertices()){
-                            incomingEdgeWeightSame = _edgeMap.get(z.getId()).get(v.getId()) == _edgeMap.get(z.getId()).get(y.getId());
-                            if (!incomingEdgeWeightSame){
+                        for (Vertex z: v.getOutgoingVertices()){
+                            outgoingEdgeWeightSame = _edgeMap.get(v.getId()).get(z.getId()).equals(_edgeMap.get(y.getId()).get(z.getId()));
+                            if (!outgoingEdgeWeightSame){
                                 break;
                             }
                         }
                     }
-
-
-
-
 
                     if ((v.getCost() == y.getCost()) && incomingVertMatch && outgoingVertMarch &&
                             incomingEdgeWeightSame && outgoingEdgeWeightSame){
+                        // check if vertex exists in a duplicate task set already, and if so append it to this set
+                        // otherwise, create a new set
                         boolean stored = false;
                         for (HashSet<Integer> identSubList : identicalList){
                             if (identSubList.contains(v.getId())){
@@ -214,8 +215,6 @@ public class Graph {
                             identicalList.add(new HashSet<Integer>(Arrays.asList(v.getId(), y.getId())));
                         }
 
-
-
                     }
                 }
             }
@@ -223,21 +222,16 @@ public class Graph {
         }
 
         for (HashSet<Integer> identSubList : identicalList){
-            for (int i=0; i<identSubList.size(); i++) {
-                List<Integer> list = new ArrayList(identSubList);
-            }
-            // add virtual edges
+            // add virtual edges between duplicate tasks
             for (int i=0; i < (identSubList.size()-1); i++){
-                List<Integer> list = new ArrayList(identSubList);
+                List<Integer> list = new ArrayList<Integer>(identSubList);
                 _idVertexMap.get(list.get(i)).clearOutgoingVertices();
                 _idVertexMap.get(list.get(i+1)).clearIncomingVertices();
                 _idVertexMap.get(list.get(i)).addOutgoingVertex(_idVertexMap.get(list.get(i+1)));
                 _idVertexMap.get(list.get(i+1)).addIncomingVertex(_idVertexMap.get(list.get(i)));
 
                 addEdge(list.get(i), list.get(i+1), -1); // -1 weight is virtual edge
-
             }
-
         }
 
         return identicalList;

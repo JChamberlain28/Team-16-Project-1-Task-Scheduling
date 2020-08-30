@@ -29,9 +29,9 @@ public class DfsBranchAndBoundCallable implements Callable<Void> {
     @Override
     public Void call() {
 
+        // Perform depth first search through our region of solution space
         while (!_stack.isEmpty()) {
 
-            //    Pop partial schedule off of stack and name curr_schedule
             PartialSchedule currentSchedule = _stack.remove(_stack.size()-1);
 
             _algo._numPartialSchedulesGenerated++;
@@ -41,6 +41,7 @@ public class DfsBranchAndBoundCallable implements Callable<Void> {
                     if (currentSchedule.isComplete()) {
                         _algo.setIfBestSchedule(currentSchedule);
                     } else {
+                        // Sort children by heuristic cost such that more 'promising' children are explored first
                         List<PartialSchedule> children = new ArrayList<PartialSchedule>(currentSchedule.extend(_dependencyGraph));
                         children.sort((c1, c2) -> Float.compare(c2.getHeuristicCost(_dependencyGraph), c1.getHeuristicCost((_dependencyGraph))));
                         _stack.addAll(children);

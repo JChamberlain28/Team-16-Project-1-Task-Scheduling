@@ -59,8 +59,7 @@ public class CliParsingTesting {
         // check Default values
         assertEquals(1, cliParser.getNumberOfCores() );
 
-        String inputDir = FilenameMethods.getDirectoryOfJar();
-        //String inputFilePath = (inputDir  + File.separator + "digraph2.dot");
+
         assertEquals(inputDigraph, cliParser.getFilePathName() );
 
         String outputDir = FilenameMethods.getDirectoryOfJar();
