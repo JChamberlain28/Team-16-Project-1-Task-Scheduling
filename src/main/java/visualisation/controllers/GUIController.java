@@ -171,9 +171,6 @@ public class GUIController {
 
 
 
-
-            //Label procNum = new Label("Number of processors: " + CliParser.getCliParserInstance().getNumberOfProcessors());//TODO decide add
-
             Label _numScheduleInfo = new Label("Partial Schedules: ");
             _numScheduleInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _numSchedule = new Label("Partial Schedules generated: ");
@@ -191,7 +188,6 @@ public class GUIController {
 
 
             _close = new Button("Exit Program");
-            _close.setVisible(true);
             _close.setStyle("-fx-background-color: lightgreen; -fx-text-fill: white; -fx-font-family: Consolas; -fx-font-size: 20; -fx-font-weight: bold");
             _close.setAlignment(Pos.CENTER);
             _close.setOnAction(event -> System.exit(0));
@@ -276,7 +272,6 @@ public class GUIController {
         _statusLower.setText("Done");
         _statusLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
         _elapsedLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
-        _close.setVisible(true);
         _timer.stop();
     }
 
