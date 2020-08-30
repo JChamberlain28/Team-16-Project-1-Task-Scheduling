@@ -25,12 +25,8 @@ import javafx.scene.shape.Rectangle;
 
 
 /*
-<<<<<<< HEAD
- * Credit to: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
-=======
  * Taken from: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
  * Credit to 'Roland' for code
->>>>>>> df8d6734ef07c74f2674d32a42cc2a35af7d6d9b
  */
 public class GanttChart<X,Y> extends XYChart<X,Y> {
 

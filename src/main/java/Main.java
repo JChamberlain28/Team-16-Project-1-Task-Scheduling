@@ -8,13 +8,14 @@ import input.InputParser;
 import output.OutputGenerator;
 import visualisation.Visualise;
 
+import java.io.File;
 import java.io.IOException;
 
 
 public class Main {
     public static void main(String[] args) {
-
-
+        System.out.println("============   group16 - saadboys    =============\n" +
+                           "============     Task scheduler      =============\n" );
 
         // singleton class
         CliParser cliparser = CliParser.getCliParserInstance();
@@ -41,18 +42,17 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
+        System.out.println("Calculating optimal scheduling solution for "
+                +graph.getVertices().size()+ " nodes on " +cliparser.getNumberOfProcessors() + " processors. ");
         Algorithm algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), cliparser.getNumberOfCores());
 
-
+        System.out.println("Visualisation of scheduling presented on new window.");
         if (cliparser.isVisualisationDisplay()) {
 
             (new Thread() {
                 @Override
                 public void run() {
-
                     Visualise.startVisual(args, algorithm, graph);
-
-
                 }
             }).start();
         }
@@ -63,10 +63,18 @@ public class Main {
         for (ScheduledTask st : schedule.getScheduledTasks()) {
             st.updateVertex(originalGraph);
         }
-
+        System.out.println("Scheduling calculation completed.");
 
         // Create output with the output file.
         try {
+            String outputFilePath = cliparser.getOutputFilePath();
+            File file = new File(outputFilePath);
+            if (file.exists()) {
+                System.out.println("The specified output file exists. The output file " +
+                        cliparser.getOutputFileName()+ " will be overwritten.");
+            } else {
+                System.out.println("Output file " + cliparser.getOutputFileName() +" generated.");
+            }
             OutputGenerator.generate(originalGraph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
         } catch (IOException e) {
             e.printStackTrace();
