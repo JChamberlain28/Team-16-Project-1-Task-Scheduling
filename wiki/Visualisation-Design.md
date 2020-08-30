@@ -7,7 +7,7 @@ Initially, a brainstorm was conducted to generate ideas for the visualisation, a
 
 From these decided upon features, an early design mockup was created, which can be seen below.
 
-![Current Visualisation](Vis_mockup.png)
+![Current Visualisation](Vis_mockup.PNG)
 
 This design was largely kept - more text elements were added, and the color scheme was changed due to grey providing better contrast. The theme button was also removed due to being unnecessary and replaced by an exit button.
 
