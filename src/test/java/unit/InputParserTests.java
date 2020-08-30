@@ -56,15 +56,9 @@ public class InputParserTests {
             expectedListVertex.add(vertexc);
             expectedListVertex.add(vertexd);
 
-
-
-
-
             System.out.println(inputDigraph);
 
             Graph graphOutput = InputParser.readInput(inputDigraph);
-
-
 
             List<Vertex> vertexList  = graphOutput.getVertices();
             int index = 0;
@@ -73,19 +67,13 @@ public class InputParserTests {
                 assertEquals(expectedListVertex.get(index).getCost() ,vertex.getCost() );
                 index++;
             }
-
-
-
-
     }
-
 
     /*
     **Test program correctly throws error on invalid input file
      */
     @Test
     public void testInvalidInputFileParsed() {
-
         try {
             Graph graphOutput = InputParser.readInput(inputDigraph2);
 
@@ -94,12 +82,5 @@ public class InputParserTests {
                     "There is an invalid line in the dot file. The input dot file " +
                     "should be valid.", e.getMessage());
         }
-
-
     }
-
-
-
-
-
 }

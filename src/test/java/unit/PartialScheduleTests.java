@@ -40,8 +40,6 @@ public class PartialScheduleTests {
 
         List<HashSet<Integer>> identicalList = new ArrayList<HashSet<Integer>>();
 
-
-
     }
 
     @Test
@@ -76,7 +74,6 @@ public class PartialScheduleTests {
 
     }
 
-
     @Test
     public void extendingSchedulesEventuallyTerminates() {
 
@@ -95,7 +92,6 @@ public class PartialScheduleTests {
         }
 
         Assert.assertNotEquals(nullSchedule.extend(dependencyGraph).size(), 0);
-
     }
 
     @Test

@@ -33,10 +33,9 @@ public class CostFunction {
             float minDataReadyTime = Integer.MAX_VALUE;
 
             for (int i = 0; i < p.getProcessorEndTimes().length; i++) {
-
                 int maxDataReadyTime = 0;
-                for (Vertex dep : child.getIncomingVertices()) {
 
+                for (Vertex dep : child.getIncomingVertices()) {
                     ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
                     int dataReadyTime = depScheduledTask.getStartTime();
                     if (depScheduledTask.getProcessor() == i) {

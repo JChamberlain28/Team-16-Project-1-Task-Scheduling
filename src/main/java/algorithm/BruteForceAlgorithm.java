@@ -25,20 +25,14 @@ public class BruteForceAlgorithm extends Algorithm {
         PartialSchedule bestSchedule = null;
 
         while (!schedules.isEmpty()) {
-
-
             PartialSchedule schedule = schedules.remove(0);
             _numPartialSchedulesGenerated++;
-
             if (schedule.isComplete()) {
-
-
                 _numCompleteSchedulesGenerated++;
                 if (schedule.getFinishTime() < earliestFinishTime) {
                     bestSchedule = schedule;
                     earliestFinishTime = schedule.getFinishTime();
                 }
-
             } else {
                 schedules.addAll(schedule.extend(_dependencyGraph));
             }
@@ -48,6 +42,4 @@ public class BruteForceAlgorithm extends Algorithm {
         return bestSchedule;
 
     }
-
-
 }

@@ -31,12 +31,10 @@ public class CliParsingTesting {
 * */
 
 
-
     @BeforeClass
     public static void testSetup() {
 
     }
-
 
     // test must be run within IDE
     @Test
@@ -59,7 +57,6 @@ public class CliParsingTesting {
         // check Default values
         assertEquals(1, cliParser.getNumberOfCores() );
 
-
         assertEquals(inputDigraph, cliParser.getFilePathName() );
 
         // checking default output file naem generated correctly
@@ -68,7 +65,6 @@ public class CliParsingTesting {
         assertEquals(outputFilePath, cliParser.getOutputFilePath() );
 
         assertEquals(false, cliParser.isVisualisationDisplay() );
-
     }
 
     /*
@@ -77,7 +73,6 @@ public class CliParsingTesting {
      * */
     @Test
     public void testInvalidFileName() {
-
 
         try {
             String[] argsInput = {"digraph2", "2"};
@@ -129,8 +124,6 @@ public class CliParsingTesting {
         }
     }
 
-
-
     /*
      **Checking program handling of 0 inputs given
      */
@@ -150,7 +143,6 @@ public class CliParsingTesting {
                     "For additional help enter the help option \"-h\" into the command line.", e.getMessage());
         }
     }
-
 
     // OPTION testing
 
@@ -201,7 +193,6 @@ public class CliParsingTesting {
                 "java" + File.separator + "TestFiles" + File.separator
                 + "digraph2.dot";
         String[] argsInput = {inputDigraph, "2","-o", "OutputOfDi.dot" };
-
 
         CliParser cliParser = CliParser.getCliParserInstance();
         cliParser.UI(argsInput);
@@ -259,10 +250,6 @@ public class CliParsingTesting {
         assertEquals("OutputOfDi.dot",cliParser.getOutputFileName());
         assertEquals("/nfs/home/dir/OutputOfDi.dot",cliParser.getOutputFilePath());
     }*/
-
-
-
-
 
     /*
     **Testing of standard valid input to program, with no optional parameters enabled

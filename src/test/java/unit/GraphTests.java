@@ -76,7 +76,6 @@ public class GraphTests {
 
         Assert.assertEquals(identicalListControl.size(), actual.size());
 
-
         for (HashSet<Integer> intListC : identicalListControl){
             boolean failed = true;
             for (HashSet<Integer> intList: actual){
@@ -102,13 +101,11 @@ public class GraphTests {
         Vertex d = new Vertex("d", 2);
         Vertex e = new Vertex("e", 2);
 
-
         graph.addVertex(a);
         graph.addVertex(b);
         graph.addVertex(c);
         graph.addVertex(d);
         graph.addVertex(e);
-
 
         graph.addEdge(a.getId(), c.getId(), 2);
         graph.addEdge(b.getId(), c.getId(), 2);
@@ -137,7 +134,6 @@ public class GraphTests {
             }
             Assert.assertFalse(failed);
         }
-
     }
 
     @Test// tests there isn't a false detection of an identical task in the graph (due to vertex weight)
@@ -150,13 +146,11 @@ public class GraphTests {
         Vertex d = new Vertex("d", 69);
         Vertex e = new Vertex("e", 2);
 
-
         graph.addVertex(a);
         graph.addVertex(b);
         graph.addVertex(c);
         graph.addVertex(d);
         graph.addVertex(e);
-
 
         graph.addEdge(a.getId(), c.getId(), 2);
         graph.addEdge(b.getId(), c.getId(), 2);
@@ -169,9 +163,7 @@ public class GraphTests {
         h1.add(a.getId());
         h1.add(b.getId());
 
-
         identicalListControl.add(h1);
-
 
         List<HashSet<Integer>> actual = graph.buildVirtualEdges();
 
@@ -187,9 +179,7 @@ public class GraphTests {
             }
             Assert.assertFalse(failed);
         }
-
     }
-
 }
 
 

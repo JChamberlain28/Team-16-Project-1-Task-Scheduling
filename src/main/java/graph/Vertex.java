@@ -41,7 +41,6 @@ public class Vertex {
 
     public void clearOutgoingVertices() { outgoingVertices.clear(); }
 
-
     public int getId() {
         return _id;
     }
@@ -86,5 +85,4 @@ public class Vertex {
         // only required for testing purposes
         currId = 0;
     }
-
 }

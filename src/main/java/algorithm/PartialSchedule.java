@@ -33,15 +33,12 @@ public class PartialSchedule {
      * @param numProcessors Number of processors that the tasks are being scheduled on.
      */
     public PartialSchedule(Graph dependencyGraph, int numProcessors) {
-
         _heuristicCost = 0.0f;
-
         _processorEndTimes = new int[numProcessors];
         for (int i = 0; i < numProcessors; i++) {
             _processorEndTimes[i] = 0;
         }
         _idleTime = 0;
-
         _scheduledTask = null;
         _toSchedule = new HashSet<Integer>(dependencyGraph.getRoots());
 
@@ -80,7 +77,6 @@ public class PartialSchedule {
                 _toSchedule.add(child.getId());
             }
         }
-
     }
 
     /**
@@ -188,14 +184,12 @@ public class PartialSchedule {
      * @return Whether or not all dependencies have been scheduled.
      */
     private boolean allDependenciesScheduled(Vertex task) {
-
         for (Vertex dependency : task.getIncomingVertices()) {
             if (_scheduledTasks[dependency.getId()] == null) {
                 return false;
             }
         }
         return true;
-
     }
 
 
@@ -210,7 +204,6 @@ public class PartialSchedule {
     @Override
     public int hashCode() {
         HashCodeBuilder pScheduleBuilder = new HashCodeBuilder(17, 37);
-
         Set<Integer> processorHashes = new HashSet<Integer>();  // use a set of hashes as we do not care about order
         for (int i = 0; i < _processorEndTimes.length; i++) {
             if (_processorEndTimes[i] != 0) {  // assuming every task has cost > 0
@@ -239,5 +232,4 @@ public class PartialSchedule {
         return o.hashCode() == this.hashCode();
 
     }
-
 }

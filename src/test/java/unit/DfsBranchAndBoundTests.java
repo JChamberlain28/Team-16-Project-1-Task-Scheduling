@@ -56,7 +56,6 @@ public class DfsBranchAndBoundTests {
     public void producesOptimalSchedule() {
 
         // Assumes brute force algorithm is correct
-
         int optimalEndTime = (new BruteForceAlgorithm(dependencyGraph, 8))
                 .findOptimalSchedule()
                 .getFinishTime();
@@ -65,6 +64,4 @@ public class DfsBranchAndBoundTests {
                 .getFinishTime()));
 
     }
-
-
 }

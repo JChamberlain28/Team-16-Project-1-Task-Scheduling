@@ -29,7 +29,6 @@ public class DfsBranchAndBound extends Algorithm {
             _busy.add(false);
         }
         _earliestFinishTime = Integer.MAX_VALUE;
-
         _cacheList = new ConcurrentLinkedQueue<Integer>();
         _cacheSet = new NonBlockingHashSet<Integer>();
         _cacheCapacity = 100000;
@@ -49,7 +48,6 @@ public class DfsBranchAndBound extends Algorithm {
     }
 
     public boolean updateCache(PartialSchedule ps) {
-
         int hashCode = ps.hashCode();
         if (_cacheSet.add(hashCode)) {
             _cacheList.add(hashCode);
@@ -60,7 +58,6 @@ public class DfsBranchAndBound extends Algorithm {
         } else {
             return false;
         }
-
     }
 
     public PartialSchedule findOptimalSchedule() {
@@ -83,7 +80,6 @@ public class DfsBranchAndBound extends Algorithm {
             DfsBranchAndBoundCallable  singleThread = new DfsBranchAndBoundCallable(this, _numProcessors, rootSchedules, 0);
             singleThread.call(); // run the runnable on the main thread as only one thread was specified
         } else {
-
             ExecutorService service = Executors.newFixedThreadPool(_threads);
             List<ArrayList<PartialSchedule>> initStacks = new ArrayList<ArrayList<PartialSchedule>>();
             for (int i = 0; i < _threads; i++) {
@@ -101,20 +97,17 @@ public class DfsBranchAndBound extends Algorithm {
             for (int i = 0; i < _threads; i++) {
                 callables.add(new DfsBranchAndBoundCallable(this, _numProcessors, initStacks.get(i), i));
             }
-
             try {
                 service.invokeAll(callables);
                 service.shutdown();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
 
         _finished = true;
         return _bestSchedule;
 
     }
-
 }
 

@@ -33,10 +33,9 @@ public class DfsBranchAndBoundCallable implements Callable<Void> {
         while (!_stack.isEmpty()) {
 
             PartialSchedule currentSchedule = _stack.remove(_stack.size()-1);
-
             _algo._numPartialSchedulesGenerated++;
-            if (_algo.updateCache(currentSchedule)) {  // if this schedule does not exist in cache
 
+            if (_algo.updateCache(currentSchedule)) {  // if this schedule does not exist in cache
                 if (currentSchedule.getHeuristicCost(_dependencyGraph) < _algo.getEarliestFinishTime()) {
                     if (currentSchedule.isComplete()) {
                         _algo.setIfBestSchedule(currentSchedule);
@@ -47,13 +46,8 @@ public class DfsBranchAndBoundCallable implements Callable<Void> {
                         _stack.addAll(children);
                     }
                 }
-
             }
-
         }
-
         return null;
-
     }
-
 }

@@ -27,7 +27,6 @@ public class Graph {
 
     public void addVertex(Vertex vertex) {
 
-
         _idVertexMap.put(vertex.getId(), vertex);
         _labelVertexMap.put(vertex.getLabel(), vertex);
         _edgeMap.put(vertex.getId(), new HashMap<Integer, Integer>());
@@ -139,12 +138,10 @@ public class Graph {
                     maxBottomLevel = Math.max(maxBottomLevel, getBottomLevel(vChild));
                 }
             }
-
             int botLevel = v.getCost() + maxBottomLevel;
             _bottomLevelMap.put(vertexId, botLevel);
             return botLevel;
         }
-
     }
 
     /**
@@ -164,15 +161,12 @@ public class Graph {
                 if (vId != vIdTwo){
                     Vertex y = _idVertexMap.get(vIdTwo);
 
-
                     // checks identical vertices (edges and weights)
                     boolean incomingVertMatch = ((v.getIncomingVertices().size() == y.getIncomingVertices().size()) &&
                             (v.getIncomingVertices().containsAll(y.getIncomingVertices())));
 
-
                     boolean outgoingVertMarch = ((v.getOutgoingVertices().size() == y.getOutgoingVertices().size()) &&
                             (v.getOutgoingVertices().containsAll(y.getOutgoingVertices())));
-
 
                     boolean incomingEdgeWeightSame = true;
                     boolean outgoingEdgeWeightSame = true;
@@ -199,8 +193,6 @@ public class Graph {
                         }
                     }
 
-
-
                     if ((v.getCost() == y.getCost()) && incomingVertMatch && outgoingVertMarch &&
                             incomingEdgeWeightSame && outgoingEdgeWeightSame){
                         // check if vertex exists in a duplicate task set already, and if so append it to this set
@@ -219,11 +211,9 @@ public class Graph {
                         if (!stored){
                             identicalList.add(new HashSet<Integer>(Arrays.asList(v.getId(), y.getId())));
                         }
-
                     }
                 }
             }
-
         }
 
         for (HashSet<Integer> identSubList : identicalList){

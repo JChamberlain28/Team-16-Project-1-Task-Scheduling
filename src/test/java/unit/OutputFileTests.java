@@ -44,7 +44,6 @@ public class OutputFileTests {
         expectedOutputDotFile.add("\tc -> d [ Weight=1 ];");
         expectedOutputDotFile.add("}");
 
-
         // make graph object to generate output file from
         Graph testGraph = new Graph("testGraph");
 
@@ -80,8 +79,7 @@ public class OutputFileTests {
         try {
             bufferReader = new BufferedReader(new FileReader(testOutputFile));
 
-
-        String line = bufferReader.readLine();
+            String line = bufferReader.readLine();
 
             while (line != null) {
 
@@ -94,9 +92,6 @@ public class OutputFileTests {
                 line = bufferReader.readLine();
             }
 
-
-
-
         } catch (FileNotFoundException e) {
             fail("could not read file");
         } catch (IOException e) {
@@ -106,15 +101,6 @@ public class OutputFileTests {
         // delete after test
         testOutputFile.delete();
 
-
     }
-
-
-
-
-
-
-
-
 
 }
