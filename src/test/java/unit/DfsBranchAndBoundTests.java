@@ -40,7 +40,7 @@ public class DfsBranchAndBoundTests {
     @Test
     public void producesSchedule() {
 
-        DfsBranchAndBound algo = new DfsBranchAndBound(dependencyGraph, 8);
+        DfsBranchAndBound algo = new DfsBranchAndBound(dependencyGraph, 8, 1);
         PartialSchedule schedule = algo.findOptimalSchedule();
         Assert.assertNotNull(schedule);
 
@@ -65,7 +65,7 @@ public class DfsBranchAndBoundTests {
         int optimalEndTime = (new BruteForceAlgorithm(dependencyGraph, 8))
                 .findOptimalSchedule()
                 .getFinishTime();
-        Assert.assertEquals(optimalEndTime, (new DfsBranchAndBound(dependencyGraph, 8)
+        Assert.assertEquals(optimalEndTime, (new DfsBranchAndBound(dependencyGraph, 8, 1)
                 .findOptimalSchedule()
                 .getFinishTime()));
 

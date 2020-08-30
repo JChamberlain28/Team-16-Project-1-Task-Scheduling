@@ -5,18 +5,17 @@ import graph.Graph;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class DfsBranchAndBoundCallable implements Callable<Void> {
 
-    private final ParallelisedDfsBranchAndBound _algo;
+    private final DfsBranchAndBound _algo;
     private Graph _dependencyGraph;
     private int _numProcessors;
     private List<PartialSchedule> _stack;
     private int _threadId;
 
-    public DfsBranchAndBoundCallable(ParallelisedDfsBranchAndBound algo, int numProcessors, List<PartialSchedule> initStack,
-                             int threadId) {
+    public DfsBranchAndBoundCallable(DfsBranchAndBound algo, int numProcessors, List<PartialSchedule> initStack,
+                                     int threadId) {
 
         _algo = algo;
         _numProcessors = numProcessors;
