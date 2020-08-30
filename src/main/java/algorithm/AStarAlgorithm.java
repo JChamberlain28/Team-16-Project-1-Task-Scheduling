@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.*;
 
-
+// A* Algorithm not included in final release due to memory issues
 public class AStarAlgorithm extends Algorithm {
 
     public AStarAlgorithm(Graph dependencyGraph, int numProcessors) {
