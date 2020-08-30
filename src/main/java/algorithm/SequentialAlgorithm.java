@@ -7,8 +7,8 @@ import java.util.*;
 
 /*
 This algorithm schedule all tasks onto one CPU core sequentially, regardless of the number of cores specified.
-It is only guaranteed to produce a valid schedule.
-This algorithm is not used in the final release but preserved.
+It is only guaranteed to produce a valid schedule. This algorithm was used for milestone 1.
+This algorithm is not used in the final release but preserved. It also is not integrated with the visualisation
  */
 public class SequentialAlgorithm {
 

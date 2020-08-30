@@ -6,3 +6,5 @@
 
 ###External Libraries
 * JavaFX - used in visualisation implementation
+* Commons CLI - used in command line parsing module
+* JUnit - used in unit testing
