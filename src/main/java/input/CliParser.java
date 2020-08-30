@@ -281,18 +281,17 @@ public class CliParser {
 
 
     private void printHelpMessage(){
-        System.out.println("Boomer\n"+
-                "ok boomer\n" +
-                "You're a boomer\n" +
-                "Ok boomer\n" +
-                "Do you say \"Oh back in my day\"\n" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" );
-
+        System.out.println("===================== HELP ======================\n" +
+                "Usage Instructions" +
+                "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                "\n" +
+                "Required Parameters\n" +
+                "INPUT FILE NAME: Name of .dot file representing the input graph (must be in the same folder as the jar and have .dot extension)\n" +
+                "NUMBER OF PROCESSORS: Number of processors / cores to schedule tasks onto\n" +
+                "Optional Parameters\n" +
+                "-p N: -p enables parallelisation (multithreading in algorithm), N specifies the number of cores to use for multithreading\n" +
+                "-v: Enables the visualisation of the algorithm progress / actions\n" +
+                "-o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). Warning, supplying the name of an existing file will overwrite it.");
     }
 
 

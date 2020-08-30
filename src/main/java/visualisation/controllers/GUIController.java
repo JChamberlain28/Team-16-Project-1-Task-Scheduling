@@ -142,11 +142,18 @@ public class GUIController {
             Separator separator3 = new Separator(Orientation.HORIZONTAL);
             Separator separator4 = new Separator(Orientation.HORIZONTAL);
 
-
-            Label inputName = new Label("Input file:  " + CliParser.getCliParserInstance().getFileName());
+            String inputNameString = CliParser.getCliParserInstance().getFileName();
+            if (inputNameString.length() > 20 ){
+                inputNameString = ("" + inputNameString.substring(0, 18) + "...");
+            }
+            String outputNameString = CliParser.getCliParserInstance().getOutputFileName();
+            if (outputNameString.length() > 20 ){
+                outputNameString = ("" + outputNameString.substring(0, 18) + "...");
+            }
+            Label inputName = new Label("Input file:  " + inputNameString);
             inputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             inputName.setPadding(new Insets(0,0,5,0));
-            Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
+            Label outputName = new Label("Output file: " + outputNameString);
             outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
 
 
