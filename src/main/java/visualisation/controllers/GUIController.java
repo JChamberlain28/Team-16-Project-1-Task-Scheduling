@@ -167,7 +167,7 @@ public class GUIController {
             Label statusUpper = new Label("Program status: ");
             statusUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _statusLower = new Label("Running");
-            _statusLower.setStyle("-fx-text-fill: lightgreen; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 16");
+            _statusLower.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 16");
 
 
 
