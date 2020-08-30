@@ -4,6 +4,7 @@ package visualisation;
 import algorithm.Algorithm;
 import graph.Graph;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 
 
@@ -66,6 +67,16 @@ public class Visualise extends Application {
 
             stage.show();
             stage.setOnCloseRequest(event -> System.exit(0));
+
+
+            // this is incase the gantt chart is resized. To reintialise the labels
+            ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
+                GUIController.resizeReinitialise();
+            };
+            stage.widthProperty().addListener(stageSizeListener);
+            stage.heightProperty().addListener(stageSizeListener);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

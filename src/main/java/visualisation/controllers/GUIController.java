@@ -7,6 +7,7 @@ import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
 import graph.Graph;
 import input.CliParser;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -29,6 +30,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 
@@ -101,7 +104,11 @@ public class GUIController {
         parent.setStyle("-fx-background-color: white");
     }
 
-
+    public void resizeReinitialise() {
+        if(_algorithm.isFinished()) {
+            updateGantt(chart);
+        }
+    }
 
     @FXML
     private void setupTextComponents(){
@@ -373,7 +380,7 @@ public class GUIController {
 
 
     /*This must be put inside the polling and update along with the other aspects. */
-    private void updateGantt( GanttChart<Number,String> chart){
+    private void updateGantt(GanttChart<Number,String> chart){
 
 
 
@@ -384,14 +391,6 @@ public class GUIController {
         for (int i=0;i<CliParser.getCliParserInstance().getNumberOfProcessors();i++){
             seriesProcessors[i]=new Series();
         }
-
-        // for every task in schedule, write its data onto the specific series
-
-
-        //PartialSchedule pSchedule = new PartialSchedule();
-        // loop for all processors
-
-        //ScheduledTask scheduledTask = new ScheduledTask(1, 2, 3);
 
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
         String noTimeYet = "N/A";
