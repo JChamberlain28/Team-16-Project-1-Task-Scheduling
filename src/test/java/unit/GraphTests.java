@@ -90,15 +90,7 @@ public class GraphTests {
             Assert.assertFalse(failed);
         }
 
-
-
-
-
     }
-
-
-
-
 
     @Test
     public void noFalsePositiveIdentDetectionEdgeWeight() {
@@ -129,14 +121,9 @@ public class GraphTests {
         h1.add(a.getId());
         h1.add(b.getId());
 
-
         identicalListControl.add(h1);
 
-
         List<HashSet<Integer>> actual = graph.buildVirtualEdges();
-
-
-
 
         for (HashSet<Integer> intListC : identicalListControl){
             boolean failed = true;
@@ -151,12 +138,7 @@ public class GraphTests {
             Assert.assertFalse(failed);
         }
 
-
-
-
-
     }
-
 
     @Test
     public void noFalsePositiveIdentDetectionVertWeight() {
@@ -193,9 +175,6 @@ public class GraphTests {
 
         List<HashSet<Integer>> actual = graph.buildVirtualEdges();
 
-
-
-
         for (HashSet<Integer> intListC : identicalListControl){
             boolean failed = true;
             for (HashSet<Integer> intList: actual){
@@ -209,13 +188,7 @@ public class GraphTests {
             Assert.assertFalse(failed);
         }
 
-
-
-
-
     }
-
-
 
 }
 

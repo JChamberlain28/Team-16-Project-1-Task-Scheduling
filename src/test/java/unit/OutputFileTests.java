@@ -15,10 +15,6 @@ import static org.junit.Assert.fail;
 
 public class OutputFileTests {
 
-
-
-
-
     @Test
     public void testValidInputFileParsed() {
 
