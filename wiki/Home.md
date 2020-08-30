@@ -17,6 +17,6 @@
 * [Software Architecture](Software-Architecture.md)
 * [Schedule Representation](Schedule-Representation.md)
 * [Testing](Testing.md)
-* [Code Style](Code-Style.md)
+* [Group Conventions](Conventions.md)
 * [Meeting Minutes](Meeting-Minutes.md)
 * [References](References.md)

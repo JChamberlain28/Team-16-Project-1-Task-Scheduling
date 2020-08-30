@@ -16,11 +16,11 @@ checking the optimality of the algorithm, input parsing of the ``dot`` file and 
 
 ##Integration testing
 
-INTEGRATION TESTING was done by combining individual units of tests and tested as a group. The purpose of this level of testing is to expose faults in the interaction between integrated units. Test drivers and test stubs were used to assist in Integration Testing.
+Integration testing was done by combining individual units of tests and tested as a group. The purpose of this level of testing is to expose faults in the interaction between integrated units. Test drivers and test stubs were used to assist in Integration Testing.
 
 
 ##Benchmarking/Performance Testing
 
 Benchmark testing was carried out by running the program in order to assess
-its relative performance against a predefined standard tests.
+its relative performance against a predefined standard tests. [See more here](Performance-Testing.md)
 

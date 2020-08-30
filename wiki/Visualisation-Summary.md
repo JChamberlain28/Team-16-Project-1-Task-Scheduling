@@ -1,7 +1,9 @@
 #Visualisation 
 
-Summary of our final visualisation.
 
 ![Current Visualisation](Vis_current.png)
 
-See
+
+
+###Design Process
+For more details on the visualisation design process, [click here](Visualisation-Design.md)
