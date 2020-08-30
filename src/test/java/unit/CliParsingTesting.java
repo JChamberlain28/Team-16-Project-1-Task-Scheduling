@@ -50,13 +50,12 @@ public class CliParsingTesting {
         assertEquals(2, cliParser.getNumberOfProcessors());
         assertEquals("digraph2-output.dot",cliParser.getOutputFileName());
 
-
         // check Default values
         assertEquals(1, cliParser.getNumberOfCores() );
 
         String inputDir = FilenameMethods.getDirectoryOfJar();
-        String inputFilePath = (inputDir  + File.separator + "digraph2.dot");
-        assertEquals(inputFilePath, cliParser.getFilePathName() );
+        //String inputFilePath = (inputDir  + File.separator + "digraph2.dot");
+        assertEquals("digraph2.dot", cliParser.getFilePathName() );
 
         String outputDir = FilenameMethods.getDirectoryOfJar();
         String outputFilePath = (outputDir + File.separator + "digraph2-output.dot");
