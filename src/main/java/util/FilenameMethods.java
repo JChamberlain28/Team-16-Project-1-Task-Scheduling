@@ -72,17 +72,6 @@ public class FilenameMethods {
                     "name with the full '.dot' extension included.");
         }
         return true;
-        /*else if ( (fileName.startsWith("\\")) ) {
-            // windows input is a folder which is invalid
-            throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
-
-        } else if ( System.getProperty("os.name").toLowerCase().startsWith("windows") && (fileName.startsWith("/"))  ) {
-            // windows input is a folder which is linux notation
-            throw new IllegalArgumentException("Error: Invalid file path. Please provide a valid file path.");
-        } else {
-            return true;
-        }*/
-
 
     }
 

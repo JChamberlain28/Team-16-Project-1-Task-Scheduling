@@ -53,8 +53,9 @@ public class CliParser {
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
                     "For additional help enter the help option \"-h\" into the command line.");
         } else {
+            // Detect and parse all command line arg options flags
             commandLineParsed = parseOptionArguments(args);
-            if (commandLineParsed.hasOption("h") /*&& args.length == 1*/) {
+            if (commandLineParsed.hasOption("h")) {
                 printHelpMessage();
                 _CliParsedInputs._successfulCliParse=false;
                 return;
@@ -81,19 +82,10 @@ public class CliParser {
                     throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.\n" +
                             "For additional help enter the help option \"-h\" into the command line.");
                 } else {
-
                     _CliParsedInputs._fileName = FilenameMethods.getFileName(args[0]); // File name
-
                     _CliParsedInputs._filePathName = args[0];
-                    System.out.println("input file name =  "+  _CliParsedInputs._fileName +
-                            "\n input file path =  "+ _CliParsedInputs._filePathName);
                 }
-
-
-
-
             }
-
             // Checking valid number of processors.
             if (checkValidStringInt(args[1])) {
                 _CliParsedInputs._numberOfProcessors = Integer.parseInt(args[1]);
@@ -102,7 +94,6 @@ public class CliParser {
                         "Please provide a valid number of processors \n" +
                         "For additional help enter the help option \"-h\" into the command line.");
             }
-
         } else {
             // does not have minimum number of args.
             throw new IllegalArgumentException("Error: Required arguments are missing." +
@@ -117,34 +108,29 @@ public class CliParser {
         _CliParsedInputs._numberOfCores = 1;
         // default output file name
         String fileName = _CliParsedInputs._fileName;
-        System.out.println("\n filename = " + fileName);
         String defaultOutputFileName = (fileName.replaceAll(".dot$", "") + "-output.dot");
         _CliParsedInputs._outputFileName = defaultOutputFileName;
-
-        String defaultDir = FilenameMethods.getDirectoryOfJar();
-        String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
+        // default output file path
+        //String defaultDir = FilenameMethods.getDirectoryOfJar();
+        //String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
+        String defaultOutputFilePath = (defaultOutputFileName);
         _CliParsedInputs._outputFilePath = defaultOutputFilePath;
-
 
         // default visualisation boolean (true or false)
         _CliParsedInputs._visualisationDisplay = false;
 
-        // Detect and parse all command line arg options flags
-        //commandLineParsed = parseOptionArguments(args);
-
-        // option flag provided for parallisation with n number of cores.
+        // option flag provided for parallelization with n number of cores.
         if (commandLineParsed.hasOption("p")) {
             String numberOfCoresInput = commandLineParsed.getOptionValue("p");
             // Checking valid number of cores.
             if (numberOfCoresInput != null && checkValidStringInt(numberOfCoresInput)) {
                 int numberOfCoresInt = Integer.parseInt(numberOfCoresInput);
-               /* if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt) */
+                // warning if number of cores inputted(desired number of threads) larger than number of cores available.
                 if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt){
                     System.out.println("There are " +Runtime.getRuntime().availableProcessors()+ " available processors.");
                     System.out.println(numberOfCoresInt + " Threads will be created");
                 }
                     _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
-
             } else {
                 throw new IllegalArgumentException("Error: invalid number of cores." +
                         " Please enter a valid number of cores. \n" +
@@ -163,22 +149,16 @@ public class CliParser {
             // Checking valid output file name.
             if (outputFileNameInput != null && FilenameMethods.checkValidDotFileExtension(outputFileNameInput)) {
                 String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
-                _CliParsedInputs._outputFileName = noFolderFileName; // File name
-                _CliParsedInputs._outputFilePath = outputFileNameInput; // file path
-                System.out.println("output file name =  "+  _CliParsedInputs._outputFileName +
-                        "\noutput file path =  "+ _CliParsedInputs._outputFilePath);
+                _CliParsedInputs._outputFileName = noFolderFileName; // output File name
+                _CliParsedInputs._outputFilePath = outputFileNameInput; // output file path
 
-
+                // check if output file path can be used to create a '.dot' file
                 String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
-                System.out.println("directories needed " + directoriesForOutput);
-
-
                 try {
                     Files.createDirectories(Paths.get(directoriesForOutput));
                     new FileOutputStream(_CliParsedInputs._outputFilePath);
                     File outputFile = new File(_CliParsedInputs._outputFilePath);
                     if (outputFile.exists()){
-                        System.out.println("file exists");
                         outputFile.delete();
                     } else {
                         throw new IllegalArgumentException("Error: File could not be created." +
@@ -192,15 +172,8 @@ public class CliParser {
                             "For additional help enter the help option \"-h\" into the command line.");
                 }
 
-
-
             }
-
-
-
         }
-
-
     }
 
 
@@ -210,13 +183,6 @@ public class CliParser {
     public static boolean checkValidBoolean(String booleanString){
         return(booleanString.equalsIgnoreCase("true") || booleanString.equalsIgnoreCase("false"));
     }
-
-
-
-
-
-
-
 
 
 
@@ -235,6 +201,11 @@ public class CliParser {
 
     }
 
+    /**
+     * Parse the command line inputs for options added by the user.
+     * @param optionArguments will take in arguments supplied by user into command line.
+     * @return returns parsed commandline object.
+     */
     private CommandLine parseOptionArguments(String[] optionArguments) {
         Options cliOptions = createOptions();
         CommandLineParser parser = new DefaultParser();
@@ -250,7 +221,7 @@ public class CliParser {
         }
 
         // too many args have been provided
-        if (line.getArgList().size() > 2){
+        if (line.getArgList().size() > 2 && !line.hasOption("h")){
             throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
                     "For additional help enter the help option \"-h\" into the command line.");
@@ -259,12 +230,13 @@ public class CliParser {
         return line;
     }
 
-    /*
+    /**
      * Method to create the additional options that may be supplied to the command line.
      *
      * −p N use N cores for execution in parallel (default is sequential )
      * −v visualise the search
      * −o OUTPUT output file is named OUTPUT ( default is INPUT−output.dot)
+     * -h option to print the help message
      * */
     private Options createOptions(){
 
@@ -279,20 +251,22 @@ public class CliParser {
     }
 
 
-
+    /**
+     * Prints a help message for user upon request with '-h' option flag.
+     * Displays information regarding usage of program.
+     **/
     private void printHelpMessage(){
-        System.out.println("Boomer\n"+
-                "ok boomer\n" +
-                "You're a boomer\n" +
-                "Ok boomer\n" +
-                "Do you say \"Oh back in my day\"\n" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" );
-
+        System.out.println("===================== HELP ======================\n" +
+                "Usage Instructions" +
+                "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                "\n" +
+                "Required Parameters\n" +
+                "INPUT FILE NAME: Name of .dot file representing the input graph (must be in the same folder as the jar and have .dot extension)\n" +
+                "NUMBER OF PROCESSORS: Number of processors / cores to schedule tasks onto\n" +
+                "Optional Parameters\n" +
+                "-p N: -p enables parallelisation (multithreading in algorithm), N specifies the number of cores to use for multithreading\n" +
+                "-v: Enables the visualisation of the algorithm progress / actions\n" +
+                "-o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). Warning, supplying the name of an existing file will overwrite it.");
     }
 
 
@@ -327,6 +301,7 @@ public class CliParser {
         return _numberOfCores;
     }
 
+    // Getters for checking if cli parsing succeeded. Only continue program if successful.
     public boolean getSuccessfulCliParse(){
         return _successfulCliParse;
     }

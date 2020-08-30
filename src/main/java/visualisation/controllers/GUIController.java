@@ -7,7 +7,6 @@ import algorithm.PartialSchedule;
 import algorithm.ScheduledTask;
 import graph.Graph;
 import input.CliParser;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -30,50 +29,42 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 
-
+/**
+ * Controller class for visualisation
+ * Paired with GUI.fxml
+ * */
 public class GUIController {
 
+    // Initialise gantt chart for displaying best found schedule
     private GanttChart<Number,String> chart;
-
 
     @FXML
     private HBox chartHBox;
-
     @FXML
     private HBox ganttHBox;
-
     @FXML
     private VBox textCont;
-
     @FXML
     private HBox lowerHbox;
-
     @FXML
     private Label _statusLower;
-
     @FXML
     private Label _elapsedLower;
-
     @FXML
     private Label _numSchedule;
     @FXML
     private Label _numScheduleComplete;
-
-
     @FXML
     private Label _bestScheduleTimeEnd;
-
     @FXML
     private HBox parent;
-
     @FXML
     private VBox rhsBox;
 
+    //components used within GUI visualisation
     private  LineChart<Number, Number> _memoryChart;
     private  LineChart<Number, Number> _cpuChart;
     private NumberAxis _xAxisCPU;
@@ -82,8 +73,8 @@ public class GUIController {
     private XYChart.Series _cpuSeries;
     private Timeline _timer;
     private Button _close;
-    //private final String logoTitle = "file:///+ C:\\Users\\dh\\2020assignments\\SE306\\project-1-saadboys-16\\src\\main\\resources\\visualisation\\controllers\\cry.png";
 
+    // Objects passed in for gantt chart creation
     private Algorithm _algorithm;
     private Graph _graph;
 
@@ -91,8 +82,6 @@ public class GUIController {
         this._algorithm = algorithm;
         this._graph = graph;
     }
-
-
 
     @FXML
     public void initialize() {
@@ -104,17 +93,24 @@ public class GUIController {
         parent.setStyle("-fx-background-color: white");
     }
 
+    // in the case that the visualisation window is resized,
+    // re-visualise the gantt chart.
     public void resizeReinitialise() {
         if(_algorithm.isFinished()) {
             updateGantt(chart);
         }
     }
 
+
+    /**
+     * Left side menu of visualisation showing summary of data for program
+     * */
     @FXML
     private void setupTextComponents(){
         try {
             Label title = new Label("Team 16 - Saadboys" );
             title.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: orange; -fx-font-family: 'Century Gothic'");
+            // components for spacing the elements apart,
             HBox fill0 = new HBox();
             fill0.prefHeightProperty().bind(textCont.heightProperty().divide(24));
             HBox fill1 = new HBox();
@@ -125,7 +121,6 @@ public class GUIController {
             fill2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
             HBox fill2v2 = new HBox();
             fill2v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
-
             HBox fill3 = new HBox();
             fill3.prefHeightProperty().bind(textCont.heightProperty().divide(20));
             HBox fill3v2 = new HBox();
@@ -136,20 +131,28 @@ public class GUIController {
             fill4v2.prefHeightProperty().bind(textCont.heightProperty().divide(20));
             HBox fill5 = new HBox();
             fill5.prefHeightProperty().bind(textCont.heightProperty().divide(10));
-
             Separator separator1 = new Separator(Orientation.HORIZONTAL);
             Separator separator2 = new Separator(Orientation.HORIZONTAL);
             Separator separator3 = new Separator(Orientation.HORIZONTAL);
             Separator separator4 = new Separator(Orientation.HORIZONTAL);
 
 
-            Label inputName = new Label("Input file:  " + CliParser.getCliParserInstance().getFileName());
+            // if name is too long shrink it so that it fits on the left side menu.
+            String inputNameString = CliParser.getCliParserInstance().getFileName();
+            if (inputNameString.length() > 20 ){
+                inputNameString = ("" + inputNameString.substring(0, 18) + "...");
+            }
+            String outputNameString = CliParser.getCliParserInstance().getOutputFileName();
+            if (outputNameString.length() > 20 ){
+                outputNameString = ("" + outputNameString.substring(0, 18) + "...");
+            }
+            Label inputName = new Label("Input file:  " + inputNameString);
             inputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             inputName.setPadding(new Insets(0,0,5,0));
-            Label outputName = new Label("Output file: " + CliParser.getCliParserInstance().getOutputFileName());
+            Label outputName = new Label("Output file: " + outputNameString);
             outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
 
-
+            // Component to show parallelisation data
             Label parallelUpper = new Label("Parallelisation:");
             parallelUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             parallelUpper.setPadding(new Insets(0,0,5,0));
@@ -159,41 +162,39 @@ public class GUIController {
                 parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores() + " threads");
             }
 
+            // Component to show  best time of current best schedule found.
             Label bestScheduleTimeStart = new Label("Current best:   ");
             bestScheduleTimeStart.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _bestScheduleTimeEnd = new Label( " ");
             _bestScheduleTimeEnd.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
 
-
+            // Component to show time elapsed of program.
             Label elapsedUpper = new Label("Time elapsed:");
             elapsedUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _elapsedLower = new Label("");
             _elapsedLower.setStyle("-fx-text-fill: orange; -fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16");
             _elapsedLower.setPadding(new Insets(0,0,5,0));
 
+            // Component to show program status (running or finished)
             Label statusUpper = new Label("Program status: ");
             statusUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _statusLower = new Label("Running");
             _statusLower.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;-fx-font-family: Consolas; -fx-font-size: 16");
 
-
-
+            // Component to show number of partial schedules found
             Label _numScheduleInfo = new Label("Partial Schedules: ");
             _numScheduleInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _numSchedule = new Label("Partial Schedules generated: ");
             _numSchedule.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
             _numScheduleInfo.setPadding(new Insets(0,0,5,0));
 
+            // Component to show number of complete schedules
             Label _numScheduleCompletedInfo = new Label("Complete Schedules: ");
             _numScheduleCompletedInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _numScheduleComplete = new Label("Complete Schedules: ");
             _numScheduleComplete.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
 
-
-            //_numScheduleComplete = new Label("Complete Schedules: ");
-            //_numScheduleComplete.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
-
-
+            // Component for exit button
             _close = new Button("Exit Program");
             _close.setStyle("-fx-background-color: lightgreen; -fx-text-fill: white; -fx-font-family: Consolas; -fx-font-size: 20; -fx-font-weight: bold");
             _close.setAlignment(Pos.CENTER);
@@ -221,11 +222,12 @@ public class GUIController {
 
     /*
     **Timer with increment 1s. Generates new CPU/Memory usage data for JVM every second and
-    * adds this data to the series displayed on each linechart
+    * adds this data to the series displayed on each linechart, also updates gantt chart containing best schedule.
+    * On a shorter poll time, updates elapsed time.
      */
     @FXML
     private void startTimer(){
-        OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();//used to get JVM CPU usage
         double startTime = System.currentTimeMillis();
         int[] increment = {0};
 
@@ -234,17 +236,21 @@ public class GUIController {
                 if (_algorithm.isFinished()){
                     stopTimer();
                 }
-                if (increment[0]%10 == 0){
+                if (increment[0]%10 == 0){//every 1 second updates cpu and memory chart data
+                    // update memory usage
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0]/10,(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
-                    if (_memorySeries.getData().size()>60){
+                    // Show only most recent 60 seconds
+                    if (_memorySeries.getData().size()>60){//section inside conditional ensures only last minute of data is displayed
+
                         _xAxisMem.setUpperBound(increment[0]/10);
                         _xAxisMem.setLowerBound(increment[0]/10 - 60);
                         _memorySeries.getData().remove(0);
                         _memoryChart.getData().remove(0);
                         _memoryChart.getData().add(_memorySeries);
-
                     }
+                    // update cpu usage
                     _cpuSeries.getData().add(new XYChart.Data<>(increment[0]/10, (osMxBean.getProcessCpuLoad())*100));
+                    // Show only most recent 60 seconds
                     if (_cpuSeries.getData().size()>60){
                         _xAxisCPU.setUpperBound(increment[0]/10);
                         _xAxisCPU.setLowerBound(increment[0]/10 - 60);
@@ -252,8 +258,15 @@ public class GUIController {
                         _cpuChart.getData().remove(0);
                         _cpuChart.getData().add(_cpuSeries);
                     }
+                    // update gantt chart
                     updateGantt(chart);
                 }
+               /*} else if (increment[0]%100 == 0){
+                    // update gantt chart
+                    updateGantt(chart);
+                }*/
+
+                // update time elapsed
                 double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (currentTime<60){
                     _elapsedLower.setText("   " + currentTime + "s");
@@ -261,9 +274,8 @@ public class GUIController {
                     _elapsedLower.setText("   " + (int)Math.floor(currentTime/60) + "m " + Math.round((currentTime%60)*10.0)/10.0 + "s");
 
                 }
-
+                // update number of partial schedules found and completed schedules
                 _numSchedule.setText(" " +_algorithm.getNumPartialSchedules());
-
                 _numScheduleComplete.setText("" + _algorithm.getNumCompleteSchedules());
 
                 increment[0]++;
@@ -274,6 +286,9 @@ public class GUIController {
         _timer.play();
     }
 
+
+    // When algorithm is completed, the timer is stopped and
+    // visualisation components are no longer updated.
     private void stopTimer(){
         updateGantt(chart);
         _statusLower.setText("Done");
@@ -287,6 +302,7 @@ public class GUIController {
      */
     @FXML
     private void setupUsageCharts(){
+        // memory chart setup
         _xAxisMem = new NumberAxis();
         final NumberAxis yAxisMem = new NumberAxis();
         _xAxisMem.setUpperBound(60);
@@ -305,6 +321,7 @@ public class GUIController {
         _memoryChart.setStyle("-fx-text-fill: darkblue");
         _memoryChart.animatedProperty().setValue(false);
 
+        // cpu chart setup
         _xAxisCPU = new NumberAxis();
         final NumberAxis yAxisCPU = new NumberAxis();
         yAxisCPU.setUpperBound(100);
@@ -331,11 +348,12 @@ public class GUIController {
 
 
 
-    /*
-     * Taken from: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
+
+    /**
+     * Initialise gantt chart axis showing current best schedule found.
+     * inspired by : https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch/27978436
      */
     private void setUpGanttAxis(){
-
 
         String[] processorList = new String[CliParser.getCliParserInstance().getNumberOfProcessors()];
         for (int i = 0;i<CliParser.getCliParserInstance().getNumberOfProcessors() ;i++){
@@ -357,9 +375,12 @@ public class GUIController {
         processorsAxis.setTickLabelFill(Color.DARKBLUE);
         processorsAxis.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(processorList)));
 
-        setUpGanttChart(timeAxis , processorsAxis);
+        setUpGanttChart(timeAxis, processorsAxis);
     }
 
+    /**
+     *  Initialise gantt chart component showing current best schedule found.
+     */
     private void setUpGanttChart(NumberAxis timeAxis , CategoryAxis processorsAxis){
         // Setting chart
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
@@ -369,8 +390,6 @@ public class GUIController {
 
         chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GUI.css").toExternalForm());
 
-        //chart.setMaxHeight(400); ganttBox.getPrefHeight()
-
         chart.animatedProperty().setValue(false);
         ganttHBox.getChildren().add(chart);
 
@@ -379,10 +398,9 @@ public class GUIController {
     }
 
 
-    /*This must be put inside the polling and update along with the other aspects. */
+    /* Updates the gantt chart to display the current best found schedule.
+     Method is inside the timer polling and updates along with the other visualisation components. */
     private void updateGantt(GanttChart<Number,String> chart){
-
-
 
         // new array of series to write onto
         Series[] seriesProcessors = new Series[CliParser.getCliParserInstance().getNumberOfProcessors()];
@@ -392,20 +410,16 @@ public class GUIController {
             seriesProcessors[i]=new Series();
         }
 
+        // initialise best time displayed
         PartialSchedule currentBestSchedule = this._algorithm.getBestSchedule();
         String noTimeYet = "N/A";
 
-
-
-
-
+        // Do not populate gantt chart if no current best schedule is found.
         if (currentBestSchedule!=null) {
-
             _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
 
-            // to get rid of null pointer remove the for loop and uncomment line 205 with the scheduled task constructor
+            // create task objects to be displayed on gantt chart.
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
-
                 int taskProcessor = scheduledTask.getProcessor();
                 XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + (taskProcessor+1)),
                         new GanttChart.ExtraData(scheduledTask, _graph, "task-ganttchart"));
@@ -418,12 +432,10 @@ public class GUIController {
                 chart.getData().add(seriesProcessors[i]);
             }
         } else {
-            //null schedule, do nothing
+            // no schedule, initialise time to 'n/a'
             _bestScheduleTimeEnd.setText(" " + noTimeYet);
-
         }
 
     }
-
 
 }

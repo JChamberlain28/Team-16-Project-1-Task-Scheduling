@@ -18,6 +18,11 @@ import java.util.regex.Pattern;
  * */
 public class InputParser {
 
+    /**
+     * Parse the specified '.dot' file and create graph object using data from file.
+     * @param filePathName the path name of the input '.dot' file
+     * @return returns graph object containing data of parsed input '.dot' file
+     */
     public static Graph readInput(String filePathName) {
 
         Graph algoGraph = new Graph("newGraph");
@@ -38,9 +43,7 @@ public class InputParser {
                 line = bufferReader.readLine();
             }
 
-
             while (line!= null) {
-
                 // end of file
                 if (line.length()==1 && line.contains("}")) {
                     break;
@@ -73,11 +76,6 @@ public class InputParser {
                     Matcher matcher = Pattern.compile("\\d+").matcher(edgeWeight);
                     matcher.find();
                     int edgeWeightInt = Integer.valueOf(matcher.group());
-                    System.out.println("edgeWeightInt : " +edgeWeightInt);
-
-                    //edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
-                    //int edgeWeightInt = Integer.parseInt(edgeWeight);
-
 
 
                     // add edge to graph data.
@@ -99,10 +97,6 @@ public class InputParser {
                     Matcher matcher = Pattern.compile("\\d+").matcher(vertexWeight);
                     matcher.find();
                     int vertexWeightInt = Integer.valueOf(matcher.group());
-                    System.out.println("vertexWeightInt : " +vertexWeightInt);
-                    //vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
-                    //int vertexWeightInt = Integer.parseInt(vertexWeight); depreciated
-
 
                     // Instantiate vertex using ID and weight
                     // and then add to the graph.
@@ -120,6 +114,7 @@ public class InputParser {
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
+
             return null;
         } finally {
 

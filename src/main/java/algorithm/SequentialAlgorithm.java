@@ -7,7 +7,8 @@ import java.util.*;
 
 /*
 This algorithm schedule all tasks onto one CPU core sequentially, regardless of the number of cores specified.
-It is only guaranteed to produce a valid schedule.
+It is only guaranteed to produce a valid schedule. This algorithm was used for milestone 1.
+This algorithm is not used in the final release but preserved. It also is not integrated with the visualisation
  */
 public class SequentialAlgorithm {
 
@@ -19,15 +20,17 @@ public class SequentialAlgorithm {
 
     public void computeSchedule(Graph graph){
 
-        Set<String> visitedVertexLabels = new HashSet<String>();
-        Vertex root = graph.getRoot();
+        List<Integer> roots = graph.getRoots();
 
         int currentStartTime = 0;
 
-        Set<String> visitedIds = new HashSet<>();
+        Set<Integer> visitedIds = new HashSet<>();
         List<Vertex> queue = new ArrayList<Vertex>();
 
-        queue.add(root);
+        for (Integer i : roots){
+            queue.add(graph.getVertex(i));
+        }
+
 
         while (queue.size() > 0){ // while there is a vertex in the queue
             // pop first vertex
@@ -36,7 +39,7 @@ public class SequentialAlgorithm {
             // check if all parent vertices are scheduled
             boolean parentsScheduled = true;
             for (Vertex v : currentVertex.getIncomingVertices()) {
-                boolean parentVisited = visitedVertexLabels.contains(v.getId());
+                boolean parentVisited = visitedIds.contains(v.getId());
                 if (!parentVisited){
                     parentsScheduled = false;
                     break;
@@ -58,7 +61,7 @@ public class SequentialAlgorithm {
                 queue.addAll(currentVertex.getOutgoingVertices());
 
                 // add current vertex's label to list of those who have been scheduled
-                visitedVertexLabels.add(currentVertex.getId());
+                visitedIds.add(currentVertex.getId());
 
             }
         }
