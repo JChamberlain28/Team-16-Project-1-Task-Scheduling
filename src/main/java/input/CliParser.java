@@ -148,29 +148,27 @@ public class CliParser {
             String outputFileNameInput = commandLineParsed.getOptionValue("o");
             // Checking valid output file name.
             if (outputFileNameInput != null && FilenameMethods.checkValidDotFileExtension(outputFileNameInput)) {
+
                 String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
                 _CliParsedInputs._outputFileName = noFolderFileName; // output File name
                 _CliParsedInputs._outputFilePath = outputFileNameInput; // output file path
 
-                // check if output file path can be used to create a '.dot' file
-                String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
-                try {
-                    Files.createDirectories(Paths.get(directoriesForOutput));
-                    new FileOutputStream(_CliParsedInputs._outputFilePath);
-                    File outputFile = new File(_CliParsedInputs._outputFilePath);
-                    if (outputFile.exists()){
-                        outputFile.delete();
-                    } else {
-                        throw new IllegalArgumentException("Error: File could not be created." +
+                    // check if output file path can be used to create a '.dot' file
+                    String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
+                    try {
+                        Files.createDirectories(Paths.get(directoriesForOutput));
+                        new FileOutputStream(_CliParsedInputs._outputFilePath);
+                        File outputFile = new File(_CliParsedInputs._outputFilePath);
+                        if (!outputFile.exists()) {
+                            throw new IllegalArgumentException("Error: File could not be created." +
+                                    " Please enter a valid output file path.\n" +
+                                    "For additional help enter the help option \"-h\" into the command line.");
+                        }
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
                                 " Please enter a valid output file path.\n" +
                                 "For additional help enter the help option \"-h\" into the command line.");
                     }
-
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
-                            " Please enter a valid output file path.\n" +
-                            "For additional help enter the help option \"-h\" into the command line.");
-                }
 
             }
         }
@@ -256,7 +254,7 @@ public class CliParser {
      * Displays information regarding usage of program.
      **/
     private void printHelpMessage(){
-        System.out.println("===================== HELP ======================\n" +
+        System.out.println("====================== HELP ======================\n" +
                 "Usage Instructions" +
                 "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
                 "\n" +
