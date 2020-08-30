@@ -17,15 +17,9 @@ public class OutputGenerator {
      */
     public static void generate(Graph graph, String fileName, String filePathName) throws IOException {
 
-        System.out.println("PATH: " + filePathName);
-
-
-        //Files.createDirectories(Paths.get(directoriesForOutput));
-
+        // create output file to write to based on specified path.
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePathName)))) {
-            //directoriesForOutput = filePathName.substring(0, filePathName.lastIndexOf(fileName));
 
-            //System.out.println("output file created at directory: " + directoriesForOutput + "with file name: "+ fileName);
             out.write("digraph \"" + fileName.replaceAll(".dot$", "") + "\" {");
             out.newLine();
 

@@ -22,17 +22,11 @@ public class Visualise extends Application {
     static private Algorithm _algorithm;
     static private Graph _graph;
 
-    /*public Visualise(Algorithm algorithm,Graph graph) {
-        super();
-        this._algorithm = algorithm;
-        this._graph = graph;
-    }*/
 
-
-
-    // start visualisation
+    // start visualisation of program
     public static void startVisual(String[] args, Algorithm algorithm,Graph graph) {
-
+        // initialise algorithm and graph needed for visualisation
+        // passed into GUI controller
         Visualise._algorithm = algorithm;
         Visualise._graph = graph;
         launch(args);
@@ -47,12 +41,10 @@ public class Visualise extends Application {
         try {
             FXMLLoader loader=new FXMLLoader();
             loader.setLocation(Visualise.class.getResource(SCENE_PATH));
-            System.out.println("loader @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=" + loader);
 
             GUIController GUIController = new GUIController(Visualise._algorithm, Visualise._graph);
             loader.setController(GUIController);
             Parent root=loader.load();
-
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(Visualise.class.getResource("visualisationutil/GUI.css").toString());
@@ -68,15 +60,12 @@ public class Visualise extends Application {
             stage.show();
             stage.setOnCloseRequest(event -> System.exit(0));
 
-
             // this is incase the gantt chart is resized. To reintialise the labels
             ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
                 GUIController.resizeReinitialise();
             };
             stage.widthProperty().addListener(stageSizeListener);
             stage.heightProperty().addListener(stageSizeListener);
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
