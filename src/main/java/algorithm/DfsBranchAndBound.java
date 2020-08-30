@@ -22,6 +22,7 @@ public class DfsBranchAndBound extends Algorithm {
     }
 
     public PartialSchedule findOptimalSchedule(){
+        System.out.println("Sequential");
 
         //    Initialise stack to store partial schedules to explore
         List<PartialSchedule> stack = new ArrayList<PartialSchedule>();
