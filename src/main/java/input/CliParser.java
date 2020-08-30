@@ -111,9 +111,8 @@ public class CliParser {
         String defaultOutputFileName = (fileName.replaceAll(".dot$", "") + "-output.dot");
         _CliParsedInputs._outputFileName = defaultOutputFileName;
         // default output file path
-        //String defaultDir = FilenameMethods.getDirectoryOfJar();
-        //String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
-        String defaultOutputFilePath = (defaultOutputFileName);
+        String defaultDir = FilenameMethods.getDirectoryOfJar();
+        String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
         _CliParsedInputs._outputFilePath = defaultOutputFilePath;
 
         // default visualisation boolean (true or false)
