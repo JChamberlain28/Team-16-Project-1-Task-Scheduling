@@ -1,8 +1,6 @@
 # Input Parsing Module
 
-a ``dot.`` file representing tasks with their weights and dependencies is passed into the input parsing module that converts it into a ``graph`` object to be used by our graph traversing algorithm of our program.
+The input passed into the input-parsing module is a ``.dot`` file of a directed graph representing tasks with their time costs and dependencies. The module reads the ``.dot`` file and stores the data by constructing a ``graph`` object that is used by the algorithm to find an optimal schedule.
 
 ## Graph representation
-The ``graph`` object maintains a list of ``vertex`` objects that represent tasks from the ``dot `` file. The vertex objects have their own ids, weights and keep a list of incoming and outgoing vertices from the current vertex.
-the list of incoming and outgoing edges have weights associated with them that define the communication cost between processors for these tasks.
-
+The ``graph`` object stores a list of ``vertex`` objects that represent the vertices from the ``dot `` file. Each ``vertex`` object has an id, weight cost and stores a list of incomming and a list of outgoing vertices. The list of incomming and outgoing edges store integers corresponding the the communication cost of switch between proccessors for these tasks.
