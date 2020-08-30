@@ -21,8 +21,6 @@ public class PartialSchedule {
     // Stores information regarding what task has been scheduled on top of the parent and how.
     private final ScheduledTask _scheduledTask;
 
-    // TODO: storing an entire HashMap / HashSet seems inefficient - consider removing _parent field: see below
-
     // Protects against duplicate task scheduling due to multiple dependencies
     private final HashSet<Integer> _toSchedule;
 
@@ -129,10 +127,8 @@ public class PartialSchedule {
     public float getHeuristicCost(Graph dependencyGraph) {
         if (_heuristicCost == 0.0f) {
             _heuristicCost = CostFunction.getHeuristicCost(this, dependencyGraph);
-            return _heuristicCost;
-        } else {
-            return _heuristicCost;
         }
+        return _heuristicCost;
     }
 
     /**
@@ -153,23 +149,19 @@ public class PartialSchedule {
         Set<PartialSchedule> partialSchedules = new HashSet<PartialSchedule>();
         for (int taskId : _toSchedule) {
 
-            // TODO: This is overall pretty inefficient (nested loops), and could do with some optimising in future.
             Vertex task = dependencyGraph.getVertex(taskId);
             for (int i = 0; i < _processorEndTimes.length; i++) {  // Loop through each processor
 
                 int pEarliestStartTime = _processorEndTimes[i];
                 for (Vertex dependency : task.getIncomingVertices()) {
 
-
-
                     ScheduledTask scheduledTask = _scheduledTasks[dependency.getId()];
                     if (scheduledTask.getProcessor() == i) {
                         // Do nothing as this start time would have to be <= processor end time
                     } else {
                         int tempStartTime;
-                        if ((dependencyGraph.getEdgeWeight(dependency.getId(), taskId)) == -1){
-                            // this is a virtual edge
-                            // It does not include the dependency cost in start time
+                        if (dependencyGraph.getEdgeWeight(dependency.getId(), taskId) == -1) {
+                            // this is a virtual edge, so we do not have to wait for this dependency to finish
                             tempStartTime = scheduledTask.getStartTime();
                         } else {
                             tempStartTime = scheduledTask.getStartTime() + dependency.getCost() +
@@ -219,7 +211,7 @@ public class PartialSchedule {
     public int hashCode() {
         HashCodeBuilder pScheduleBuilder = new HashCodeBuilder(17, 37);
 
-        Set<Integer> processorHashes = new HashSet<Integer>();
+        Set<Integer> processorHashes = new HashSet<Integer>();  // use a set of hashes as we do not care about order
         for (int i = 0; i < _processorEndTimes.length; i++) {
             if (_processorEndTimes[i] != 0) {  // assuming every task has cost > 0
                 HashCodeBuilder pBuilder = new HashCodeBuilder(911, 97);

@@ -16,7 +16,8 @@ public class DfsBranchAndBound extends Algorithm {
     private int _earliestFinishTime;
     List<Boolean> _busy = new ArrayList<Boolean>();
 
-    ConcurrentLinkedQueue<Integer> _cacheList;
+    // Keep a cache of recently encountered schedules to reduce the number of duplicate schedules we explore
+    ConcurrentLinkedQueue<Integer> _cacheList;  // Required to evict oldest cache member
     Set<Integer> _cacheSet;
     private int _cacheCapacity;
 
@@ -64,8 +65,7 @@ public class DfsBranchAndBound extends Algorithm {
 
     public PartialSchedule findOptimalSchedule() {
 
-
-
+        // generate initial schedules to be distributed amongst worker threads as their initial stacks
         List<PartialSchedule> rootSchedules = new ArrayList<PartialSchedule>();
         rootSchedules.add(new PartialSchedule(_dependencyGraph, _numProcessors));
         while (rootSchedules.size() < _threads) {
@@ -78,6 +78,7 @@ public class DfsBranchAndBound extends Algorithm {
             }
             rootSchedules.addAll(ps.extend(_dependencyGraph));
         }
+
         if (_threads < 2){ // single threaded algorithm
             DfsBranchAndBoundCallable  singleThread = new DfsBranchAndBoundCallable(this, _numProcessors, rootSchedules, 0);
             singleThread.call(); // run the runnable on the main thread as only one thread was specified
@@ -90,6 +91,7 @@ public class DfsBranchAndBound extends Algorithm {
             }
             int remaining = rootSchedules.size();
 
+            // distribute initial schedules amongst threads as evenly as possible
             for (int i = remaining-1; i >= 0; i--) {
                 List<PartialSchedule> initStack = initStacks.get(i % _threads);
                 initStack.add(rootSchedules.remove(i));

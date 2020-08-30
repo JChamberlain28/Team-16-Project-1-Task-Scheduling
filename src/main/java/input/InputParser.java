@@ -27,7 +27,6 @@ public class InputParser {
 
         File file = new File(filePathName);
 
-
         try {
             bufferReader = new BufferedReader(new FileReader(file));
 
