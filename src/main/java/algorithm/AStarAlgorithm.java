@@ -50,6 +50,7 @@ public class AStarAlgorithm extends Algorithm {
 
         }
 
+        _finished = true;
         return null;
 
     }

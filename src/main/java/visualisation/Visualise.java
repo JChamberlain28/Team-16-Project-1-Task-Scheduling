@@ -15,7 +15,7 @@ import visualisation.controllers.GUIController;
 public class Visualise extends Application {
 
 
-    private final String visualiserTitle = "Visualisation";
+    private final String visualiserTitle = "Team 16 - Scheduling Visualisation";
     private final String SCENE_PATH = "views/GUI.fxml";
 
     static private Algorithm _algorithm;
@@ -54,7 +54,8 @@ public class Visualise extends Application {
 
 
             Scene scene = new Scene(root);
-            stage.setWidth(900);
+            scene.getStylesheets().add(Visualise.class.getResource("visualisationutil/GUI.css").toString());
+            stage.setWidth(1000);
             stage.setHeight(600);
 
 

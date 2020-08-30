@@ -66,6 +66,7 @@ public class DfsBranchAndBound extends Algorithm {
 
         }
 
+        _finished = true;
         return bestSchedule;
     }
 

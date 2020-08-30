@@ -18,6 +18,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 
@@ -32,7 +33,7 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
         public long taskTimeLength;
         public String styleClass;
         private ScheduledTask scheduledTask;
-
+        private String vertexLabel;
 
         public ScheduledTask getScheduledTask() {
             return scheduledTask;
@@ -40,7 +41,8 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
 
         public ExtraData(ScheduledTask scheduledTask, Graph _graph, String styleClass) {
             super();
-            Vertex taskVertex = _graph.getVertex(scheduledTask.getTask()); //lol
+            Vertex taskVertex = _graph.getVertex(scheduledTask.getTask()); //this is used so that we can build vertex objects out of task id
+            this.vertexLabel =  taskVertex.getLabel();
             this.taskTimeLength = taskVertex.getCost();
             this.scheduledTask = scheduledTask;
             this.styleClass = styleClass;
@@ -64,6 +66,9 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
             this.styleClass = styleClass;
         }
 
+        public String getVertexLabel() {
+            return vertexLabel;
+        }
 
     }
 

@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        String[] inputArgs = {"C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot", "4", "-v", "-p", "4"};
+        String[] inputArgs = {"C:\\Users\\dh\\Downloads\\testfolder\\hello\\a1.dot", "16", "-v", "-p", "4"};
         System.out.println("Started: " + LocalDateTime.now());
 
         CliParser cliparser = CliParser.getCliParserInstance();
@@ -52,17 +52,13 @@ public class Main {
         Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
                 cliparser.getNumberOfCores());
 
-
-
         if (cliparser.isVisualisationDisplay()) {
-
             (new Thread() {
                 @Override
                 public void run() {
                     Visualise.startVisual(inputArgs, dfs, graph);
                 }
             }).start();
-
         }
 
         PartialSchedule schedule = dfs.findOptimalSchedule();

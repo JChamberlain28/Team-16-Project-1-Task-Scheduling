@@ -2,11 +2,14 @@
 
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:id="parent"
+      prefHeight="400.0" prefWidth="600.0">
+    <VBox  fx:id="textCont" />
+    <VBox fx:id="rhsBox">
+        <HBox fx:id="chartHBox" />
+        <HBox fx:id="ganttHBox" />
+    </VBox>
 
-            prefHeight="400.0" prefWidth="600.0">
-
-    <HBox fx:id="chartHBox" />
-    <HBox fx:id="ganttHBox" />
-</VBox>
+</HBox>
