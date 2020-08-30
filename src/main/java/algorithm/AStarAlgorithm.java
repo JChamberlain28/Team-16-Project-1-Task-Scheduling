@@ -37,7 +37,9 @@ public class AStarAlgorithm extends Algorithm {
 
             if (p.isComplete()) {
                 _numCompleteSchedulesGenerated++;
-                return p;
+                _bestSchedule = p;
+                _finished = true;
+                return _bestSchedule;
             }
 
             List<PartialSchedule> children = p.extend(_dependencyGraph);

@@ -30,7 +30,6 @@ public class DfsBranchAndBound extends Algorithm {
         stack.add(new PartialSchedule(_dependencyGraph, _numProcessors));
 
         int earliestFinishTime = Integer.MAX_VALUE;
-        PartialSchedule bestSchedule = null;
 
         while (!stack.isEmpty()) {
 
@@ -44,7 +43,7 @@ public class DfsBranchAndBound extends Algorithm {
                 _numCompleteSchedulesGenerated++;
                 if (currentFinishTime < earliestFinishTime) {
                     earliestFinishTime = currentFinishTime;
-                    bestSchedule = currentSchedule;
+                    _bestSchedule = currentSchedule;
                 }
 
             } else {
@@ -68,7 +67,7 @@ public class DfsBranchAndBound extends Algorithm {
         }
 
         _finished = true;
-        return bestSchedule;
+        return _bestSchedule;
     }
 
 }
