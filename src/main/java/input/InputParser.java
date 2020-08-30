@@ -77,7 +77,6 @@ public class InputParser {
                     matcher.find();
                     int edgeWeightInt = Integer.valueOf(matcher.group());
 
-
                     // add edge to graph data.
                     algoGraph.addEdge(parentVertex.getId(), childVertex.getId(), edgeWeightInt);
                     edgeCount++;
@@ -114,10 +113,8 @@ public class InputParser {
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
-
             return null;
         } finally {
-
             try {
                 bufferReader.close();
             } catch (IOException e) {

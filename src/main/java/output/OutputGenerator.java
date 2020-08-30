@@ -40,7 +40,6 @@ public class OutputGenerator {
                             graph.getEdgeWeight(other.getId(), v.getId()) + " ];";
                     out.write("\t" + eString);
                     out.newLine();
-
                 }
             }
 
@@ -50,7 +49,5 @@ public class OutputGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }

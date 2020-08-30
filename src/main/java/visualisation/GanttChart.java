@@ -49,7 +49,6 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
             this.scheduledTask = scheduledTask;
             this.styleClass = styleClass;
 
-
         }
 
         public long getTaskTimeLength() {
@@ -98,7 +97,6 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
 
     private static String getVertexLabel(Object obj) { return ((ExtraData) obj).getVertexLabel(); }
 
-
     private static ScheduledTask getScheduledTask(Object obj){
         return ((ExtraData) obj).getScheduledTask();
     }
@@ -111,6 +109,7 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
             Series<X, Y> series = getData().get(seriesIndex);
 
             Iterator<Data<X, Y>> iter = getDisplayedDataIterator(series);
+
             while (iter.hasNext()) {
                 Data<X, Y> item = iter.next();
                 double x = getXAxis().getDisplayPosition(item.getXValue());
@@ -118,9 +117,10 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                 if (Double.isNaN(x) || Double.isNaN(y)) {
                     continue;
                 }
-                Node block = item.getNode();
 
+                Node block = item.getNode();
                 Rectangle ellipse;
+
                 if (block != null) {
                     if (block instanceof StackPane) {
                         StackPane region = (StackPane) item.getNode();
@@ -147,7 +147,6 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                         region.setScaleShape(false);
                         region.setCenterShape(false);
                         region.setCacheShape(false);
-
 
                         // Create label for each task (vertex id) // Daniels awesome code
                         Label vertexLabel = new Label(getVertexLabel(item.getExtraValue()));
@@ -205,9 +204,7 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
             getPlotChildren().remove(container);
         }
         removeSeriesFromDisplay(series);
-
     }
-
 
     private Node createContainer(Series<X, Y> series, int seriesIndex, final Data<X, Y> item, int itemIndex) {
 

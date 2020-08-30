@@ -62,7 +62,6 @@ public class CliParser {
             }
             // Parse the command line inputs and store them for use in the program.
             parseCli(args);
-
         }
     }
 
@@ -147,7 +146,6 @@ public class CliParser {
             String outputFileNameInput = commandLineParsed.getOptionValue("o");
             // Checking valid output file name.
             if (outputFileNameInput != null && FilenameMethods.checkValidDotFileExtension(outputFileNameInput)) {
-
                 String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
                 _CliParsedInputs._outputFileName = noFolderFileName; // output File name
                 _CliParsedInputs._outputFilePath = outputFileNameInput; // output file path
@@ -168,7 +166,6 @@ public class CliParser {
                                 " Please enter a valid output file path.\n" +
                                 "For additional help enter the help option \"-h\" into the command line.");
                     }
-
             }
         }
     }
@@ -195,7 +192,6 @@ public class CliParser {
         } catch (NumberFormatException e) {
             return false;
         }
-
     }
 
     /**
@@ -305,8 +301,5 @@ public class CliParser {
     public boolean getSuccessfulCliParse(){
         return _successfulCliParse;
     }
-
-
-
 
 }

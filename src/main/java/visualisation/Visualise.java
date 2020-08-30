@@ -15,13 +15,11 @@ import visualisation.controllers.GUIController;
 
 public class Visualise extends Application {
 
-
     private final String visualiserTitle = "Team 16 - Scheduling Visualisation";
     private final String SCENE_PATH = "views/GUI.fxml";
 
     static private Algorithm _algorithm;
     static private Graph _graph;
-
 
     // start visualisation of program
     public static void startVisual(String[] args, Algorithm algorithm,Graph graph) {
@@ -32,9 +30,6 @@ public class Visualise extends Application {
         launch(args);
     }
 
-
-
-
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -42,42 +37,39 @@ public class Visualise extends Application {
             FXMLLoader loader=new FXMLLoader();
             loader.setLocation(Visualise.class.getResource(SCENE_PATH));
 
+            //initialising controller with links to algorithm and graph objects
             GUIController GUIController = new GUIController(Visualise._algorithm, Visualise._graph);
             loader.setController(GUIController);
             Parent root=loader.load();
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(Visualise.class.getResource("visualisationutil/GUI.css").toString());
+            scene.getStylesheets().add(Visualise.class.getResource("visualisationutil/GUI.css").toString());//adding stylesheet to scene
             stage.setWidth(1000);
             stage.setHeight(600);
 
-
             stage.setTitle(visualiserTitle);
-
             stage.centerOnScreen();
             stage.setScene(scene);
 
             stage.show();
-            stage.setOnCloseRequest(event -> System.exit(0));
+            stage.setOnCloseRequest(event -> System.exit(0));//setting entire application to stop on visualisation exit
 
             // this is in case the gantt chart is resized. To reinitialise the labels
             ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
                 GUIController.resizeReinitialise();
             };
+
             stage.widthProperty().addListener(stageSizeListener);
             stage.heightProperty().addListener(stageSizeListener);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     @Override
     public void stop() {
         System.exit(1);
     }
-
 
 }
