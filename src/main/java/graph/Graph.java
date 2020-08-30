@@ -163,6 +163,9 @@ public class Graph {
             for (int vIdTwo: _idVertexMap.keySet()) {
                 if (vId != vIdTwo){
                     Vertex y = _idVertexMap.get(vIdTwo);
+
+
+                    // checks identical vertices (edges and weights)
                     boolean incomingVertMatch = ((v.getIncomingVertices().size() == y.getIncomingVertices().size()) &&
                             (v.getIncomingVertices().containsAll(y.getIncomingVertices())));
 
@@ -195,6 +198,8 @@ public class Graph {
                             }
                         }
                     }
+
+
 
                     if ((v.getCost() == y.getCost()) && incomingVertMatch && outgoingVertMarch &&
                             incomingEdgeWeightSame && outgoingEdgeWeightSame){
