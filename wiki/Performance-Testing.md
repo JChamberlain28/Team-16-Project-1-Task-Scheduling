@@ -22,11 +22,13 @@ Performance testing was conducted for A*, DFS Branch and Bound and DFS Branch an
 
 It was found that A* is faster on large graphs (larger than 11 nodes) but runs out of memory too quickly to be practical with 4GB heap space. It was also found that the multithreaded algorithm had no benifit on small graphs due to the time spent creating threads. It was slightly slower than single threaded DFS Branch and Bound in most cases.    
 
+   
+The benefits of parallelisation can be seen in the results for 13nodes-fork
 
 
 13node-fork is a graph not supplied and is provided below:
 ```
-digraph "13node-fork" {
+digraph "13nodes-fork" {
    
    	1	 [Weight=3];
    	2	 [Weight=5];

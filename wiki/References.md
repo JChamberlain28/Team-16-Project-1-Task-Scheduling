@@ -8,4 +8,5 @@
 * JavaFX - used in visualisation implementation
 * Commons CLI - used in command line parsing module
 * JUnit - used in unit testing
+* High Scale Lib - contains a data structure used to prevent threads blocking in the parallelised algorithm
 

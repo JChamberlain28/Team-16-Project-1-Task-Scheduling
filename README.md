@@ -45,7 +45,8 @@ Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.
 * -p N: -p enables parallelisation (multithreading in algorithm), N specifies the number of cores to use for multithreading    
 * -v: Enables the visualisation of the algorithm progress / actions
 * -o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). Warning, supplying the name of an existing file will overwrite it.
-
+### Help Option
+* -h: Shows a help message
 
 
 ## Helpful Links

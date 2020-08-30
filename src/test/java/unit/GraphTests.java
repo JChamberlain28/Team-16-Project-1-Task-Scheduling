@@ -38,7 +38,7 @@ public class GraphTests {
 
     }
 
-    @Test
+    @Test // checks functionality of identical task pruning in graph class
     public void identDetection() {
         Graph graph = new Graph("test");
 
@@ -92,7 +92,7 @@ public class GraphTests {
 
     }
 
-    @Test
+    @Test // tests there isn't a false detection of an identical task in the graph (due to edge weight)
     public void noFalsePositiveIdentDetectionEdgeWeight() {
         Graph graph = new Graph("test");
 
@@ -140,7 +140,7 @@ public class GraphTests {
 
     }
 
-    @Test
+    @Test// tests there isn't a false detection of an identical task in the graph (due to vertex weight)
     public void noFalsePositiveIdentDetectionVertWeight() {
         Graph graph = new Graph("test");
 
