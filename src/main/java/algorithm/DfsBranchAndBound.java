@@ -1,73 +1,118 @@
 package algorithm;
 
 import graph.Graph;
+import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
+import java.lang.reflect.Array;
 import java.util.*;
+
+import java.util.concurrent.*;
+
+
 
 public class DfsBranchAndBound extends Algorithm {
 
-    private HashSet<Integer> _seenCacheSet;
-    private LinkedList<Integer> _seenCacheList;
-    private int _seenCacheCapacity;
-    private int _seenCacheSize;
+    private final int _threads;
+    private int _earliestFinishTime;
+    List<Boolean> _busy = new ArrayList<Boolean>();
 
-    public DfsBranchAndBound(Graph dependencyGraph, int numProcessors){
+    ConcurrentLinkedQueue<Integer> _cacheList;
+    Set<Integer> _cacheSet;
+    private int _cacheCapacity;
+
+    public DfsBranchAndBound(Graph dependencyGraph, int numProcessors, int threads){
 
         super(dependencyGraph, numProcessors);
-        _seenCacheSet = new HashSet<Integer>();
-        _seenCacheList = new LinkedList<Integer>();
-        _seenCacheCapacity = 100000;
-        _seenCacheSize = 0;
+        _threads = threads;
+        for (int i = 0; i < threads; i++) {
+            _busy.add(false);
+        }
+        _earliestFinishTime = Integer.MAX_VALUE;
+
+        _cacheList = new ConcurrentLinkedQueue<Integer>();
+        _cacheSet = new NonBlockingHashSet<Integer>();
+        _cacheCapacity = 100000;
 
     }
 
-    public PartialSchedule findOptimalSchedule(){
-        System.out.println("Sequential");
+    public void setIfBestSchedule(PartialSchedule ps) {
+        _numCompleteSchedulesGenerated++;
+        if (ps.getFinishTime() < _earliestFinishTime) {
+            _bestSchedule = ps;
+            _earliestFinishTime = ps.getFinishTime();
+        }
+    }
 
-        //    Initialise stack to store partial schedules to explore
-        List<PartialSchedule> stack = new ArrayList<PartialSchedule>();
+    public int getEarliestFinishTime() {
+        return _earliestFinishTime;
+    }
 
-        stack.add(new PartialSchedule(_dependencyGraph, _numProcessors));
+    public boolean updateCache(PartialSchedule ps) {
 
-        int earliestFinishTime = Integer.MAX_VALUE;
+        int hashCode = ps.hashCode();
+        if (_cacheSet.add(hashCode)) {
+            _cacheList.add(hashCode);
+            for (int i = 0; i < _cacheSet.size() - _cacheCapacity; i++) {
+                _cacheSet.remove(_cacheList.remove());
+            }
+            return true;
+        } else {
+            return false;
+        }
 
-        while (!stack.isEmpty()) {
+    }
 
-            PartialSchedule currentSchedule = stack.remove(stack.size()-1);
-            _numPartialSchedulesGenerated++;
+    public PartialSchedule findOptimalSchedule() {
 
-            int currentFinishTime = currentSchedule.getFinishTime();
 
-            if (currentSchedule.isComplete()) {
 
-                _numCompleteSchedulesGenerated++;
-                if (currentFinishTime < earliestFinishTime) {
-                    earliestFinishTime = currentFinishTime;
-                    _bestSchedule = currentSchedule;
-                }
+        List<PartialSchedule> rootSchedules = new ArrayList<PartialSchedule>();
+        rootSchedules.add(new PartialSchedule(_dependencyGraph, _numProcessors));
+        while (rootSchedules.size() < _threads) {
+            PartialSchedule ps = rootSchedules.remove(0);
+            if (ps.isComplete()) {
+                // if we have gotten to the point where we are generating complete schedules,
+                // we must have a huge amount of threads and so leaving some threads with no work
+                rootSchedules.add(ps);
+                break;
+            }
+            rootSchedules.addAll(ps.extend(_dependencyGraph));
+        }
+        if (_threads < 2){ // single threaded algorithm
+            DfsBranchAndBoundCallable  singleThread = new DfsBranchAndBoundCallable(this, _numProcessors, rootSchedules, 0);
+            singleThread.call(); // run the runnable on the main thread as only one thread was specified
+        } else {
 
-            } else {
-                int hashCode = currentSchedule.hashCode();
-                if (_seenCacheSet.add(hashCode)) {
+            ExecutorService service = Executors.newFixedThreadPool(_threads);
+            List<ArrayList<PartialSchedule>> initStacks = new ArrayList<ArrayList<PartialSchedule>>();
+            for (int i = 0; i < _threads; i++) {
+                initStacks.add(new ArrayList<PartialSchedule>());
+            }
+            int remaining = rootSchedules.size();
 
-                    _seenCacheList.addLast(hashCode);
-                    _seenCacheSize++;
-                    if (_seenCacheSize > _seenCacheCapacity) {
-                        _seenCacheSet.remove(_seenCacheList.pollFirst());
-                        _seenCacheSize--;
-                    }
+            for (int i = remaining-1; i >= 0; i--) {
+                List<PartialSchedule> initStack = initStacks.get(i % _threads);
+                initStack.add(rootSchedules.remove(i));
+            }
 
-                    if (currentSchedule.getHeuristicCost(_dependencyGraph) < earliestFinishTime) {
-                        stack.addAll(currentSchedule.extend(_dependencyGraph));
-                    }
+            List<DfsBranchAndBoundCallable> callables = new ArrayList<DfsBranchAndBoundCallable>();
+            for (int i = 0; i < _threads; i++) {
+                callables.add(new DfsBranchAndBoundCallable(this, _numProcessors, initStacks.get(i), i));
+            }
 
-                }
+            try {
+                service.invokeAll(callables);
+                service.shutdown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
         }
 
         _finished = true;
         return _bestSchedule;
+
     }
 
 }
+

@@ -5,22 +5,10 @@ import graph.Graph;
 import graph.GraphCopier;
 import input.CliParser;
 import input.InputParser;
-import javafx.application.Platform;
-import javafx.stage.Stage;
 import output.OutputGenerator;
 import visualisation.Visualise;
-import visualisation.controllers.GUIController;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 
 public class Main {
@@ -52,16 +40,11 @@ public class Main {
         // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-        // choose DFS algorithm to use
-        Algorithm algorithm;
-        if (cliparser.getNumberOfCores() < 2) { // if less than 2 threads to be used for algorithm
-                                                // use sequential algorithm
-            algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors());
 
-        } else { // use parallelised algorithm
-            algorithm = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
+
+        Algorithm  algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
                     cliparser.getNumberOfCores());
-        }
+
 
         if (cliparser.isVisualisationDisplay()) {
 
