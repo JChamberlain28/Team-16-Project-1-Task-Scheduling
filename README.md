@@ -14,7 +14,7 @@ A Java application which facilitates the creation of optimal schedulings of task
 
 ## Compilation Instructions
 Required system packages (Linux):
-* Oracle Java JDK/JRE 8 ONLY (Incompatibilities with JavaFX have limited the java version to compile and run the jar. Apologies. Also do not use OpenJDK). Compile and run tested on linux with jre1.8.0_261
+* Oracle Java JDK/JRE 8 ONLY (Incompatibilities with JavaFX have limited the java version to compile and run the jar. Apologies. Also do not use OpenJDK). Compile and run tested on linux with jre1.8.0_261.
 * git    
 
 ### Clone the Repository
