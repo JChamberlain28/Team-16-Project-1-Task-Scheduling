@@ -1,6 +1,4 @@
-#Algorithms: Schedule Representation
-
-
+# Algorithms: Schedule Representation
 
 ## Schedule
 Schedules are represented using ```PartialSchedule``` objects. These 
