@@ -38,12 +38,15 @@ public class CostFunction {
                 for (Vertex dep : child.getIncomingVertices()) {
 
                     ScheduledTask depScheduledTask = p.getScheduledTask(dep.getId());
-                    int dataReadyTime = depScheduledTask.getStartTime() + dep.getCost();
+                    int dataReadyTime = depScheduledTask.getStartTime();
                     if (depScheduledTask.getProcessor() == i) {
                         // Do nothing, as there is no cross-processor communication delay
                     } else {
                         // doing Math.abs to negate virtual edges
-                        dataReadyTime += Math.abs(graph.getEdgeWeight(dep.getId(), child.getId()));
+                        int edgeWeight = graph.getEdgeWeight(dep.getId(), child.getId());
+                        if (edgeWeight != -1) {  // not a virtual edge
+                            dataReadyTime += edgeWeight + dep.getCost();
+                        }
                     }
                     maxDataReadyTime = Math.max(maxDataReadyTime, dataReadyTime);
 
