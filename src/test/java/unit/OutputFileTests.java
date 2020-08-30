@@ -15,6 +15,10 @@ import static org.junit.Assert.fail;
 
 public class OutputFileTests {
 
+    /*
+    **Checking output correctly generated from graph object,
+    * comparing to expected dot file output
+     */
     @Test
     public void testValidInputFileParsed() {
 

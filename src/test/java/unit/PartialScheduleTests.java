@@ -76,6 +76,7 @@ public class PartialScheduleTests {
 
     }
 
+
     @Test
     public void extendingSchedulesEventuallyTerminates() {
 

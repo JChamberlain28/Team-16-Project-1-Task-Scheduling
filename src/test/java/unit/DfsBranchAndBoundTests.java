@@ -37,6 +37,9 @@ public class DfsBranchAndBoundTests {
 
     }
 
+    /*
+    **Testing a schedule is produced, from input
+     */
     @Test
     public void producesSchedule() {
 
@@ -46,6 +49,9 @@ public class DfsBranchAndBoundTests {
 
     }
 
+    /*
+     **Testing an optimal schedule is produced, from input
+     */
     @Test
     public void producesOptimalSchedule() {
 

@@ -4,8 +4,8 @@ import java.util.*;
 
 /*
 * Graph implementation to store the data in the ".dot" file.
-* This class is instantiated in the cli parser.
-* the and called with the algorithm.
+* This class is instantiated in the cli parser
+* and called with the algorithm.
 * */
 public class Graph {
 
