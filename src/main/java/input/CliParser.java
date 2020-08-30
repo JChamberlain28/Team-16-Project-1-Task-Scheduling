@@ -75,7 +75,7 @@ public class CliParser {
             if (FilenameMethods.checkValidDotFileExtension(args[0])) {
                 // handles absolute file names
                 File file = new File((args[0]));
-                ;
+
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
                 } else {
@@ -186,15 +186,18 @@ public class CliParser {
             // Checking valid number of cores.
             if (numberOfCoresInput != null && checkValidStringInt(numberOfCoresInput)) {
                 int numberOfCoresInt = Integer.parseInt(numberOfCoresInput);
-                if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt) {
-                    System.out.println("num of cores available - " + Runtime.getRuntime().availableProcessors());
+               /* if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt) */
+                if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt){
+                    System.out.println("There are " +Runtime.getRuntime().availableProcessors()+ " available processors.");
+                    System.out.println(numberOfCoresInt + " Threads will be created");
+                }
                     _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
-                } else {
+               /* } else {
                     // does not have this many cores
                     throw new IllegalArgumentException("Error: Too large for number of cores inputted." +
                             " Please enter a valid number of cores. There are " + Runtime.getRuntime().availableProcessors()
                             + " cores available");
-                }
+                }*/
             } else {
                 throw new IllegalArgumentException("Error: invalid number of cores." +
                         " Please enter a valid number of cores.");
@@ -230,12 +233,12 @@ public class CliParser {
                         System.out.println("file exists");
                         outputFile.delete();
                     } else {
-                        throw new IllegalArgumentException("Error: invalid output file path." +
+                        throw new IllegalArgumentException("Error: File could not be created." +
                                 " Please enter a valid output file path.");
                     }
 
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Error: invalid output file path." +
+                    throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
                             " Please enter a valid output file path.");
                 }
 

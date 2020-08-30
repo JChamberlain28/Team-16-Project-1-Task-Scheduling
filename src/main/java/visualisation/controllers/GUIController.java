@@ -86,9 +86,6 @@ public class GUIController {
         setUpGanttBox();
 
 
-        // this should be inside polling but left for testing
-        //updateGantt();
-
     }
 
 
@@ -157,7 +154,7 @@ public class GUIController {
 
         String[] processorList = new String[numberOfProcessors];
         for (int i = 0;i<numberOfProcessors ;i++){
-            processorList[i]="Processor "+i;
+            processorList[i]="Processor "+(i+1);
         }
 
         // intitialise x and y axis
@@ -180,7 +177,7 @@ public class GUIController {
         chart = new GanttChart<Number,String>(timeAxis,processorsAxis);
         chart.setTitle("best schedule");
         chart.setLegendVisible(false);
-        chart.setBlockHeight(200/numberOfProcessors);
+        chart.setBlockHeight(100/numberOfProcessors);
 
         chart.getStylesheets().add(getClass().getResource("/visualisation/visualisationutil/GanttChart.css").toExternalForm());
         //chart.getStylesheets().add(getClass().getResource("visualisationutil/GanttChart.css").toExternalForm());
@@ -223,7 +220,7 @@ public class GUIController {
             for (ScheduledTask scheduledTask : currentBestSchedule.getScheduledTasks()) {
 
                 int taskProcessor = scheduledTask.getProcessor();
-                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + taskProcessor),
+                XYChart.Data newData = new XYChart.Data(scheduledTask.getStartTime(), ("Processor " + (taskProcessor+1)),
                         new GanttChart.ExtraData(scheduledTask, _graph, "status-red"));
                 seriesProcessors[taskProcessor].getData().add(newData);
             }
@@ -235,7 +232,7 @@ public class GUIController {
                 chart.getData().add(series);
             }
         } else {
-            System.out.println("null schdule");
+            //System.out.println("null schdule");
         }
 
     }
