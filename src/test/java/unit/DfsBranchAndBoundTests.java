@@ -18,6 +18,7 @@ public class DfsBranchAndBoundTests {
     public void initGraph() {
 
         dependencyGraph = new Graph("test");
+        Vertex.resetIdCount();
 
         Vertex a = new Vertex("a", 2);
         Vertex b = new Vertex("b", 3);
