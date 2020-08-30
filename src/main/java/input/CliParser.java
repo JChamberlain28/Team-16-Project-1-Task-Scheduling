@@ -250,7 +250,7 @@ public class CliParser {
         }
 
         // too many args have been provided
-        if (line.getArgList().size() > 2){
+        if (line.getArgList().size() > 2 && !line.hasOption("h")){
             throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format \n" +
                     "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
                     "For additional help enter the help option \"-h\" into the command line.");
@@ -281,18 +281,17 @@ public class CliParser {
 
 
     private void printHelpMessage(){
-        System.out.println("Boomer\n"+
-                "ok boomer\n" +
-                "You're a boomer\n" +
-                "Ok boomer\n" +
-                "Do you say \"Oh back in my day\"\n" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" );
-
+        System.out.println("===================== HELP ======================\n" +
+                "Usage Instructions" +
+                "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                "\n" +
+                "Required Parameters\n" +
+                "INPUT FILE NAME: Name of .dot file representing the input graph (must be in the same folder as the jar and have .dot extension)\n" +
+                "NUMBER OF PROCESSORS: Number of processors / cores to schedule tasks onto\n" +
+                "Optional Parameters\n" +
+                "-p N: -p enables parallelisation (multithreading in algorithm), N specifies the number of cores to use for multithreading\n" +
+                "-v: Enables the visualisation of the algorithm progress / actions\n" +
+                "-o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). Warning, supplying the name of an existing file will overwrite it.");
     }
 
 
