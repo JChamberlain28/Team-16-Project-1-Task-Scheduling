@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * The CliParser class will parse the specified input ".dot" file and store the
@@ -16,6 +18,11 @@ import java.io.IOException;
  * */
 public class InputParser {
 
+    /**
+     * Parse the specified '.dot' file and create graph object using data from file.
+     * @param filePathName the path name of the input '.dot' file
+     * @return returns graph object containing data of parsed input '.dot' file
+     */
     public static Graph readInput(String filePathName) {
 
         Graph algoGraph = new Graph("newGraph");
@@ -25,19 +32,18 @@ public class InputParser {
 
         File file = new File(filePathName);
 
-
         try {
             bufferReader = new BufferedReader(new FileReader(file));
 
             String line = bufferReader.readLine();
             // Remove all lines until it finds the last line of the title,
             // which is the first line with a vertex.
-            while (!line.contains("[Weight=")) {
+
+            while (!line.trim().replaceAll("\\s+", "").contains("[Weight=")) {
                 line = bufferReader.readLine();
             }
 
             while (line!= null) {
-
                 // end of file
                 if (line.length()==1 && line.contains("}")) {
                     break;
@@ -67,8 +73,10 @@ public class InputParser {
                     Vertex childVertex = algoGraph.getVertex(childVertexID);
 
                     // find edge weight
-                    edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
-                    int edgeWeightInt = Integer.parseInt(edgeWeight);
+                    Matcher matcher = Pattern.compile("\\d+").matcher(edgeWeight);
+                    matcher.find();
+                    int edgeWeightInt = Integer.valueOf(matcher.group());
+
 
                     // add edge to graph data.
                     algoGraph.addEdge(parentVertex.getId(), childVertex.getId(), edgeWeightInt);
@@ -85,8 +93,10 @@ public class InputParser {
 
                     // find vertex weight
                     String vertexWeight = lineSplit[1];
-                    vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
-                    int vertexWeightInt = Integer.parseInt(vertexWeight);
+
+                    Matcher matcher = Pattern.compile("\\d+").matcher(vertexWeight);
+                    matcher.find();
+                    int vertexWeightInt = Integer.valueOf(matcher.group());
 
                     // Instantiate vertex using ID and weight
                     // and then add to the graph.
@@ -104,6 +114,7 @@ public class InputParser {
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
+
             return null;
         } finally {
 

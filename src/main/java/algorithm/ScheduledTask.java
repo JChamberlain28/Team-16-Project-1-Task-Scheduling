@@ -28,6 +28,11 @@ public class ScheduledTask {
         return _taskId;
     }
 
+    /**
+     * 'Writes' the scheduling information encoded in this object onto the corresponding Vertex object in the passed
+     * dependency graph.
+     * @param dependencyGraph
+     */
     public void updateVertex(Graph dependencyGraph){
         Vertex task = dependencyGraph.getVertex(_taskId);
         task.setProcessorNumber(_processor + 1);
@@ -36,6 +41,7 @@ public class ScheduledTask {
 
     @Override
     public int hashCode() {
+        // Don't care about which processor we are on, as this is handled in PartialSchedule
         return new HashCodeBuilder(37, 101)
                 .append(_startTime)
                 .append(_taskId)

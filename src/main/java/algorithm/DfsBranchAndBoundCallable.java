@@ -5,18 +5,17 @@ import graph.Graph;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingDeque;
-
+// callable class to run on different threads
 public class DfsBranchAndBoundCallable implements Callable<Void> {
 
-    private final ParallelisedDfsBranchAndBound _algo;
+    private final DfsBranchAndBound _algo;
     private Graph _dependencyGraph;
     private int _numProcessors;
     private List<PartialSchedule> _stack;
     private int _threadId;
 
-    public DfsBranchAndBoundCallable(ParallelisedDfsBranchAndBound algo, int numProcessors, List<PartialSchedule> initStack,
-                             int threadId) {  // TODO: better way to close threads, experiment
+    public DfsBranchAndBoundCallable(DfsBranchAndBound algo, int numProcessors, List<PartialSchedule> initStack,
+                                     int threadId) {
 
         _algo = algo;
         _numProcessors = numProcessors;
@@ -30,32 +29,29 @@ public class DfsBranchAndBoundCallable implements Callable<Void> {
     @Override
     public Void call() {
 
-        LinkedList<PartialSchedule> cacheList = new LinkedList<PartialSchedule>();
-        Set<PartialSchedule> cacheSet = new HashSet<PartialSchedule>();
-
-        System.out.println("thread " + _threadId + " working");
-
+        // Perform depth first search through our region of solution space
         while (!_stack.isEmpty()) {
 
-            //    Pop partial schedule off of stack and name curr_schedule
             PartialSchedule currentSchedule = _stack.remove(_stack.size()-1);
 
             _algo._numPartialSchedulesGenerated++;
             if (_algo.updateCache(currentSchedule)) {  // if this schedule does not exist in cache
-                if (CostFunction.getHeuristicCost(currentSchedule, _dependencyGraph) < _algo.getEarliestFinishTime()) {
-                    //System.out.println(currentSchedule.getToSchedule().size());
+
+                if (currentSchedule.getHeuristicCost(_dependencyGraph) < _algo.getEarliestFinishTime()) {
                     if (currentSchedule.isComplete()) {
                         _algo.setIfBestSchedule(currentSchedule);
                     } else {
-                        _stack.addAll(currentSchedule.extend(_dependencyGraph));
+                        // Sort children by heuristic cost such that more 'promising' children are explored first
+                        List<PartialSchedule> children = new ArrayList<PartialSchedule>(currentSchedule.extend(_dependencyGraph));
+                        children.sort((c1, c2) -> Float.compare(c2.getHeuristicCost(_dependencyGraph), c1.getHeuristicCost((_dependencyGraph))));
+                        _stack.addAll(children);
                     }
                 }
+
             }
 
         }
 
-        System.out.println("Thread " + _threadId + " closing");
-        System.out.flush();
         return null;
 
     }

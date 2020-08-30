@@ -18,6 +18,7 @@ public class DfsBranchAndBoundTests {
     public void initGraph() {
 
         dependencyGraph = new Graph("test");
+        Vertex.resetIdCount();
 
         Vertex a = new Vertex("a", 2);
         Vertex b = new Vertex("b", 3);
@@ -36,26 +37,21 @@ public class DfsBranchAndBoundTests {
 
     }
 
+    /*
+    **Testing a schedule is produced, from input
+     */
     @Test
     public void producesSchedule() {
 
-        DfsBranchAndBound algo = new DfsBranchAndBound(dependencyGraph, 8);
+        DfsBranchAndBound algo = new DfsBranchAndBound(dependencyGraph, 8, 1);
         PartialSchedule schedule = algo.findOptimalSchedule();
         Assert.assertNotNull(schedule);
 
-
-// for debug to show the schedule
-//        while (schedule.getTask() != null){
-//            System.out.println("ID: " + schedule.getTask().getId() + " Processor: " + (schedule.getProcessor() +1) + " Start Time: " + schedule.getStartTime()
-//            + " Cost: " + schedule.getTask().getCost());
-//
-//            schedule = schedule.getParent();
-//
-//
-//        }
-
     }
 
+    /*
+     **Testing an optimal schedule is produced, from input
+     */
     @Test
     public void producesOptimalSchedule() {
 
@@ -64,7 +60,7 @@ public class DfsBranchAndBoundTests {
         int optimalEndTime = (new BruteForceAlgorithm(dependencyGraph, 8))
                 .findOptimalSchedule()
                 .getFinishTime();
-        Assert.assertEquals(optimalEndTime, (new DfsBranchAndBound(dependencyGraph, 8)
+        Assert.assertEquals(optimalEndTime, (new DfsBranchAndBound(dependencyGraph, 8, 1)
                 .findOptimalSchedule()
                 .getFinishTime()));
 

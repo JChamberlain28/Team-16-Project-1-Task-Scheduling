@@ -30,4 +30,6 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    // https://mvnrepository.com/artifact/org.cliffc.high_scale_lib/high-scale-lib
+    compile 'com.boundary:high-scale-lib:1.0.6'
 }

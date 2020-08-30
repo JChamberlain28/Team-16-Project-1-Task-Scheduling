@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.*;
 
-
+// A* Algorithm not included in final release due to memory issues
 public class AStarAlgorithm extends Algorithm {
 
     public AStarAlgorithm(Graph dependencyGraph, int numProcessors) {
@@ -24,8 +24,8 @@ public class AStarAlgorithm extends Algorithm {
         HashSet<Integer> scheduleSet = new HashSet<Integer>();
 
         PriorityQueue<PartialSchedule> open = new PriorityQueue<PartialSchedule>(
-                (a, b) -> Float.compare(CostFunction.getHeuristicCost(a, _dependencyGraph),
-                        CostFunction.getHeuristicCost(b, _dependencyGraph))
+                (a, b) -> Float.compare(a.getHeuristicCost(_dependencyGraph),
+                        b.getHeuristicCost(_dependencyGraph))
         );
 
         PartialSchedule nullSchedule = new PartialSchedule(_dependencyGraph, _numProcessors);
@@ -37,7 +37,9 @@ public class AStarAlgorithm extends Algorithm {
 
             if (p.isComplete()) {
                 _numCompleteSchedulesGenerated++;
-                return p;
+                _bestSchedule = p;
+                _finished = true;
+                return _bestSchedule;
             }
 
             List<PartialSchedule> children = p.extend(_dependencyGraph);
@@ -50,6 +52,7 @@ public class AStarAlgorithm extends Algorithm {
 
         }
 
+        _finished = true;
         return null;
 
     }

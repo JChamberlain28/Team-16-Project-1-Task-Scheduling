@@ -1,4 +1,4 @@
-# Team: Saadboys   
+# Team 16: Saadboys   
 
 # SOFTENG 306 Project 1: Task Scheduling
 A Java application which facilitates the creation of optimal schedulings of tasks.
@@ -15,7 +15,7 @@ A Java application which facilitates the creation of optimal schedulings of task
 ## Compilation Instructions
 Required system packages (Linux):
 * gradle
-* Java JDK 8 or higher
+* Java JDK 8 or higher (Not OpenJDK, as JavaFX is not included)
 * git    
 
 ### Clone the Repository
@@ -29,9 +29,12 @@ Then navigate to the repository
 Type the following to build the project and package it into a jar   
 `` gradle fatJar ``
 
-If the build fails, ensure java is in the classpath and the JAVA_HOME variable is set to the home directory of your java installation.   
+If the build fails, ensure java is in the classpath and the JAVA_HOME variable is set to the home directory of your java installation. This java installation must be Oracle JDK 8+. This is due to dependencies on JavaFX.       
 
-Navigate to the produced jar   
+If you dont want to set the JAVA_HOME variable, please try the below command instead:     
+```gradle fatJar -Dorg.gradle.java.home=/<JDK HOME PATH>```
+
+Navigate to the produced jar.   
 `` cd ./build/libs ``
 
 Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.
@@ -45,7 +48,8 @@ Note the produced jar file is named "Project-1.0-SNAPSHOT-all.jar" by gradle.
 * -p N: -p enables parallelisation (multithreading in algorithm), N specifies the number of cores to use for multithreading    
 * -v: Enables the visualisation of the algorithm progress / actions
 * -o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). Warning, supplying the name of an existing file will overwrite it.
-
+### Help Option
+* -h: Shows a help message
 
 
 ## Helpful Links

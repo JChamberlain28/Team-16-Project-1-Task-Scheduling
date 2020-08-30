@@ -2,37 +2,27 @@ import algorithm.*;
 import graph.Graph;
 
 
+import graph.GraphCopier;
 import input.CliParser;
 import input.InputParser;
-import javafx.application.Platform;
-import javafx.stage.Stage;
 import output.OutputGenerator;
 import visualisation.Visualise;
-import visualisation.controllers.GUIController;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 
 public class Main {
     public static void main(String[] args) {
-        String[] hardcodedArgs = {"C:\\Users\\dh\\Downloads\\testfolder\\hello\\a1.dot", "2", "-v"};
-        System.out.println("Started: " + LocalDateTime.now());
+        System.out.println("============   group16 - saadboys    =============\n" +
+                           "============     Task scheduler      =============\n" );
 
+        // singleton class
         CliParser cliparser = CliParser.getCliParserInstance();
 
         // Parse the command line inputs and check for validity of all inputs
         try {
-            //cliparser.UI(args);
-            cliparser.UI(hardcodedArgs);
+            cliparser.UI(args);
 
             if (!cliparser.getSuccessfulCliParse()){
                 // in the case that we should not run the algorithm
@@ -46,44 +36,51 @@ public class Main {
 
         // Parse the input file and create the graph object
         Graph graph = InputParser.readInput(cliparser.getFilePathName());
+        // preserve the original graph before adding virtual edges as it is used for output generation
+        Graph originalGraph = GraphCopier.copyGraph(graph);
+
+        // create virtual edges to enforce task order for identical tasks (one pruning method)
         graph.buildVirtualEdges();
 
-        Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
-                cliparser.getNumberOfCores());
+        System.out.println("Calculating optimal scheduling solution for "
+                +graph.getVertices().size()+ " nodes on " +cliparser.getNumberOfProcessors() + " processors. ");
+        Algorithm algorithm = new DfsBranchAndBound(graph, cliparser.getNumberOfProcessors(), cliparser.getNumberOfCores());
 
         if (cliparser.isVisualisationDisplay()) {
-
+            System.out.println("Visualisation of scheduling presented in new window.");
             (new Thread() {
                 @Override
                 public void run() {
-                    //Visualise.startVisual(args, dfs, graph);
-                    Visualise.startVisual(hardcodedArgs, dfs, graph);
-
+                    Visualise.startVisual(args, algorithm, graph);
                 }
             }).start();
-
         }
 
-        PartialSchedule schedule = dfs.findOptimalSchedule();
+        PartialSchedule schedule = algorithm.findOptimalSchedule();
 
         // persist start times and processor numbers in the graph for use in output
-        for (ScheduledTask st : schedule.getScheduledTasks()){
-            st.updateVertex(graph);
+        for (ScheduledTask st : schedule.getScheduledTasks()) {
+            st.updateVertex(originalGraph);
         }
-
+        System.out.println("Scheduling calculation completed.");
 
         // Create output with the output file.
         try {
-            OutputGenerator.generate(graph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
+            String outputFilePath = cliparser.getOutputFilePath();
+            File file = new File(outputFilePath);
+            if (file.exists()) {
+                System.out.println("The specified output file exists. The output file " +
+                        cliparser.getOutputFileName()+ " will be overwritten.");
+            } else {
+                System.out.println("Output file " + cliparser.getOutputFileName() +" generated.");
+            }
+            OutputGenerator.generate(originalGraph, cliparser.getOutputFileName(), cliparser.getOutputFilePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Ended: " + LocalDateTime.now());
 
 
-
-        System.out.println("after visual");
 
     }
 

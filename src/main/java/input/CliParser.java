@@ -50,10 +50,12 @@ public class CliParser {
         if (args.length == 0) {
             throw new IllegalArgumentException("Error: No arguments provided. " +
                     "Please enter a valid filename and number of processors in the format: \n" +
-                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                    "For additional help enter the help option \"-h\" into the command line.");
         } else {
+            // Detect and parse all command line arg options flags
             commandLineParsed = parseOptionArguments(args);
-            if (commandLineParsed.hasOption("h") /*&& args.length == 1*/) {
+            if (commandLineParsed.hasOption("h")) {
                 printHelpMessage();
                 _CliParsedInputs._successfulCliParse=false;
                 return;
@@ -77,86 +79,27 @@ public class CliParser {
                 File file = new File((args[0]));
 
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
+                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.\n" +
+                            "For additional help enter the help option \"-h\" into the command line.");
                 } else {
-
                     _CliParsedInputs._fileName = FilenameMethods.getFileName(args[0]); // File name
-
                     _CliParsedInputs._filePathName = args[0];
-                    System.out.println("input file name =  "+  _CliParsedInputs._fileName +
-                            "\n input file path =  "+ _CliParsedInputs._filePathName);
                 }
-
-                /*if (FilenameMethods.checkIfAbsolutePath(args[0])){
-                    System.out.println("Absolute path input");
-                    String noFolderFileName = FilenameMethods.getFileName(args[0]);
-                        _CliParsedInputs._fileName = noFolderFileName; // File name
-                        _CliParsedInputs._filePathName = args[0];
-                        file = new File(args[0]);
-                } else {
-                    // relative paths
-                    // could have folders
-                    String noFolderFileName = FilenameMethods.getFileName(args[0]);
-
-                    System.out.println ("args0 =" +args[0] + "noFolderfileName =" + noFolderFileName);
-
-                    if (args[0].startsWith("./") || args[0].startsWith(".\\") ){ // TODO: fix?
-
-                        String fileNameNoRelativeSlash = noFolderFileName.substring(2);
-                        _CliParsedInputs._fileName = fileNameNoRelativeSlash; // File name
-
-                        String filePathNoRelativeSlash = args[0].substring(2);
-                        _CliParsedInputs._filePathName = filePathNoRelativeSlash; // TODO: no digrph? is it working?
-                        System.out.println("got Rid of ./");
-                        System.out.println(" = " + filePathNoRelativeSlash);
-                    } else if (!args[0].startsWith(".") &&  args[0] != noFolderFileName){
-                        // it has folders but does not have '.' or '..' at the start is invalid
-                        throw new IllegalArgumentException("Error: Input relative path is invalid path." +
-                                " Please enter a valid file path.");
-                    } else {
-                        // just the file name
-
-                        _CliParsedInputs._fileName = noFolderFileName; // File name
-
-                        String inputDir = FilenameMethods.getDirectoryOfJar();
-                        String inputFilePath = (inputDir  + File.separator + noFolderFileName);
-
-                        _CliParsedInputs._filePathName = inputFilePath;
-                        System.out.println("just file name input: file name is  = "+ _CliParsedInputs._fileName
-                                +"file path is  = " + _CliParsedInputs._filePathName+"\n");
-
-
-                    }
-                if (!file.exists()) {
-                    throw new IllegalArgumentException("Error: file does not exist. Please enter an existing file name.");
-                }
-
-
-
-                    String dir = FilenameMethods.getDirectoryOfJar();
-                    System.out.println(""+dir + File.separator + _filePathName + "\n");
-
-                    //File file = new File(dir + File.separator + _filePathName);
-
-                    file = new File("C:\\Users\\dh\\eclipse-workspace\\project-1-saadboys-16\\src\\main\\java\\input\\digraph2.dot");
-                }*/
-
-
             }
-
             // Checking valid number of processors.
             if (checkValidStringInt(args[1])) {
                 _CliParsedInputs._numberOfProcessors = Integer.parseInt(args[1]);
             } else {
                 throw new IllegalArgumentException("Error: Invalid number of processors. " +
-                        "Please provide a valid number of processors");
+                        "Please provide a valid number of processors \n" +
+                        "For additional help enter the help option \"-h\" into the command line.");
             }
-
         } else {
             // does not have minimum number of args.
             throw new IllegalArgumentException("Error: Required arguments are missing." +
                     " Please enter a valid filename and number of processors in the format: \n" +
-                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                    "For additional help enter the help option \"-h\" into the command line.");
         }
 
         // In the case that options are not included, default values are set.
@@ -165,42 +108,32 @@ public class CliParser {
         _CliParsedInputs._numberOfCores = 1;
         // default output file name
         String fileName = _CliParsedInputs._fileName;
-        System.out.println("\n filename = " + fileName);
         String defaultOutputFileName = (fileName.replaceAll(".dot$", "") + "-output.dot");
         _CliParsedInputs._outputFileName = defaultOutputFileName;
-
+        // default output file path
         String defaultDir = FilenameMethods.getDirectoryOfJar();
         String defaultOutputFilePath = (defaultDir + File.separator + defaultOutputFileName);
         _CliParsedInputs._outputFilePath = defaultOutputFilePath;
 
-
         // default visualisation boolean (true or false)
         _CliParsedInputs._visualisationDisplay = false;
 
-        // Detect and parse all command line arg options flags
-        //commandLineParsed = parseOptionArguments(args);
-
-        // option flag provided for parallisation with n number of cores.
+        // option flag provided for parallelization with n number of cores.
         if (commandLineParsed.hasOption("p")) {
             String numberOfCoresInput = commandLineParsed.getOptionValue("p");
             // Checking valid number of cores.
             if (numberOfCoresInput != null && checkValidStringInt(numberOfCoresInput)) {
                 int numberOfCoresInt = Integer.parseInt(numberOfCoresInput);
-               /* if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt) */
+                // warning if number of cores inputted(desired number of threads) larger than number of cores available.
                 if (Runtime.getRuntime().availableProcessors() > numberOfCoresInt){
                     System.out.println("There are " +Runtime.getRuntime().availableProcessors()+ " available processors.");
                     System.out.println(numberOfCoresInt + " Threads will be created");
                 }
                     _CliParsedInputs._numberOfCores = Integer.parseInt(numberOfCoresInput);
-               /* } else {
-                    // does not have this many cores
-                    throw new IllegalArgumentException("Error: Too large for number of cores inputted." +
-                            " Please enter a valid number of cores. There are " + Runtime.getRuntime().availableProcessors()
-                            + " cores available");
-                }*/
             } else {
                 throw new IllegalArgumentException("Error: invalid number of cores." +
-                        " Please enter a valid number of cores.");
+                        " Please enter a valid number of cores. \n" +
+                        "For additional help enter the help option \"-h\" into the command line.");
             }
         }
 
@@ -214,87 +147,30 @@ public class CliParser {
             String outputFileNameInput = commandLineParsed.getOptionValue("o");
             // Checking valid output file name.
             if (outputFileNameInput != null && FilenameMethods.checkValidDotFileExtension(outputFileNameInput)) {
+
                 String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
-                _CliParsedInputs._outputFileName = noFolderFileName; // File name
-                _CliParsedInputs._outputFilePath = outputFileNameInput; // file path
-                System.out.println("output file name =  "+  _CliParsedInputs._outputFileName +
-                        "\noutput file path =  "+ _CliParsedInputs._outputFilePath);
+                _CliParsedInputs._outputFileName = noFolderFileName; // output File name
+                _CliParsedInputs._outputFilePath = outputFileNameInput; // output file path
 
-                //System.out.println("filename: " + fileName + "\n path output name "+filePathName);
-                String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
-                System.out.println("directories needed " + directoriesForOutput);
-
-
-                try {
-                    Files.createDirectories(Paths.get(directoriesForOutput));
-                    new FileOutputStream(_CliParsedInputs._outputFilePath);
-                    File outputFile = new File(_CliParsedInputs._outputFilePath);
-                    if (outputFile.exists()){
-                        System.out.println("file exists");
-                        outputFile.delete();
-                    } else {
-                        throw new IllegalArgumentException("Error: File could not be created." +
-                                " Please enter a valid output file path.");
+                    // check if output file path can be used to create a '.dot' file
+                    String directoriesForOutput = _CliParsedInputs._outputFilePath.substring(0, _CliParsedInputs._outputFilePath.lastIndexOf(_CliParsedInputs._outputFileName));
+                    try {
+                        Files.createDirectories(Paths.get(directoriesForOutput));
+                        new FileOutputStream(_CliParsedInputs._outputFilePath);
+                        File outputFile = new File(_CliParsedInputs._outputFilePath);
+                        if (!outputFile.exists()) {
+                            throw new IllegalArgumentException("Error: File could not be created." +
+                                    " Please enter a valid output file path.\n" +
+                                    "For additional help enter the help option \"-h\" into the command line.");
+                        }
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
+                                " Please enter a valid output file path.\n" +
+                                "For additional help enter the help option \"-h\" into the command line.");
                     }
 
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Error: invalid output file path." + e.getMessage() +
-                            " Please enter a valid output file path.");
-                }
-
-
-
             }
-
-                /*if (FilenameMethods.checkIfAbsolutePath(outputFileNameInput)){
-                    String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
-                    _CliParsedInputs._outputFileName = noFolderFileName; // File name
-                    _CliParsedInputs._outputFilePath = outputFileNameInput; // file path
-
-                } else {
-                    // relative paths
-                    // could have folders
-                    String noFolderFileName = FilenameMethods.getFileName(outputFileNameInput);
-
-                    if ( (outputFileNameInput.startsWith("./") && !System.getProperty("os.name").toLowerCase().startsWith("windows"))
-                            || (System.getProperty("os.name").toLowerCase().startsWith("windows")  && outputFileNameInput.startsWith(".\\")) ){ // TODO: fix this?
-                        String fileOutputNameNoRelativeSlash = noFolderFileName.substring(2);
-                        _CliParsedInputs._outputFileName = fileOutputNameNoRelativeSlash; // File name
-
-                        String filePathNoRelativeSlash = args[0].substring(2);
-                        _CliParsedInputs._outputFilePath = filePathNoRelativeSlash;
-                    } else if (!args[0].startsWith(".") &&  outputFileNameInput != noFolderFileName){
-                        // it has folders but does not have '.' or '..' at the start is invalid
-                        throw new IllegalArgumentException("Error: Output relative path is invalid path." +
-                                " Please enter a valid file path.");
-                    } else {
-                        System.out.println("only output file name given\n");
-                        // just the name of the output given use default for path
-
-                        System.out.println("only output file fiven under exception if contiioon: "+ _CliParsedInputs._outputFileName);
-
-                        _CliParsedInputs._outputFileName = noFolderFileName; // File name
-
-                        String outputDir = FilenameMethods.getDirectoryOfJar();
-                        String outputFilePath = (outputDir + File.separator + _CliParsedInputs._outputFileName);
-                        _CliParsedInputs._outputFilePath = outputFilePath;
-                        System.out.println("output file name =  "+  _CliParsedInputs._outputFileName + "\noutput file path =  "+ _CliParsedInputs._outputFilePath);
-
-                    }
-
-                    String dir = FilenameMethods.getDirectoryOfJar();
-                    System.out.println(""+dir + File.separator + _outputFilePath + "\n");
-                }
-
-            } else{
-                throw new IllegalArgumentException("Error: invalid output file name. " +
-                        "Please provide a valid file name with the full '.dot' extension included.");
-            }
-        }*/
-
         }
-
-
     }
 
 
@@ -304,13 +180,6 @@ public class CliParser {
     public static boolean checkValidBoolean(String booleanString){
         return(booleanString.equalsIgnoreCase("true") || booleanString.equalsIgnoreCase("false"));
     }
-
-
-
-
-
-
-
 
 
 
@@ -329,6 +198,11 @@ public class CliParser {
 
     }
 
+    /**
+     * Parse the command line inputs for options added by the user.
+     * @param optionArguments will take in arguments supplied by user into command line.
+     * @return returns parsed commandline object.
+     */
     private CommandLine parseOptionArguments(String[] optionArguments) {
         Options cliOptions = createOptions();
         CommandLineParser parser = new DefaultParser();
@@ -339,24 +213,27 @@ public class CliParser {
         } catch(Exception e) {
             throw new IllegalArgumentException( "Error: " + e.getMessage() +
                     ". Please enter valid options and valid arguments in the format \n" +
-                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                    "For additional help enter the help option \"-h\" into the command line." );
         }
 
         // too many args have been provided
-        if (line.getArgList().size() > 2){
+        if (line.getArgList().size() > 2 && !line.hasOption("h")){
             throw new IllegalArgumentException("Error: too many arguments. Please enter valid options and valid arguments in the format \n" +
-                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]");
+                    "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                    "For additional help enter the help option \"-h\" into the command line.");
         }
 
         return line;
     }
 
-    /*
+    /**
      * Method to create the additional options that may be supplied to the command line.
      *
      * −p N use N cores for execution in parallel (default is sequential )
      * −v visualise the search
      * −o OUTPUT output file is named OUTPUT ( default is INPUT−output.dot)
+     * -h option to print the help message
      * */
     private Options createOptions(){
 
@@ -371,22 +248,25 @@ public class CliParser {
     }
 
 
-
+    /**
+     * Prints a help message for user upon request with '-h' option flag.
+     * Displays information regarding usage of program.
+     **/
     private void printHelpMessage(){
-        System.out.println("Boomer\n"+
-                "ok boomer\n" +
-                "You're a boomer\n" +
-                "Ok boomer\n" +
-                "Do you say \"Oh back in my day\"\n" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" +
-                "" );
-
-
-
+        System.out.println("====================== HELP ======================\n" +
+                "Usage Instructions\n" +
+                "java -jar <JAR NAME>.jar <INPUT FILE NAME> <NUMBER OF PROCESSORS> [-p N | -v | -o <OUTPUT FILE NAME>]\n" +
+                "\n" +
+                "Required Parameters\n" +
+                "INPUT FILE NAME: Name of .dot file representing the input graph " +
+                "                 (must be in the same folder as the jar and have .dot extension)\n" +
+                "NUMBER OF PROCESSORS: Number of processors / cores to schedule tasks onto\n" +
+                "\nOptional Parameters\n" +
+                "-p N: -p enables parallelisation (multithreading in algorithm), " +
+                "       N specifies the number of cores to use for multithreading\n" +
+                "-v: Enables the visualisation of the algorithm progress / actions\n" +
+                "-o OUTPUT FILE NAME: Name of file the program should output (must include .dot extension). " +
+                "                     Warning, supplying the name of an existing file will overwrite it.");
     }
 
 
@@ -421,6 +301,7 @@ public class CliParser {
         return _numberOfCores;
     }
 
+    // Getters for checking if cli parsing succeeded. Only continue program if successful.
     public boolean getSuccessfulCliParse(){
         return _successfulCliParse;
     }
