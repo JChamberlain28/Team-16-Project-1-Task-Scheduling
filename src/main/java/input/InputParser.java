@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * The CliParser class will parse the specified input ".dot" file and store the
@@ -69,8 +71,15 @@ public class InputParser {
                     Vertex childVertex = algoGraph.getVertex(childVertexID);
 
                     // find edge weight
-                    edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
-                    int edgeWeightInt = Integer.parseInt(edgeWeight);
+                    Matcher matcher = Pattern.compile("\\d+").matcher(edgeWeight);
+                    matcher.find();
+                    int edgeWeightInt = Integer.valueOf(matcher.group());
+                    System.out.println("edgeWeightInt : " +edgeWeightInt);
+
+                    //edgeWeight = edgeWeight.replaceAll("[^-?0-9]+", "");
+                    //int edgeWeightInt = Integer.parseInt(edgeWeight);
+
+
 
                     // add edge to graph data.
                     algoGraph.addEdge(parentVertex.getId(), childVertex.getId(), edgeWeightInt);
@@ -87,8 +96,14 @@ public class InputParser {
 
                     // find vertex weight
                     String vertexWeight = lineSplit[1];
-                    vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
-                    int vertexWeightInt = Integer.parseInt(vertexWeight);
+
+                    Matcher matcher = Pattern.compile("\\d+").matcher(vertexWeight);
+                    matcher.find();
+                    int vertexWeightInt = Integer.valueOf(matcher.group());
+                    System.out.println("vertexWeightInt : " +vertexWeightInt);
+                    //vertexWeight = vertexWeight.replaceAll("[^-?0-9]+", "");
+                    //int vertexWeightInt = Integer.parseInt(vertexWeight);
+
 
                     // Instantiate vertex using ID and weight
                     // and then add to the graph.
