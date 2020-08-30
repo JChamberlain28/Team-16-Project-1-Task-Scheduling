@@ -71,8 +71,8 @@ public class GUIController {
     private NumberAxis _xAxisMem;
     private XYChart.Series _memorySeries;
     private XYChart.Series _cpuSeries;
-    private Timeline _timer;
-    private Button _close;
+    private Timeline _timer;//used for polling and updating display elements
+    private Button _close;//used as alternative way to exit application
 
     // Objects passed in for gantt chart creation
     private Algorithm _algorithm;
@@ -103,13 +103,15 @@ public class GUIController {
 
 
     /**
-     * Left side menu of visualisation showing summary of data for program
+     * Left side menu of visualisation showing textual summary of data for program
      * */
     @FXML
     private void setupTextComponents(){
         try {
+            //header with team name
             Label title = new Label("Team 16 - Saadboys" );
             title.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: orange; -fx-font-family: 'Century Gothic'");
+
             // components for spacing the elements apart,
             HBox fill0 = new HBox();
             fill0.prefHeightProperty().bind(textCont.heightProperty().divide(24));
@@ -136,10 +138,10 @@ public class GUIController {
             Separator separator3 = new Separator(Orientation.HORIZONTAL);
             Separator separator4 = new Separator(Orientation.HORIZONTAL);
 
-
-            // if name is too long shrink it so that it fits on the left side menu.
+            // if input or output name is too long shrink it so that it fits on the left side menu.
             String inputNameString = CliParser.getCliParserInstance().getFileName();
             if (inputNameString.length() > 20 ){
+                //displays ... to indicate name continues off-screen
                 inputNameString = ("" + inputNameString.substring(0, 18) + "...");
             }
             String outputNameString = CliParser.getCliParserInstance().getOutputFileName();
@@ -152,17 +154,18 @@ public class GUIController {
             Label outputName = new Label("Output file: " + outputNameString);
             outputName.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
 
-            // Component to show parallelisation data
+            //Component to show parallelisation data
             Label parallelUpper = new Label("Parallelisation:");
             parallelUpper.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             parallelUpper.setPadding(new Insets(0,0,5,0));
             Label parallelLower = new Label(" Off");
             parallelLower.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
+            //if number of cores used>1 then parallelisation is on, dispay number of cores used in parallel processing
             if (CliParser.getCliParserInstance().getNumberOfCores()>1){
                 parallelLower.setText(" " + CliParser.getCliParserInstance().getNumberOfCores() + " threads");
             }
 
-            // Component to show  best time of current best schedule found.
+            //Component to show end time of current best schedule found.
             Label bestScheduleTimeStart = new Label("Current best:   ");
             bestScheduleTimeStart.setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _bestScheduleTimeEnd = new Label( " ");
@@ -188,7 +191,7 @@ public class GUIController {
             _numSchedule.setStyle("-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 16; -fx-text-fill: white");
             _numScheduleInfo.setPadding(new Insets(0,0,5,0));
 
-            // Component to show number of complete schedules
+            // Component to show number of complete schedules found
             Label _numScheduleCompletedInfo = new Label("Complete Schedules: ");
             _numScheduleCompletedInfo .setStyle("-fx-font-family: Consolas; -fx-font-size: 14; -fx-text-fill: white");
             _numScheduleComplete = new Label("Complete Schedules: ");
@@ -203,6 +206,7 @@ public class GUIController {
             HBox closeButtonContainer = new HBox(fill5, _close);
             closeButtonContainer.setAlignment(Pos.CENTER);
 
+            //addition of all components + spacing elements used for formatting
             textCont.getChildren().addAll(fill0, new HBox(title), fill1 , separator1, fill1v2, inputName, outputName,
                     fill2, separator2, fill2v2, new HBox(parallelUpper, parallelLower),
                     new HBox(bestScheduleTimeStart, _bestScheduleTimeEnd), fill3, new HBox(_numScheduleInfo , _numSchedule),
@@ -212,18 +216,17 @@ public class GUIController {
                     closeButtonContainer
                     );
             textCont.setMinWidth(Region.USE_PREF_SIZE);
+            //styling of LHS component
             textCont.setStyle("-fx-padding: 10; -fx-background-color: slategray; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
-
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-
     /*
-    **Timer with increment 1s. Generates new CPU/Memory usage data for JVM every second and
-    * adds this data to the series displayed on each line chart, also updates gantt chart containing best schedule.
-    * On a shorter poll time, updates elapsed time.
+    **Timer with increment 0.1s. Generates new CPU/Memory usage data for JVM every second (1s) and
+    * adds this data to the series displayed on respective line chart. Also updates gantt chart containing best schedule.
+    * On a shorter poll time of 0.1s, updates elapsed time.
      */
     @FXML
     private void startTimer(){
@@ -232,22 +235,26 @@ public class GUIController {
         int[] increment = {0};
 
         _timer = new Timeline(
-            new KeyFrame(Duration.seconds(0.1), event -> {
+            new KeyFrame(Duration.seconds(0.1), event -> {//updates every 0.1s
+
+                //stop timer updating elements after algorithm has finished running
                 if (_algorithm.isFinished()){
                     stopTimer();
                 }
-                if (increment[0]%10 == 0){//every 1 second updates cpu and memory chart data
+
+                //every 1 second updates cpu and memory chart data
+                if (increment[0]%10 == 0){
                     // update memory usage
                     _memorySeries.getData().add(new XYChart.Data<>(increment[0]/10,(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000));
-                    // Show only most recent 60 seconds
-                    if (_memorySeries.getData().size()>60){//section inside conditional ensures only last minute of data is displayed
-
-                        _xAxisMem.setUpperBound(increment[0]/10);
+                    // Ensure only most recent 60 seconds displayed
+                    if (_memorySeries.getData().size()>60){
+                        _xAxisMem.setUpperBound(increment[0]/10);//adjusting x axis range of values displayed
                         _xAxisMem.setLowerBound(increment[0]/10 - 60);
-                        _memorySeries.getData().remove(0);
-                        _memoryChart.getData().remove(0);
+                        _memorySeries.getData().remove(0);//remove oldest datapoint in series data
+                        _memoryChart.getData().remove(0);//remove old series from chart and readd
                         _memoryChart.getData().add(_memorySeries);
                     }
+
                     // update cpu usage
                     _cpuSeries.getData().add(new XYChart.Data<>(increment[0]/10, (osMxBean.getProcessCpuLoad())*100));
                     // Show only most recent 60 seconds
@@ -258,6 +265,7 @@ public class GUIController {
                         _cpuChart.getData().remove(0);
                         _cpuChart.getData().add(_cpuSeries);
                     }
+
                     // update gantt chart
                     updateGantt(chart);
                 }
@@ -269,11 +277,13 @@ public class GUIController {
                 // update time elapsed
                 double currentTime = Math.round((System.currentTimeMillis() - startTime)/10)/100.0;
                 if (currentTime<60){
+                    //time displayed in seconds only
                     _elapsedLower.setText("   " + currentTime + "s");
                 } else {
+                    //formatting altered to display time in minutes and seconds
                     _elapsedLower.setText("   " + (int)Math.floor(currentTime/60) + "m " + Math.round((currentTime%60)*10.0)/10.0 + "s");
-
                 }
+
                 // update number of partial schedules found and completed schedules
                 _numSchedule.setText(" " +_algorithm.getNumPartialSchedules());
                 _numScheduleComplete.setText("" + _algorithm.getNumCompleteSchedules());
@@ -286,23 +296,23 @@ public class GUIController {
         _timer.play();
     }
 
-
     // When algorithm is completed, the timer is stopped and
     // visualisation components are no longer updated.
     private void stopTimer(){
         updateGantt(chart);
-        _statusLower.setText("Done");
+        _statusLower.setText("Done");//update system status
+        //set some components colour from orange to green to indicate algorithm stop
         _statusLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
         _elapsedLower.setStyle("-fx-text-fill: lightgreen;-fx-font-weight: bold; -fx-font-family: Consolas; -fx-font-size: 14");
         _timer.stop();
     }
 
     /*
-    ** Creation of line charts for both cpu/memory usage, and addition of these to hbox container
+    ** Creation of line charts for both cpu/memory usage of jvm
      */
     @FXML
     private void setupUsageCharts(){
-        // memory chart setup
+        //memory chart axes setup
         _xAxisMem = new NumberAxis();
         final NumberAxis yAxisMem = new NumberAxis();
         _xAxisMem.setUpperBound(60);
@@ -312,6 +322,7 @@ public class GUIController {
         _xAxisMem.setTickLabelFill(Color.DARKBLUE);
         yAxisMem.setTickLabelFill(Color.DARKBLUE);
 
+        //memory chart setup
         _memoryChart = new LineChart<>(_xAxisMem, yAxisMem);
         _memorySeries = new XYChart.Series();
         _memoryChart.getData().add(_memorySeries);
@@ -321,7 +332,7 @@ public class GUIController {
         _memoryChart.setStyle("-fx-text-fill: darkblue");
         _memoryChart.animatedProperty().setValue(false);
 
-        // cpu chart setup
+        //cpu chart axes setup
         _xAxisCPU = new NumberAxis();
         final NumberAxis yAxisCPU = new NumberAxis();
         yAxisCPU.setUpperBound(100);
@@ -333,6 +344,7 @@ public class GUIController {
         _xAxisCPU.setTickLabelFill(Color.DARKBLUE);
         yAxisCPU.setTickLabelFill(Color.DARKBLUE);
 
+        //cpu chart setup
         _cpuChart = new LineChart<>(_xAxisCPU, yAxisCPU);
         _cpuSeries = new XYChart.Series();
         _cpuChart.getData().add(_cpuSeries);
@@ -343,10 +355,6 @@ public class GUIController {
         chartHBox.setPrefHeight(300);
         chartHBox.getChildren().addAll(_memoryChart, _cpuChart);
     }
-
-
-
-
 
 
     /**
@@ -397,7 +405,6 @@ public class GUIController {
         VBox.setVgrow(ganttHBox, Priority.ALWAYS);
     }
 
-
     /* Updates the gantt chart to display the current best found schedule.
      Method is inside the timer polling and updates along with the other visualisation components. */
     private void updateGantt(GanttChart<Number,String> chart){
@@ -416,6 +423,8 @@ public class GUIController {
 
         // Do not populate gantt chart if no current best schedule is found.
         if (currentBestSchedule!=null) {
+
+            //updating text component displaying current best schedule finish time
             _bestScheduleTimeEnd.setText(" " + currentBestSchedule.getFinishTime() + "s");
 
             // create task objects to be displayed on gantt chart.
@@ -435,7 +444,5 @@ public class GUIController {
             // no schedule, initialise time to 'n/a'
             _bestScheduleTimeEnd.setText(" " + noTimeYet);
         }
-
     }
-
 }
