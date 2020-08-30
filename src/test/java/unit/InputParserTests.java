@@ -54,6 +54,9 @@ public class InputParserTests {
             expectedListVertex.add(vertexd);
 
 
+
+
+
             System.out.println(inputDigraph);
 
             Graph graphOutput = InputParser.readInput(inputDigraph);
