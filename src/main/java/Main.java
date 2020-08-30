@@ -50,17 +50,13 @@ public class Main {
         Algorithm dfs = new ParallelisedDfsBranchAndBound(graph, cliparser.getNumberOfProcessors(),
                 cliparser.getNumberOfCores());
 
-
-
         if (cliparser.isVisualisationDisplay()) {
-
             (new Thread() {
                 @Override
                 public void run() {
                     Visualise.startVisual(inputArgs, dfs, graph);
                 }
             }).start();
-
         }
 
         PartialSchedule schedule = dfs.findOptimalSchedule();

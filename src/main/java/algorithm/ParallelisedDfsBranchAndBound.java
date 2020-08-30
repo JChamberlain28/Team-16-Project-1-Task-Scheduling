@@ -92,6 +92,7 @@ public class  ParallelisedDfsBranchAndBound extends Algorithm {
             e.printStackTrace();
         }
 
+        _finished = true;
         return _bestSchedule;
 
     }

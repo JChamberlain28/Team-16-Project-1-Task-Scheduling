@@ -37,6 +37,7 @@ public class BruteForceAlgorithm extends Algorithm {
             }
         }
 
+        _finished = true;
         return bestSchedule;
 
     }
