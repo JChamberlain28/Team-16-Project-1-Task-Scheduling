@@ -1,6 +1,6 @@
-#CLI PARSING
+# CLI PARSING
 
-##Process
+## Process
 To run the ``jar`` file from the command line, the user can pass in their arguments and options in the following form.
 
 ``java -jar <jar name> INPUT.dot P [-p N | -v | -o <output file name>``
