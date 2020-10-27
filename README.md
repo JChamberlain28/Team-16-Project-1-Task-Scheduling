@@ -1,3 +1,5 @@
+## Note: this is a copy of a repository from GitHub Classroom. Pull Requests and other github managment features are missing in this copy.
+
 # Team 16: Saadboys   
 
 # SOFTENG 306 Project 1: Task Scheduling
